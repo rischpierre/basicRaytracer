@@ -4,7 +4,8 @@
 #define COLS 600
 #define BYTES_PER_PIXEL 3
 
-
+// todo put the view in another file  -> bug with passing the guchar array to the function
+// todo create a function to make a vector cross product
 int main(int argc, char **argv) {
 
     guchar rgbBuffer[ROWS * COLS * BYTES_PER_PIXEL] = {0};
