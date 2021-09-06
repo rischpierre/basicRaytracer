@@ -1,36 +1,23 @@
 #include <gtk/gtk.h>
 
-#define ROWS 600
+#define ROWS 300
 #define COLS 600
 #define BYTES_PER_PIXEL 3
 
-void bw_to_rgb(guchar *rgb, guchar *bw, size_t sz) {
-    for (size_t i = 0; i < sz; i++)
-        for (size_t j = 0; j < BYTES_PER_PIXEL; j++)
-            rgb[i * BYTES_PER_PIXEL + j] = bw[i];
-}
 
 int main(int argc, char **argv) {
 
-    // grayscale data array
-    guchar bw[ROWS * COLS] = { 0 }; // start all black
+    guchar rgbBuffer[ROWS * COLS * BYTES_PER_PIXEL] = {0};
 
-    // draw a design
-    for (int color = 0, i = 20; i < ROWS; i += 20) {
-        color = (color == 0) ? 255 : 0;
-        for (int r = i; r < ROWS - i; r++)
-            for (int c = i; c < COLS - i; c++)
-                bw[r * COLS + c] = color;
+    // set all pixels to grey
+    for(size_t i = 0; i <= sizeof(rgbBuffer); i++) {
+        rgbBuffer[i] = 128;
     }
-
-    // convert to rgb (by tripling the values)
-    guchar rgb[sizeof bw * BYTES_PER_PIXEL];
-    bw_to_rgb(rgb, bw, ROWS * COLS);
 
     gtk_init(&argc, &argv);
 
     GdkPixbuf *pb = gdk_pixbuf_new_from_data(
-            rgb,
+            rgbBuffer,
             GDK_COLORSPACE_RGB,     // colorspace (must be RGB)
             0,                      // has_alpha (0 for no alpha)
             8,                      // bits-per-sample (must be 8)
