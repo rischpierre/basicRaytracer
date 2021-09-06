@@ -1,12 +1,32 @@
 #include <gtk/gtk.h>
+#include "vector.h"
 
 #define ROWS 300
 #define COLS 600
 #define BYTES_PER_PIXEL 3
 
 // todo put the view in another file  -> bug with passing the guchar array to the function
-// todo create a function to make a vector cross product
+// todo create a function to make a vector cross product with unittests
 int main(int argc, char **argv) {
+
+
+
+    // test vectors
+
+    struct Vector v1;
+    v1.x = 1;
+    v1.y = 0;
+    v1.z = 0;
+
+    struct Vector v2;
+    v2.x = 0;
+    v2.y = 1;
+    v2.z = 0;
+    struct Vector test = crossProduct(v1, v2);
+
+    printf( "%f", test.x);
+    printf( "%f", test.y);
+    printf( "%f", test.z);
 
     guchar rgbBuffer[ROWS * COLS * BYTES_PER_PIXEL] = {0};
 

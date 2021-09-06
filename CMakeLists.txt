@@ -20,7 +20,7 @@ string(REPLACE ";" " -I" FLAGS "${FLAGS}")
 set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${GTK3_FLAGS} ${FLAGS})
 
 add_executable(raytracerExperiment
-        raytracerExperiment/main.c)
+        raytracerExperiment/main.c raytracerExperiment/vector.c raytracerExperiment/vector.h)
 
 add_definitions (${GTK3_CFLAGS_OTHER})
 target_link_libraries (raytracerExperiment ${GTK3_LIBRARIES})
