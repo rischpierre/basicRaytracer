@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
-#include "vector.h"
+#include "test_vector.h"
+#include "geometries.h"
 
 #define ROWS 300
 #define COLS 600
@@ -7,26 +8,44 @@
 
 // todo put the view in another file  -> bug with passing the guchar array to the function
 // todo create a function to make a vector cross product with unittests
+
+
+void run_all_tests(){
+    printf("Running unittests");
+    test_cross_product_is_valid();
+}
+
+
+
 int main(int argc, char **argv) {
 
 
+    // test geometries
 
-    // test vectors
+    Face f1;
 
-    struct Vector v1;
-    v1.x = 1;
-    v1.y = 0;
-    v1.z = 0;
+    f1.v0.x = 1;
+    f1.v0.y = 0;
+    f1.v0.z = 0;
 
-    struct Vector v2;
-    v2.x = 0;
-    v2.y = 1;
-    v2.z = 0;
-    struct Vector test = crossProduct(v1, v2);
+    f1.v1.x = 0;
+    f1.v1.y = 1;
+    f1.v1.z = 0;
 
-    printf( "%f", test.x);
-    printf( "%f", test.y);
-    printf( "%f", test.z);
+    f1.v2.x = 0;
+    f1.v2.y = 0;
+    f1.v2.z = 1;
+
+
+    // todo run tests if -t is in the args
+    // bug here
+    for (int i=0; i <= argc; i++) {
+
+        if(strcmp(argv[i], "-t") != 0) {
+            run_all_tests();
+        }
+
+    }
 
     guchar rgbBuffer[ROWS * COLS * BYTES_PER_PIXEL] = {0};
 
