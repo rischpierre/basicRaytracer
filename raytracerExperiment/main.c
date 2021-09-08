@@ -11,9 +11,12 @@
 
 
 void run_all_tests(){
-    printf("Running unittests");
+    printf("Running unittests\n");
     test_cross_product_is_valid();
+    test_dot_product_is_valid();
+    printf("End unittests\n");
 }
+
 
 
 
@@ -42,6 +45,7 @@ int main(int argc, char *argv[]) {
 
         if(strcmp(argv[i], "-t") != 0) {
             run_all_tests();
+            return 0;
         }
     }
 

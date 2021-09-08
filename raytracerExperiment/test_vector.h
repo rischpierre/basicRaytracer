@@ -6,5 +6,6 @@
 #define RAYTRACEREXPERIMENT_TEST_VECTOR_H
 
 void test_cross_product_is_valid();
+void test_dot_product_is_valid();
 
 #endif //RAYTRACEREXPERIMENT_TEST_VECTOR_H

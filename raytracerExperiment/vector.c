@@ -1,6 +1,8 @@
 
 #include "vector.h"
 
+
+// todo pass args as references
 struct Vector crossProduct(struct Vector v1, struct Vector v2) {
     struct Vector result;
 
@@ -9,4 +11,10 @@ struct Vector crossProduct(struct Vector v1, struct Vector v2) {
     result.z = v1.x*v2.y - v1.y*v2.x;
 
     return result;
+}
+
+
+double dotProduct (struct Vector v1, struct Vector v2) {
+
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }

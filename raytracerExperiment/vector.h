@@ -13,4 +13,6 @@ struct Vector {
 
 struct Vector crossProduct(struct Vector v1, struct Vector v2);
 
+double dotProduct (struct Vector v1, struct Vector v2);
+
 #endif //RAYTRACEREXPERIMENT_VECTOR_H
