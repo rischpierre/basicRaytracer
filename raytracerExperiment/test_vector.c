@@ -18,7 +18,10 @@ void test_cross_product_is_valid(){
     v2.z = 0;
     struct Vector test = crossProduct(v1, v2);
 
-    if (test.x == 1 && test.y == 0 && test.z == 1) {
-        printf("success cross product");
+    if (test.x == 0 && test.y == 0 && test.z == 1) {
+        printf("success cross product\n");
+        return;
+    } else{
+        printf("Test cross product failed\n");
     }
 }

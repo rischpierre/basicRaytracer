@@ -52,6 +52,8 @@ int main(int argc, char *argv[]) {
         rgbBuffer[i] = 128;
     }
 
+
+    // VIEW
     gtk_init(&argc, &argv);
 
     GdkPixbuf *pb = gdk_pixbuf_new_from_data(
