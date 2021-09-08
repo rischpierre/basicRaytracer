@@ -17,7 +17,7 @@ void run_all_tests(){
 
 
 
-int main(int argc, char **argv) {
+int main(int argc, char *argv[]) {
 
 
     // test geometries
@@ -38,13 +38,11 @@ int main(int argc, char **argv) {
 
 
     // todo run tests if -t is in the args
-    // bug here
-    for (int i=0; i <= argc; i++) {
+    for (int i=0; i < argc; i++) {
 
         if(strcmp(argv[i], "-t") != 0) {
             run_all_tests();
         }
-
     }
 
     guchar rgbBuffer[ROWS * COLS * BYTES_PER_PIXEL] = {0};
