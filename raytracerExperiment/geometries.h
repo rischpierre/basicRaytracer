@@ -45,8 +45,13 @@ typedef struct face{
 
 typedef struct camera{
     Point focalPoint;
-    Vector v;
+    Vector direction;
 } Camera;
 
+typedef struct scene {
+
+    Camera camera;
+    Face face;
+} Scene;
 
 #endif //RAYTRACEREXPERIMENT_GEOMETRIES_H

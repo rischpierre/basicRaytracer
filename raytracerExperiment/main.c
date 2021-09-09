@@ -16,27 +16,43 @@ void run_all_tests(){
 }
 
 
+Scene defineScene(){
 
-
-int main(int argc, char *argv[]) {
-
-
-    // test geometries
+    // lets design a flat scene  along x, y
 
     Face f1;
 
-    f1.v0.x = 1;
+    f1.v0.x = 10;
     f1.v0.y = 0;
     f1.v0.z = 0;
 
-    f1.v1.x = 0;
+    f1.v1.x = 10;
     f1.v1.y = 1;
     f1.v1.z = 0;
 
-    f1.v2.x = 0;
+    f1.v2.x = 10;
     f1.v2.y = 0;
     f1.v2.z = 1;
 
+    Camera camera;
+
+    camera.focalPoint.x = 0;
+    camera.focalPoint.y = 0;
+    camera.focalPoint.z = 0;
+
+    camera.direction.x = 10;
+    camera.direction.y = 1;
+    camera.direction.z = 0;
+
+    Scene scene;
+    scene.camera = camera;
+    scene.face = f1;
+
+    return scene;
+}
+
+
+int main(int argc, char *argv[]) {
 
     // run tests if -t is in the args
     for (int i=0; i < argc; i++) {
@@ -46,6 +62,9 @@ int main(int argc, char *argv[]) {
             return 0;
         }
     }
+
+    //  geometries
+    Scene scene = defineScene();
 
     guchar rgbBuffer[ROWS * COLS * BYTES_PER_PIXEL] = {0};
 
