@@ -1,18 +1,12 @@
-//
-// Created by pierre on 2021-09-06.
-//
+
 
 #ifndef RAYTRACEREXPERIMENT_VECTOR_H
 #define RAYTRACEREXPERIMENT_VECTOR_H
-struct Vector {
+#include "vector.h"
+#include "geometries.h"
 
-    double x;
-    double y;
-    double z;
-};
+Vector crossProduct(Vector v1, Vector v2);
 
-struct Vector crossProduct(struct Vector v1, struct Vector v2);
-
-double dotProduct (struct Vector v1, struct Vector v2);
+double dotProduct (Vector v1, Vector v2);
 
 #endif //RAYTRACEREXPERIMENT_VECTOR_H

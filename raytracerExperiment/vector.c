@@ -3,8 +3,8 @@
 
 
 // todo pass args as references
-struct Vector crossProduct(struct Vector v1, struct Vector v2) {
-    struct Vector result;
+Vector crossProduct(Vector v1, Vector v2) {
+    Vector result;
 
     result.x = v1.y*v2.z - v1.z*v2.y;
     result.y = v1.z*v2.x - v1.x*v2.z;
@@ -14,7 +14,7 @@ struct Vector crossProduct(struct Vector v1, struct Vector v2) {
 }
 
 
-double dotProduct (struct Vector v1, struct Vector v2) {
+double dotProduct (Vector v1, Vector v2) {
 
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
