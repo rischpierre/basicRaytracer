@@ -40,10 +40,10 @@ int main(int argc, char *argv[]) {
     f1.v2.z = 1;
 
 
-    // todo run tests if -t is in the args
+    // run tests if -t is in the args
     for (int i=0; i < argc; i++) {
 
-        if(strcmp(argv[i], "-t") != 0) {
+        if(strcmp(argv[i], "-t") == 0) {
             run_all_tests();
             return 0;
         }
