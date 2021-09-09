@@ -6,8 +6,6 @@
 #define COLS 600
 #define BYTES_PER_PIXEL 3
 
-// todo put the view in another file  -> bug with passing the guchar array to the function
-// todo create a function to make a vector cross product with unittests
 
 
 void run_all_tests(){
@@ -58,6 +56,7 @@ int main(int argc, char *argv[]) {
 
 
     // VIEW
+    // todo put the view in another file  -> bug with passing the guchar array to the function
     gtk_init(&argc, &argv);
 
     GdkPixbuf *pb = gdk_pixbuf_new_from_data(
