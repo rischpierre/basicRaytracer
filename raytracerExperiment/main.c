@@ -15,6 +15,7 @@ void run_all_tests(){
     printf("End unittests\n");
 }
 
+// todo first start make a 2d projection of the created face, need to
 
 Scene defineScene(){
 
@@ -69,9 +70,33 @@ int main(int argc, char *argv[]) {
     guchar rgbBuffer[ROWS * COLS * BYTES_PER_PIXEL] = {0};
 
     // set all pixels to grey
-    for(size_t i = 0; i <= sizeof(rgbBuffer); i++) {
-        rgbBuffer[i] = 128;
-    }
+//    for(size_t i = 0; i <= sizeof(rgbBuffer); i++) {
+//        rgbBuffer[i] = 128;
+//    }
+
+    double filmSizeX = 6;
+    double filmSizeY = 3;
+    double pixelIncrementX = ROWS / filmSizeX;
+    double pixelIncrementY = COLS / filmSizeY;
+
+    Ray ray;
+
+    for(int x = 0; x <= ROWS; x++) {
+        for(int y = 0; x <= COLS; x++) {
+            ray.v.x = 1;
+            ray.v.y = 0;
+            ray.v.z = 0;
+            ray.p.x = x + pixelIncrementX;
+            ray.p.y = y + pixelIncrementY;
+
+            bool intersected = intersectRayTriangle( ray, triangle);
+
+            if intersected{
+                // todo need to have a double array
+            }
+        }
+        }
+
 
 
     // VIEW
