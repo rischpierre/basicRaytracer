@@ -1,22 +1,10 @@
-//
-// Created by pierre on 2021-09-07.
-//
 
 #include "test_vector.h"
 #include "vector.h"
-#include "geometries.h"
-#include "stdio.h"
 #include "stdbool.h"
-#include "string.h"
+#include "utils.h"
 
 
-void print_result(const bool success, const char *function) {
-    if (success) {
-        printf("PASS: %s\n", function);
-    }else {
-        printf("FAIL: %s\n", function);
-    }
-}
 
 void test_cross_product_is_valid(){
     Vector v1;

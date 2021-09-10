@@ -1,6 +1,8 @@
 #include <gtk/gtk.h>
-#include "test_vector.h"
 #include "geometries.h"
+
+#include "tests/test_vector.h"
+#include "tests/test_raytracer.h"
 
 #define ROWS 300
 #define COLS 600
@@ -10,8 +12,13 @@
 
 void run_all_tests(){
     printf("Running unittests\n");
+
     test_cross_product_is_valid();
     test_dot_product_is_valid();
+
+    test_ray_inside_triangle();
+    test_ray_outside_triangle();
+
     printf("End unittests\n");
 }
 
@@ -74,28 +81,28 @@ int main(int argc, char *argv[]) {
 //        rgbBuffer[i] = 128;
 //    }
 
-    double filmSizeX = 6;
-    double filmSizeY = 3;
-    double pixelIncrementX = ROWS / filmSizeX;
-    double pixelIncrementY = COLS / filmSizeY;
-
-    Ray ray;
-
-    for(int x = 0; x <= ROWS; x++) {
-        for(int y = 0; x <= COLS; x++) {
-            ray.v.x = 1;
-            ray.v.y = 0;
-            ray.v.z = 0;
-            ray.p.x = x + pixelIncrementX;
-            ray.p.y = y + pixelIncrementY;
-
-            bool intersected = intersectRayTriangle( ray, triangle);
-
-            if intersected{
-                // todo need to have a double array
-            }
-        }
-        }
+//    double filmSizeX = 6;
+//    double filmSizeY = 3;
+//    double pixelIncrementX = ROWS / filmSizeX;
+//    double pixelIncrementY = COLS / filmSizeY;
+//
+//    Ray ray;
+//
+//    for(int x = 0; x <= ROWS; x++) {
+//        for(int y = 0; x <= COLS; x++) {
+//            ray.v.x = 1;
+//            ray.v.y = 0;
+//            ray.v.z = 0;
+//            ray.p.x = x + pixelIncrementX;
+//            ray.p.y = y + pixelIncrementY;
+//
+//            bool intersected = intersectRayTriangle( ray, triangle);
+//
+//            if intersected{
+//                // todo need to have a double array
+//            }
+//        }
+//        }
 
 
 
