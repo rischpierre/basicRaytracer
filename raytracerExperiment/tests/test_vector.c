@@ -16,7 +16,7 @@ void test_cross_product_is_valid(){
     v2.x = 0;
     v2.y = 1;
     v2.z = 0;
-    Vector test = crossProduct(v1, v2);
+    Vector test = crossProduct(&v1, &v2);
 
     if (test.x == 0 && test.y == 0 && test.z == 1) {
         print_result(true, __func__ );
@@ -35,7 +35,8 @@ void test_dot_product_is_valid(){
     v2.x = 0;
     v2.y = 1;
     v2.z = 4;
-    if (dotProduct(v1, v2) == 10) {
+
+    if (dotProduct(&v1, &v2) == 10) {
         print_result(true, __func__ );
     } else{
         print_result(false, __func__ );

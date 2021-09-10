@@ -20,15 +20,6 @@ typedef struct vector {
 } Vector;
 
 
-typedef struct vertex{
-
-    double x;
-    double y;
-    double z;
-
-} Vertex;
-
-
 typedef struct ray{
     Point p;
     Vector v;
@@ -36,9 +27,11 @@ typedef struct ray{
 } Ray;
 
 typedef struct face{
-    Vertex v0;
-    Vertex v1;
-    Vertex v2;
+    Vector v0;
+    Vector v1;
+    Vector v2;
+
+    Vector normal;
 
 } Face;
 
