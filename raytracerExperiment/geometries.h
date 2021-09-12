@@ -4,25 +4,17 @@
 
 
 
-typedef struct point{
-
-    double x;
-    double y;
-    double z;
-
-} Point;
-
 typedef struct vector {
 
-    double x;
-    double y;
-    double z;
+    float x;
+    float y;
+    float z;
 } Vector;
 
 
 typedef struct ray{
-    Point p;
-    Vector v;
+    Vector origin;
+    Vector direction;
 
 } Ray;
 
@@ -37,7 +29,7 @@ typedef struct face{
 
 
 typedef struct camera{
-    Point focalPoint;
+    Vector focalPoint;
     Vector direction;
 } Camera;
 

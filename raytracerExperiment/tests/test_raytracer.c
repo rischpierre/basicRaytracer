@@ -3,12 +3,18 @@
 #include "utils.h"
 #include "raytracer.h"
 
+
+
 void test_ray_inside_triangle(){
     Ray ray;
 
-    ray.v.x = 1;
-    ray.v.y = 0;
-    ray.v.z = 0;
+    ray.direction.x = 1;
+    ray.direction.y = 0;
+    ray.direction.z = 0;
+
+    ray.origin.x = 0;
+    ray.origin.y = 0;
+    ray.origin.z = 0;
 
     // defining a triangle that is in the sight of the ray
     Face f1;

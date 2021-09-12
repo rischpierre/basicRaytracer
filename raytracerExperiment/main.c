@@ -90,11 +90,11 @@ int main(int argc, char *argv[]) {
 //
 //    for(int x = 0; x <= ROWS; x++) {
 //        for(int y = 0; x <= COLS; x++) {
-//            ray.v.x = 1;
-//            ray.v.y = 0;
-//            ray.v.z = 0;
-//            ray.p.x = x + pixelIncrementX;
-//            ray.p.y = y + pixelIncrementY;
+//            ray.direction.x = 1;
+//            ray.direction.y = 0;
+//            ray.direction.z = 0;
+//            ray.origin.x = x + pixelIncrementX;
+//            ray.origin.y = y + pixelIncrementY;
 //
 //            bool intersected = intersectRayTriangle( ray, triangle);
 //
