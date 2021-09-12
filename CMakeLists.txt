@@ -22,5 +22,8 @@ set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${GTK3_FLAGS} ${FLAGS})
 add_executable(raytracerExperiment
         raytracerExperiment/main.c raytracerExperiment/vector.c raytracerExperiment/vector.h raytracerExperiment/geometries.c raytracerExperiment/geometries.h raytracerExperiment/tests/test_vector.c raytracerExperiment/tests/test_vector.c raytracerExperiment/tests/test_vector.h raytracerExperiment/raytracer.c raytracerExperiment/raytracer.h raytracerExperiment/tests/test_raytracer.c raytracerExperiment/tests/test_raytracer.h raytracerExperiment/utils.c raytracerExperiment/utils.h)
 
+find_package(GSL REQUIRED)
+target_link_libraries(raytracerExperiment GSL::gsl GSL::gslcblas)
+
 add_definitions (${GTK3_CFLAGS_OTHER})
 target_link_libraries (raytracerExperiment ${GTK3_LIBRARIES})

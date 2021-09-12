@@ -23,9 +23,9 @@ float dotProduct (Vector *v1, Vector *v2) {
 Vector crossProductFloat(Vector *v1, float f) {
     Vector result;
 
-    result.x = v1->y*f - v1->z*f;
-    result.y = v1->z*f - v1->x*f;
-    result.z = v1->x*f - v1->y*f;
+    result.x = v1->x*f;
+    result.y = v1->y*f;
+    result.z = v1->z*f;
 
     return result;
 }
