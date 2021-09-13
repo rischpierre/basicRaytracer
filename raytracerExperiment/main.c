@@ -1,6 +1,8 @@
 #include <gtk/gtk.h>
 #include "geometries.h"
+#include "raytracer.h"
 
+// todo make a preprocessor for the unittests ?? or use a lib for it
 #include "tests/test_vector.h"
 #include "tests/test_raytracer.h"
 
@@ -76,33 +78,62 @@ int main(int argc, char *argv[]) {
 
     guchar rgbBuffer[ROWS * COLS * BYTES_PER_PIXEL] = {0};
 
-    // set all pixels to grey
-//    for(size_t i = 0; i <= sizeof(rgbBuffer); i++) {
-//        rgbBuffer[i] = 128;
-//    }
+//     set all pixels to grey for testing
+    for(size_t i = 0; i <= sizeof(rgbBuffer); i++) {
+        rgbBuffer[i] = 20;
+    }
 
-//    double filmSizeX = 6;
-//    double filmSizeY = 3;
-//    double pixelIncrementX = ROWS / filmSizeX;
-//    double pixelIncrementY = COLS / filmSizeY;
-//
-//    Ray ray;
-//
-//    for(int x = 0; x <= ROWS; x++) {
-//        for(int y = 0; x <= COLS; x++) {
-//            ray.direction.x = 1;
-//            ray.direction.y = 0;
-//            ray.direction.z = 0;
-//            ray.origin.x = x + pixelIncrementX;
-//            ray.origin.y = y + pixelIncrementY;
-//
-//            bool intersected = intersectRayTriangle( ray, triangle);
-//
-//            if intersected{
-//                // todo need to have a double array
-//            }
-//        }
-//        }
+    float filmSizeX = 6;
+    float filmSizeY = 3;
+    float pixelIncrementX = filmSizeX /ROWS;
+    float pixelIncrementY = filmSizeY / COLS;
+
+    Face f1;
+
+    f1.normal.x = -1;
+    f1.normal.y = 0;
+    f1.normal.z = 0;
+
+    f1.v0.x = 2;
+    f1.v0.y = 2;
+    f1.v0.z = 2;
+
+    f1.v1.x = 2;
+    f1.v1.y = -1;
+    f1.v1.z = 1;
+
+    f1.v2.x = 2;
+    f1.v2.y = -1;
+    f1.v2.z = 2;
+
+    // this is first a test with planar projection
+    Ray ray;
+    ray.direction.x = 1;
+    ray.direction.y = 0;
+    ray.direction.z = 0;
+
+    int i = 0;
+    for(int x = 0; x <= ROWS; x++) {
+        for(int y = 0; x <= COLS; x++) {
+
+            ray.origin.x = (float)x + pixelIncrementX - filmSizeX/2;
+            ray.origin.y = (float)y + pixelIncrementY - filmSizeY/2;
+
+            bool intersected = isRayIntersectsTriangle( ray, f1);
+            if (true) {
+                rgbBuffer[i] = 128;
+                rgbBuffer[i+1] = 128;
+                rgbBuffer[i+2] = 128;
+
+            } else{
+                rgbBuffer[i] = 0;
+                rgbBuffer[i+1] = 0;
+                rgbBuffer[i+2] = 0;
+            }
+
+           i+=3;
+        }
+    }
 
 
 
