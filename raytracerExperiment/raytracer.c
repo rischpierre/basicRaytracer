@@ -10,36 +10,26 @@
 
 bool isRayIntersectsTriangle(Ray ray, Face triangle){
 
-    gsl_vector * v1 = gsl_vector_alloc(3);
-    gsl_vector * v2 = gsl_vector_alloc(3);
 
-
-    gsl_vector_set(v1, 0, 1);
-    gsl_vector_set(v1, 1, 0);
-    gsl_vector_set(v1, 2, 0);
-
-    gsl_vector_set(v2, 0, 0);
-    gsl_vector_set(v2, 1, 1);
-    gsl_vector_set(v2, 2, 0);
-
-//    gsl_vector *v3 = gsl_vector_alloc(3);
-
-//    gsl_vector_mul(v1, v2); cross product
-    gsl_vector_sub(v1, v2);
-
-    gsl_vector_fprintf(stdout, v1, "%g");
-
-
+    // calculate face normal, discard normal from triangle?
+    Vector v0v1 = subVectors(&triangle.v1, &triangle.v0);
+    Vector v0v2 = subVectors(&triangle.v2, &triangle.v0);
+    Vector Normal = crossProduct(&v0v1, &v0v2);
 
     // parametric equation of a plane: Ax + By + Cz + D = 0
     // where D is the distance from origin and parallel to the plane's normal
-    float D = dotProduct(&triangle.normal, &triangle.v0);
+    float D = dotProduct(&Normal, &triangle.v0);
+
+    // check if triangle is parrallel to ray. This can cause div by 0 instead
+    if (dotProduct(&Normal, &ray.direction) == 0) return false;
 
     // compute the distance between the triangle and the origin
-    float t = -(dotProduct(&triangle.normal,  &ray.origin) + D) / dotProduct(&triangle.normal, &ray.direction);
+    float t = (dotProduct(&Normal,  &ray.origin) + D) / dotProduct(&Normal, &ray.direction);
 
-    // todo the PHit calue is not valid here, it should be 2, 0, 0
-    // todo install lib for vectors
+
+    // triangle is behind the ray
+    if (t < 0 ) return false;
+
     Vector tmpCross = crossProductFloat(&ray.direction, t);
     Vector Phit = addVectors(&ray.origin, &tmpCross);
 
