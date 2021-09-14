@@ -6,8 +6,6 @@
 #include "tests/test_vector.h"
 #include "tests/test_raytracer.h"
 
-#define ROWS 300
-#define COLS 600
 #define BYTES_PER_PIXEL 3
 
 
@@ -73,21 +71,32 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    int white = 255;
+    int grey = 128;
+    int black = 20;
+
+    int resolutionY = 100;
+    int resolutionX = 100;
+
     //  geometries
     Scene scene = defineScene();
 
-    guchar rgbBuffer[ROWS * COLS * BYTES_PER_PIXEL] = {0};
+    int sizeArray = resolutionY * resolutionX * BYTES_PER_PIXEL;
+    guchar rgbBuffer[sizeArray];
+    memset( rgbBuffer, 0, sizeArray*sizeof(guchar) );
 
 //     set all pixels to grey for testing
-    for(size_t i = 0; i <= sizeof(rgbBuffer); i++) {
-        rgbBuffer[i] = 20;
-    }
+//    for(size_t i = 0; i <= sizeof(rgbBuffer); i++) {
+//        rgbBuffer[i] = white;
+//    }
+
 
     float filmSizeX = 6;
-    float filmSizeY = 3;
-    float pixelIncrementX = filmSizeX /ROWS;
-    float pixelIncrementY = filmSizeY / COLS;
+    float filmSizeY = 6;
+    float pixelIncrementX = filmSizeX / (float)resolutionY;
+    float pixelIncrementY = filmSizeY / (float)resolutionX;
 
+    // defining a triangle that is in the sight of the ray
     Face f1;
 
     f1.normal.x = -1;
@@ -96,15 +105,16 @@ int main(int argc, char *argv[]) {
 
     f1.v0.x = 2;
     f1.v0.y = 2;
-    f1.v0.z = 2;
+    f1.v0.z = 0;
 
     f1.v1.x = 2;
     f1.v1.y = -1;
-    f1.v1.z = 1;
+    f1.v1.z = -1;
 
     f1.v2.x = 2;
     f1.v2.y = -1;
-    f1.v2.z = 2;
+    f1.v2.z = 1;
+
 
     // this is first a test with planar projection
     Ray ray;
@@ -112,30 +122,35 @@ int main(int argc, char *argv[]) {
     ray.direction.y = 0;
     ray.direction.z = 0;
 
+    int buffer[sizeArray];
+
     int i = 0;
-    for(int x = 0; x <= ROWS; x++) {
-        for(int y = 0; x <= COLS; x++) {
+    for(int x = 0; x <= resolutionY; x++) {
+        for(int y = 0; y <= resolutionX; y++) {
 
             ray.origin.x = (float)x + pixelIncrementX - filmSizeX/2;
             ray.origin.y = (float)y + pixelIncrementY - filmSizeY/2;
 
             bool intersected = isRayIntersectsTriangle( ray, f1);
-            if (true) {
-                rgbBuffer[i] = 128;
-                rgbBuffer[i+1] = 128;
-                rgbBuffer[i+2] = 128;
+            if (intersected) {
+                buffer[i] = 255;
+                buffer[i+1] = 255;
+                buffer[i+2] = 255;
 
             } else{
-                rgbBuffer[i] = 0;
-                rgbBuffer[i+1] = 0;
-                rgbBuffer[i+2] = 0;
+                buffer[i] = 128;
+                buffer[i+1] = 128;
+                buffer[i+2] = 128;
             }
 
            i+=3;
         }
     }
 
-
+    // todo bug with the representation of the buffer
+    for(size_t j = 0; j <= sizeof(rgbBuffer); j++) {
+        rgbBuffer[j] = buffer[j];
+    }
 
     // VIEW
     // todo put the view in another file  -> bug with passing the guchar array to the function
@@ -146,15 +161,15 @@ int main(int argc, char *argv[]) {
             GDK_COLORSPACE_RGB,     // colorspace (must be RGB)
             0,                      // has_alpha (0 for no alpha)
             8,                      // bits-per-sample (must be 8)
-            COLS, ROWS,             // cols, rows
-            COLS * BYTES_PER_PIXEL, // rowstride
+            resolutionX, resolutionY,             // cols, rows
+            resolutionX * BYTES_PER_PIXEL, // rowstride
             NULL, NULL              // destroy_fn, destroy_fn_data
     );
     GtkWidget *image = gtk_image_new_from_pixbuf(pb);
 
     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window), "Image");
-    gtk_window_set_default_size(GTK_WINDOW(window), COLS+20, ROWS+20);
+    gtk_window_set_default_size(GTK_WINDOW(window), resolutionX + 20, resolutionY + 20);
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_container_add(GTK_CONTAINER(window), image);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
