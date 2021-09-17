@@ -6,24 +6,10 @@ set(CMAKE_C_STANDARD 11)
 
 include_directories(raytracerExperiment)
 
-# Find dependencies
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-
-link_directories(${GTK3_LIBRARY_DIRS})
-add_compile_options(${GTK3_CFLAGS_OTHER})
-set(LIBRARIES ${LIBRARIES} ${GTK3_LIBRARIES})
-
 set(FLAGS "-I${GTK3_INCLUDE_DIRS}")
 message(STATUS "Flags: ${FLAGS}")
 string(REPLACE ";" " -I" FLAGS "${FLAGS}")
 set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${GTK3_FLAGS} ${FLAGS})
 
 add_executable(raytracerExperiment
-        raytracerExperiment/main.c raytracerExperiment/vector.c raytracerExperiment/vector.h raytracerExperiment/geometries.c raytracerExperiment/geometries.h raytracerExperiment/tests/test_vector.c raytracerExperiment/tests/test_vector.c raytracerExperiment/tests/test_vector.h raytracerExperiment/raytracer.c raytracerExperiment/raytracer.h raytracerExperiment/tests/test_raytracer.c raytracerExperiment/tests/test_raytracer.h raytracerExperiment/utils.c raytracerExperiment/utils.h)
-
-find_package(GSL REQUIRED)
-target_link_libraries(raytracerExperiment GSL::gsl GSL::gslcblas)
-
-add_definitions (${GTK3_CFLAGS_OTHER})
-target_link_libraries (raytracerExperiment ${GTK3_LIBRARIES})
+        src/main.c src/vector.c src/vector.h src/geometries.c src/geometries.h src/tests/test_vector.c src/tests/test_vector.c src/tests/test_vector.h src/raytracer.c src/raytracer.h src/tests/test_raytracer.c src/tests/test_raytracer.h src/utils.c src/utils.h)

@@ -3,8 +3,6 @@
 #include "raytracer.h"
 #include "vector.h"
 #include "stdio.h"
-#include <gsl/gsl_vector.h>
-#include <gsl/gsl_cblas.h>
 
 // todo install gsl lib for vectors
 
