@@ -1,7 +1,6 @@
 
-#include "test_raytracer.h"
-#include "utils.h"
-#include "raytracer.h"
+#include "../utils.h"
+#include "../raytracer.h"
 
 
 

@@ -1,8 +1,7 @@
 
-#include "test_vector.h"
-#include "vector.h"
+#include "../vector.h"
 #include "stdbool.h"
-#include "utils.h"
+#include "../utils.h"
 
 
 
@@ -41,4 +40,13 @@ void test_dot_product_is_valid(){
     } else{
         print_result(false, __func__ );
     }
+}
+
+
+int main(){
+
+    test_cross_product_is_valid();
+    test_dot_product_is_valid();
+
+    return 0;
 }
