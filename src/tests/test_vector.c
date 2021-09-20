@@ -42,11 +42,3 @@ void test_dot_product_is_valid(){
     }
 }
 
-
-int main(){
-
-    test_cross_product_is_valid();
-    test_dot_product_is_valid();
-
-    return 0;
-}

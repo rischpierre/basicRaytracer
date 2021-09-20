@@ -6,7 +6,6 @@ set(CMAKE_C_STANDARD 11)
 
 include_directories(raytracerExperiment)
 
-set(FLAGS "-I${GTK3_INCLUDE_DIRS}")
 message(STATUS "Flags: ${FLAGS}")
 string(REPLACE ";" " -I" FLAGS "${FLAGS}")
 set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${GTK3_FLAGS} ${FLAGS})
@@ -17,13 +16,19 @@ file(GLOB SOURCES
         "src/*.c"
         )
 
-file(GLOB TEST_SOURCES
+file(GLOB ALL_SOURCES
         "src/tests/*.c"
+        "src/*.c"
+        "src/*.h"
         )
+list(FILTER ALL_SOURCES EXCLUDE REGEX "src/main.c")
 
+#list(REMOVE_ITEM ALL_SOURCES "src/main.c")
+
+message(${ALL_SOURCES})
 
 add_executable(raytracerExperiment ${SOURCES})
-add_executable(raytracerExperimentTests ${TEST_SOURCES})
+add_executable(raytracerExperimentTests ${ALL_SOURCES})
 
 
 # todo
