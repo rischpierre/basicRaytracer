@@ -6,6 +6,6 @@
 #define RAYTRACEREXPERIMENT_BMPWRITER_H
 
 
-
+void writeFile(int width, int height);
 
 #endif //RAYTRACEREXPERIMENT_BMPWRITER_H

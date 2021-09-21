@@ -1,6 +1,6 @@
 #include "geometries.h"
 #include "raytracer.h"
-
+#include "bmpWriter.h"
 
 #define BYTES_PER_PIXEL 3
 
@@ -43,6 +43,8 @@ Scene defineScene(){
 
 
 int main(int argc, char *argv[]) {
+
+    writeFile(2, 2);
 
     int white = 255;
     int grey = 128;
