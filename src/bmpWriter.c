@@ -5,7 +5,7 @@
 #include "bmpWriter.h"
 
 
-void writeFile(const int width, const int height) {
+void writeFile(const int width, const int height, const float *red, const float *green, const float *blue) {
 
     FILE *f;
     unsigned char *img = NULL;
@@ -15,18 +15,27 @@ void writeFile(const int width, const int height) {
     memset(img, 0, 3 * width * height);
 
     // todo this is a test, need to pass as args
-    float red[2][2] = {{0.2f, 0.2f}, {0.2f, 0.2f}};
-    float green[2][2] = {{0.2f, 0.2f}, {0.2f, 0.2f}};
-    float blue[2][2] = {{0.2f, 0.2f}, {0.2f, 0.2f}};
+//    float red[width][height];
+//    float green[width][height];
+//    float blue[width][height];
+//
+//    for (int i = 0; i < width; i++) {
+//
+//        for (int j = 0; j < height; j++) {
+//            red[i][j] = 0.2f;
+//            green[i][j] =0.9f;
+//            blue[i][j] = 0.8f;
+//            }
+//    }
 
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             int x = i;
             int y = (height - 1) - j;
-            int r = (int) (red[i][j] * 255.f);
-            int g = (int) (green[i][j] * 255.f);
-            int b = (int) (blue[i][j] * 255.f);
+            int r = (int) (*((red + i * width) +j) * 255.f);
+            int g = (int) (*((green + i * width) +j) * 255.f);
+            int b = (int) (*((blue + i * width) +j) * 255.f);
             if (r > 255) r = 255;
             if (g > 255) g = 255;
             if (b > 255) b = 255;

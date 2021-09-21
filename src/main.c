@@ -43,8 +43,23 @@ Scene defineScene(){
 
 
 int main(int argc, char *argv[]) {
+    int width = 200;
+    int height = 200;
 
-    writeFile(2, 2);
+    float red[width][height];
+    float green[width][height];
+    float blue[width][height];
+
+    for (int i = 0; i < width; i++) {
+
+        for (int j = 0; j < height; j++) {
+            red[i][j] = 0.2f;
+            green[i][j] =0.9f;
+            blue[i][j] = 0.8f;
+        }
+    }
+
+    writeFile(width, height, *red, *green, *blue);
 
     int white = 255;
     int grey = 128;
