@@ -59,7 +59,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-// TODO switch caps and escape
 // todo add filepath in the write file
 // TODO AFTER RUN ADD A PROCESS CLION TO OPEN THE RESULT IMAGE
     writeFile(width, height, *red, *green, *blue);
