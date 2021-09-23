@@ -9,24 +9,10 @@ void writeFile(const int width, const int height, const float *red, const float 
 
     FILE *f;
     unsigned char *img = NULL;
-    int filesize = 54 + 3 * width * height;  //w is your image width, h is image height, both int
+    int filesize = 54 + 3 * width * height;
 
     img = (unsigned char *) malloc(3 * width * height);
     memset(img, 0, 3 * width * height);
-
-    // todo this is a test, need to pass as args
-//    float red[width][height];
-//    float green[width][height];
-//    float blue[width][height];
-//
-//    for (int i = 0; i < width; i++) {
-//
-//        for (int j = 0; j < height; j++) {
-//            red[i][j] = 0.2f;
-//            green[i][j] =0.9f;
-//            blue[i][j] = 0.8f;
-//            }
-//    }
 
 
     for (int i = 0; i < width; i++) {
