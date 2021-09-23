@@ -23,8 +23,6 @@ file(GLOB ALL_SOURCES
         )
 list(FILTER ALL_SOURCES EXCLUDE REGEX "src/main.c")
 
-#list(REMOVE_ITEM ALL_SOURCES "src/main.c")
-
 message(${ALL_SOURCES})
 
 add_executable(raytracerExperiment ${SOURCES})
