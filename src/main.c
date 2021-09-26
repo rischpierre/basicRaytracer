@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
     float white = 0.8f;
     float black = 0.2f;
 
-    const int resolutionY = 10;
-    const int resolutionX = 10;
+    const int resolutionY = 100;
+    const int resolutionX = 100;
 
     //  todo geometries
 //    Scene scene = defineScene();
@@ -104,6 +104,7 @@ int main(int argc, char *argv[]) {
     ray.direction.y = 0;
     ray.direction.z = 0;
 
+    ray.origin.x = 0;
 
     float red[resolutionX][resolutionY];
     float green[resolutionX][resolutionY];
@@ -111,12 +112,8 @@ int main(int argc, char *argv[]) {
 
     for(int x = 0; x < resolutionX; x++) {
         for(int y = 0; y < resolutionY; y++) {
-
-            red[x][y] = white;
-            green[x][y] = white;
-            blue[x][y] = white;
-
-            ray.origin.x = (float)x + pixelIncrementX - filmSizeX/2;
+            // todo problem here with origin calcul
+            ray.origin.z = (float)x + pixelIncrementX + filmSizeX/2;
             ray.origin.y = (float)y + pixelIncrementY - filmSizeY/2;
 
             bool intersected = isRayIntersectsTriangle( ray, f1);
