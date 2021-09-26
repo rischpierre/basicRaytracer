@@ -59,9 +59,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-// todo add filepath in the write file
-// TODO AFTER RUN ADD A PROCESS CLION TO OPEN THE RESULT IMAGE
-    writeFile(width, height, *red, *green, *blue);
+    writeFile(width, height, *red, *green, *blue, "render.bmp");
 
     int white = 255;
     int grey = 128;

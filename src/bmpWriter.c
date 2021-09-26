@@ -5,9 +5,9 @@
 #include "bmpWriter.h"
 
 
-void writeFile(const int width, const int height, const float *red, const float *green, const float *blue) {
+void writeFile(const int width, const int height, const float *red, const float *green, const float *blue, const char *filePath) {
 
-    FILE *f;
+    FILE *file;
     unsigned char *img = NULL;
     int filesize = 54 + 3 * width * height;
 
@@ -49,18 +49,19 @@ void writeFile(const int width, const int height, const float *red, const float 
     bmpinfoheader[10] = (unsigned char) (height >> 16);
     bmpinfoheader[11] = (unsigned char) (height >> 24);
 
-    f = fopen("img.bmp", "wb");
-    fwrite(bmpfileheader, 1, 14, f);
-    fwrite(bmpinfoheader, 1, 40, f);
+    file = fopen(filePath, "wb");
+    fwrite(bmpfileheader, 1, 14, file);
+    fwrite(bmpinfoheader, 1, 40, file);
     for (int i = 0; i < height; i++) {
         
         // write pixel data
-        fwrite(img + (width * (height - i - 1) * 3), 3, width, f);
+        fwrite(img + (width * (height - i - 1) * 3), 3, width, file);
         
         // add padding at the end of each row
-        fwrite(bmppad, 1, (4 - (width * 3) % 4) % 4, f);
+        fwrite(bmppad, 1, (4 - (width * 3) % 4) % 4, file);
     }
 
     free(img);
-    fclose(f);
+    fclose(file);
+    printf("Writing image: %s", filePath);
 }
