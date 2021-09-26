@@ -43,33 +43,35 @@ Scene defineScene(){
 
 
 int main(int argc, char *argv[]) {
-    int width = 200;
-    int height = 200;
 
-    float red[width][height];
-    float green[width][height];
-    float blue[width][height];
 
-    for (int i = 0; i < width; i++) {
+    //todo put this in a unit test
+//    int width = 200;
+//    int height = 200;
+//
+//    float red[width][height];
+//    float green[width][height];
+//    float blue[width][height];
+//
+//    for (int i = 0; i < width; i++) {
+//
+//        for (int j = 0; j < height; j++) {
+//            red[i][j] = 0.2f;
+//            green[i][j] =0.9f;
+//            blue[i][j] = 0.8f;
+//        }
+//    }
+//
+//    writeFile(width, height, *red, *green, *blue, "render.bmp");
 
-        for (int j = 0; j < height; j++) {
-            red[i][j] = 0.2f;
-            green[i][j] =0.9f;
-            blue[i][j] = 0.8f;
-        }
-    }
+    float white = 0.8f;
+    float black = 0.2f;
 
-    writeFile(width, height, *red, *green, *blue, "render.bmp");
+    const int resolutionY = 10;
+    const int resolutionX = 10;
 
-    int white = 255;
-    int grey = 128;
-    int black = 20;
-
-    const int resolutionY = 1000;
-    const int resolutionX = 1000;
-
-    //  geometries
-    Scene scene = defineScene();
+    //  todo geometries
+//    Scene scene = defineScene();
 
     float filmSizeX = 6;
     float filmSizeY = 6;
@@ -103,29 +105,35 @@ int main(int argc, char *argv[]) {
     ray.direction.z = 0;
 
 
-//    int i = 0;
-//    for(int x = 0; x <= resolutionY; x++) {
-//        for(int y = 0; y <= resolutionX; y++) {
-//
-//            ray.origin.x = (float)x + pixelIncrementX - filmSizeX/2;
-//            ray.origin.y = (float)y + pixelIncrementY - filmSizeY/2;
-//
-//            bool intersected = isRayIntersectsTriangle( ray, f1);
-//            if (intersected) {
-//                buffer[i] = 255;
-//                buffer[i+1] = 255;
-//                buffer[i+2] = 255;
-//
-//            } else{
-//                buffer[i] = 128;
-//                buffer[i+1] = 128;
-//                buffer[i+2] = 128;
-//            }
-//
-//           i+=3;
-//        }
-//    }
+    float red[resolutionX][resolutionY];
+    float green[resolutionX][resolutionY];
+    float blue[resolutionX][resolutionY];
 
+    for(int x = 0; x < resolutionX; x++) {
+        for(int y = 0; y < resolutionY; y++) {
+
+            red[x][y] = white;
+            green[x][y] = white;
+            blue[x][y] = white;
+
+            ray.origin.x = (float)x + pixelIncrementX - filmSizeX/2;
+            ray.origin.y = (float)y + pixelIncrementY - filmSizeY/2;
+
+            bool intersected = isRayIntersectsTriangle( ray, f1);
+            if (intersected) {
+                red[x][y] = white;
+                green[x][y] = white;
+                blue[x][y] = white;
+
+            } else{
+                red[x][y] = black;
+                green[x][y] = black;
+                blue[x][y] = black;
+            }
+        }
+    }
+
+    writeFile(resolutionX, resolutionY, *red, *green, *blue, "render.bmp");
 
     return 0;
 }
