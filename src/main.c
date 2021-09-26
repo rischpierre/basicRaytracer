@@ -3,9 +3,6 @@
 #include "bmpWriter.h"
 #include "utils.h"
 
-#define BYTES_PER_PIXEL 3
-
-// todo first start make a 2d projection of the created face, need to
 
 Scene defineScene(){
 
@@ -45,26 +42,6 @@ Scene defineScene(){
 
 int main(int argc, char *argv[]) {
 
-
-    //todo put this in a unit test
-//    int width = 200;
-//    int height = 200;
-//
-//    float red[width][height];
-//    float green[width][height];
-//    float blue[width][height];
-//
-//    for (int i = 0; i < width; i++) {
-//
-//        for (int j = 0; j < height; j++) {
-//            red[i][j] = 0.2f;
-//            green[i][j] =0.9f;
-//            blue[i][j] = 0.8f;
-//        }
-//    }
-//
-//    writeFile(width, height, *red, *green, *blue, "render.bmp");
-
     float white = 0.8f;
     float black = 0.2f;
 
@@ -76,8 +53,6 @@ int main(int argc, char *argv[]) {
 
     float filmSizeX = 6;
     float filmSizeY = 6;
-//    float pixelIncrementX = filmSizeX / (float)resolutionY;
-//    float pixelIncrementY = filmSizeY / (float)resolutionX;
 
     // defining a triangle that is in the sight of the ray
     Face f1;
