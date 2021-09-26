@@ -22,11 +22,11 @@ Scene defineExampleScene(){
 
     f1.v1.x = 2;
     f1.v1.y = -1;
-    f1.v1.z = -1;
+    f1.v1.z = -2;
 
     f1.v2.x = 2;
     f1.v2.y = -1;
-    f1.v2.z = 6;
+    f1.v2.z = 2;
 
     Camera camera;
 
