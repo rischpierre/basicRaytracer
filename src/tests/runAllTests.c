@@ -12,6 +12,7 @@ int main(){
     test_cross_product_is_valid();
     test_dot_product_is_valid();
     test_bmpWriter();
+    test_multVectMatrix44();
 
     return 0;
 }

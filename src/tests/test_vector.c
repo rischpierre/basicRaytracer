@@ -1,4 +1,5 @@
 
+#include <assert.h>
 #include "../vector.h"
 #include "stdbool.h"
 #include "../utils.h"
@@ -42,3 +43,16 @@ void test_dot_product_is_valid(){
     }
 }
 
+
+void test_multVectMatrix44(){
+    float matrix44fTranslate[16]= {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 2, 2, 1 };
+    float vector[4] = {1, 1, 1, 1};
+    float vectorExpected[4] = {3, 3, 3, 1};
+
+    float *result = multVectMatrix44(vector, matrix44fTranslate);
+
+    for(int i =0; i < 4; i++) {
+        assert(result[i] == vectorExpected[i]);
+    }
+
+}

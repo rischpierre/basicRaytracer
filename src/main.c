@@ -28,6 +28,16 @@ Scene defineExampleScene(){
     f1.v2.y = -1;
     f1.v2.z = 2;
 
+    // todo lets use a transform matrix to change the object
+
+    // translate everything to the -z
+    float tx = 0;
+    float ty = 0;
+    float tz = 3;
+
+    float matrix44fTranslate[16]= {1, 0, 0, tx, 0, 1, 0, ty, 0, 0, 1, tz, 0, 0, 0, 1 };
+
+
     Camera camera;
 
     camera.focalPoint.x = 0;

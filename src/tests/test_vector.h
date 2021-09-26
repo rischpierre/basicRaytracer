@@ -8,6 +8,6 @@
 
 void test_cross_product_is_valid();
 void test_dot_product_is_valid();
-
+void test_multVectMatrix44();
 
 #endif //RAYTRACEREXPERIMENT_TEST_VECTOR_H

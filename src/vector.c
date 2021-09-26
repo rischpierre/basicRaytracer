@@ -13,6 +13,19 @@ Vector crossProduct(Vector *v1, Vector *v2) {
     return result;
 }
 
+float* multVectMatrix44(const float *m1 , const float *m2) {
+    static float matrix4fResult[4];
+
+    for(int i=0; i < 4; i++) {
+
+        matrix4fResult[i] = m1[0] * m2[i] + m1[1] * m2[i+4] + m1[2] * m2[i+8] + m1[3] * m2[i+12];
+
+    }
+
+    return matrix4fResult;
+}
+
+
 
 float dotProduct (Vector *v1, Vector *v2) {
 
