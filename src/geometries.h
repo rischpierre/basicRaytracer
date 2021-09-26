@@ -31,6 +31,9 @@ typedef struct face{
 typedef struct camera{
     Vector focalPoint;
     Vector direction;
+    float filmSizeX;
+    float filmSizeY;
+
 } Camera;
 
 typedef struct scene {
