@@ -1,6 +1,7 @@
 #include "geometries.h"
 #include "raytracer.h"
 #include "bmpWriter.h"
+#include "utils.h"
 
 #define BYTES_PER_PIXEL 3
 
@@ -75,8 +76,8 @@ int main(int argc, char *argv[]) {
 
     float filmSizeX = 6;
     float filmSizeY = 6;
-    float pixelIncrementX = filmSizeX / (float)resolutionY;
-    float pixelIncrementY = filmSizeY / (float)resolutionX;
+//    float pixelIncrementX = filmSizeX / (float)resolutionY;
+//    float pixelIncrementY = filmSizeY / (float)resolutionX;
 
     // defining a triangle that is in the sight of the ray
     Face f1;
@@ -112,9 +113,9 @@ int main(int argc, char *argv[]) {
 
     for(int x = 0; x < resolutionX; x++) {
         for(int y = 0; y < resolutionY; y++) {
-            // todo problem here with origin calcul
-            ray.origin.z = (float)x + pixelIncrementX + filmSizeX/2;
-            ray.origin.y = (float)y + pixelIncrementY - filmSizeY/2;
+
+            ray.origin.z = interpolation1d((float)x, 0, (float)resolutionX, filmSizeY/2, - filmSizeY/2);
+            ray.origin.y = interpolation1d((float)y, 0, (float)resolutionY, - filmSizeY/2, filmSizeY/2);
 
             bool intersected = isRayIntersectsTriangle( ray, f1);
             if (intersected) {
