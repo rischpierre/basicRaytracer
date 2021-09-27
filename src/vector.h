@@ -10,6 +10,6 @@ float dotProduct(Vector *v1, Vector *v2);
 Vector crossProductFloat(Vector *v1, float f);
 Vector addVectors(Vector *v1, Vector *v2);
 Vector subVectors(Vector *v1, Vector *v2);
-float* multVectMatrix44(const float *m1 , const float *m2);
+void multVectMatrix44(float *m1 , const float *m2);
 
 #endif //RAYTRACEREXPERIMENT_VECTOR_H

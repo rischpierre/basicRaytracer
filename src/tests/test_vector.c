@@ -49,10 +49,10 @@ void test_multVectMatrix44(){
     float vector[4] = {1, 1, 1, 1};
     float vectorExpected[4] = {3, 3, 3, 1};
 
-    float *result = multVectMatrix44(vector, matrix44fTranslate);
+    multVectMatrix44(vector, matrix44fTranslate);
 
     for(int i =0; i < 4; i++) {
-        assert(result[i] == vectorExpected[i]);
+        assert(vector[i] == vectorExpected[i]);
     }
 
 }

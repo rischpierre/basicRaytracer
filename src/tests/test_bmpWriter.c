@@ -30,15 +30,11 @@ int test_bmpWriter(){
 
     strcat(fileName, ".bmp");
 
-    puts(fileName);
-
     writeFile(width, height, *red, *green, *blue, fileName);
 
     assert(access(fileName, F_OK) == 0);
 
     // remove file since it exists
-    printf("removing image %s", fileName);
-
     remove(fileName);
 
     return 0;

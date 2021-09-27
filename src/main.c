@@ -4,7 +4,7 @@
 #include "raytracer.h"
 #include "bmpWriter.h"
 #include "utils.h"
-
+#include "vector.h"
 
 Scene defineExampleScene(){
 
@@ -16,26 +16,34 @@ Scene defineExampleScene(){
     f1.normal.y = 0;
     f1.normal.z = 0;
 
-    f1.v0.x = 2;
-    f1.v0.y = 2;
-    f1.v0.z = 0;
-
-    f1.v1.x = 2;
-    f1.v1.y = -1;
-    f1.v1.z = -2;
-
-    f1.v2.x = 2;
-    f1.v2.y = -1;
-    f1.v2.z = 2;
-
-    // todo lets use a transform matrix to change the object
-
     // translate everything to the -z
     float tx = 0;
-    float ty = 0;
-    float tz = 3;
+    float ty = 1;
+    float tz = 2;
 
-    float matrix44fTranslate[16]= {1, 0, 0, tx, 0, 1, 0, ty, 0, 0, 1, tz, 0, 0, 0, 1 };
+    float matrix44fTranslate[16]= {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1 };
+
+    float v0[4] = {2, 2, 0, 1};
+    float v1[4] = {2, -1, -2, 1};
+    float v2[4] = {2, -1, 2, 1};
+
+    // transformed vectors
+    multVectMatrix44(v0, matrix44fTranslate);
+    multVectMatrix44(v1, matrix44fTranslate);
+    multVectMatrix44(v2, matrix44fTranslate);
+
+    // todo use arrays to store the x, y, z coords.
+    f1.v0.x = v0[0];
+    f1.v0.y = v0[1];
+    f1.v0.z = v0[2];
+
+    f1.v1.x = v1[0];
+    f1.v1.y = v1[1];
+    f1.v1.z = v1[2];
+
+    f1.v2.x = v2[0];
+    f1.v2.y = v2[1];
+    f1.v2.z = v2[2];
 
 
     Camera camera;
