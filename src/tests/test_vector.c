@@ -1,5 +1,6 @@
 
 #include <assert.h>
+#include <math.h>
 #include "../vector.h"
 #include "stdbool.h"
 #include "../utils.h"
@@ -55,4 +56,29 @@ void test_multVectMatrix44(){
         assert(vector[i] == vectorExpected[i]);
     }
 
+}
+
+
+void test_angleBetweenVectors(){
+    Vector v1;
+    Vector v2;
+    v1.x = 1;
+    v1.y = 0;
+    v1.z = 0;
+
+    v2.x = 0;
+    v2.y = 1;
+    v2.z = 0;
+
+    assert(angleBetweenVectors(&v1, &v2) == (float)M_PI/2);
+
+    v2.x = 1;
+    v2.y = 0;
+    v2.z = 0;
+    assert(angleBetweenVectors(&v1, &v2) == 0);
+
+    v2.x = -1;
+    v2.y = 0;
+    v2.z = 0;
+    assert(angleBetweenVectors(&v1, &v2) == (float)M_PI);
 }

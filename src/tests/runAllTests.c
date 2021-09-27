@@ -13,6 +13,7 @@ int main(){
     test_dot_product_is_valid();
     test_bmpWriter();
     test_multVectMatrix44();
+    test_angleBetweenVectors();
 
     return 0;
 }

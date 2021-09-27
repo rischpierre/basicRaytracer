@@ -1,6 +1,7 @@
 #include <bits/types/clock_t.h>
 #include <time.h>
 #include <math.h>
+#include <memory.h>
 #include "geometries.h"
 #include "raytracer.h"
 #include "bmpWriter.h"
@@ -24,8 +25,9 @@ Scene defineExampleScene(){
 
     // in radians
     float rx = 0;
-    float ry = 0;
-    float rz = M_PI/4;
+    float ry = M_PI/4;
+    float rz = 0;
+//    float rz = M_PI/4;
 
     float sx = 0.8f;
     float sy = 0.8f;
@@ -98,7 +100,9 @@ Scene defineExampleScene(){
     multVectMatrix44(v1, matrix44fTranslate);
     multVectMatrix44(v2, matrix44fTranslate);
 
+    // todo need to recompute face normal after transformation
 
+    f1.normal = computeNormal(face);
 
     // todo use arrays to store the x, y, z coords.
     f1.v0.x = v0[0];
@@ -127,18 +131,37 @@ Scene defineExampleScene(){
     camera.filmSizeX = 6;
     camera.filmSizeY = 6;
 
+
+
+    // light on the right side
+    DirLight light;
+
+    light.direction[0] = 1;
+    light.direction[1] = 0;
+    light.direction[2] = 0;
+
     Scene scene;
     scene.camera = camera;
     scene.face = f1;
+    scene.light = light;
 
     return scene;
 }
 
+float computeColor(Face f, DirLight light) {
+
+    Vector v1;
+    v1.x = light.direction[0];
+    v1.y = light.direction[1];
+    v1.z = light.direction[2];
+    float angle = angleBetweenVectors(&v1, &f.normal);
+
+    return interpolation1d(angle, M_PI/2, M_PI, 0, 1);
+}
+
+
 
 int main(int argc, char *argv[]) {
-
-    float white = 0.8f;
-    float black = 0.2f;
 
     // todo bug when increasing the resolution
     const int resolutionY = 500;
@@ -158,8 +181,8 @@ int main(int argc, char *argv[]) {
     float green[resolutionX][resolutionY];
     float blue[resolutionX][resolutionY];
 
+
     // todo put the rayTrace algo in a function
-    // todo print render time
 
     clock_t start = clock();
 
@@ -169,16 +192,19 @@ int main(int argc, char *argv[]) {
             ray.origin.z = interpolation1d((float)x, 0, (float)resolutionX, scene.camera.filmSizeX/2, - scene.camera.filmSizeX/2);
             ray.origin.y = interpolation1d((float)y, 0, (float)resolutionY, - scene.camera.filmSizeY/2, scene.camera.filmSizeY/2);
 
+            // todo change the color based on the direction of the light
+
             bool intersected = isRayIntersectsTriangle( ray, scene.face);
             if (intersected) {
-                red[x][y] = white;
-                green[x][y] = white;
-                blue[x][y] = white;
+                float color = computeColor(scene.face, scene.light);
+                red[x][y] = color;
+                green[x][y] = color;
+                blue[x][y] = color;
 
             } else{
-                red[x][y] = black;
-                green[x][y] = black;
-                blue[x][y] = black;
+                red[x][y] = 0.f;
+                green[x][y] = 0.f;
+                blue[x][y] = 0.f;
             }
         }
     }

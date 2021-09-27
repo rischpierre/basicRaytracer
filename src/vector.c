@@ -1,6 +1,6 @@
 
 #include "vector.h"
-
+#include "math.h"
 
 // todo pass args as references
 Vector crossProduct(Vector *v1, Vector *v2) {
@@ -23,6 +23,15 @@ void multVectMatrix44(float *m1 , const float *m2) {
 
 }
 
+float magnitude3f(Vector *v){
+    return sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
+}
+
+float angleBetweenVectors(Vector *v1, Vector *v2) {
+
+    return acosf(dotProduct(v1, v2) / (magnitude3f(v1) * magnitude3f(v2)));
+
+}
 
 float dotProduct (Vector *v1, Vector *v2) {
 

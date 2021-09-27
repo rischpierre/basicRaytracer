@@ -36,8 +36,14 @@ typedef struct camera{
 
 } Camera;
 
-typedef struct scene {
+typedef struct dirLight{
+    float direction[3];
 
+} DirLight;
+
+
+typedef struct scene {
+    DirLight light;
     Camera camera;
     Face face;
 } Scene;
