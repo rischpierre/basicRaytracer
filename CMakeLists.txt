@@ -29,6 +29,10 @@ add_executable(raytracerExperiment ${SOURCES})
 add_executable(raytracerExperimentTests ${ALL_SOURCES})
 
 
+# add math library
+target_link_libraries(raytracerExperiment m)
+target_link_libraries(raytracerExperimentTests m)
+
 # todo
 enable_testing()
 add_test(Tests raytracerExperimentTests)
