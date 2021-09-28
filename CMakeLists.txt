@@ -23,8 +23,6 @@ file(GLOB ALL_SOURCES
         )
 list(FILTER ALL_SOURCES EXCLUDE REGEX "src/main.c")
 
-message(${ALL_SOURCES})
-
 add_executable(raytracerExperiment ${SOURCES})
 add_executable(raytracerExperimentTests ${ALL_SOURCES})
 
@@ -33,6 +31,5 @@ add_executable(raytracerExperimentTests ${ALL_SOURCES})
 target_link_libraries(raytracerExperiment m)
 target_link_libraries(raytracerExperimentTests m)
 
-# todo
-enable_testing()
-add_test(Tests raytracerExperimentTests)
+# todo make it better
+target_link_libraries(raytracerExperimentTests /usr/local/lib/libcriterion.so.3)
