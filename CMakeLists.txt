@@ -23,16 +23,15 @@ file(GLOB ALL_SOURCES
         )
 list(FILTER ALL_SOURCES EXCLUDE REGEX "src/main.c")
 
-message(${ALL_SOURCES})
-
 add_executable(raytracerExperiment ${SOURCES})
 add_executable(raytracerExperimentTests ${ALL_SOURCES})
 
 
 # add math library
 target_link_libraries(raytracerExperiment m)
-target_link_libraries(raytracerExperimentTests m)
 
-# todo
-enable_testing()
-add_test(Tests raytracerExperimentTests)
+# testing lib
+# todo make this testing part optionnal
+find_library(CRITERION_LIBS NAMES libcriterion*)
+target_link_libraries(raytracerExperimentTests m)
+target_link_libraries(raytracerExperimentTests ${CRITERION_LIBS})

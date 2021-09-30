@@ -1,9 +1,0 @@
-
-#ifndef RAYTRACEREXPERIMENT_TEST_BMPWRITER_H
-#define RAYTRACEREXPERIMENT_TEST_BMPWRITER_H
-
-#include "../bmpWriter.h"
-
-int test_bmpWriter();
-
-#endif //RAYTRACEREXPERIMENT_TEST_BMPWRITER_H

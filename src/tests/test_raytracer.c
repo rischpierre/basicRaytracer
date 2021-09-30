@@ -2,9 +2,10 @@
 #include "../utils.h"
 #include "../raytracer.h"
 
+#include "criterion/criterion.h"
 
 
-void test_ray_inside_triangle(){
+Test(raytracer, test_ray_inside_triangle){
     Ray ray;
 
     ray.direction.x = 1;
@@ -35,16 +36,11 @@ void test_ray_inside_triangle(){
     f1.v2.z = 1;
 
 
-    bool intersected = isRayIntersectsTriangle( ray, f1);
-
-    if (intersected) {
-        print_result(true, __func__ );
-    }else{
-        print_result(false,  __func__ );
-    }
+    cr_assert(isRayIntersectsTriangle( ray, f1));
 
 }
-void test_ray_outside_triangle(){
+
+Test(raytracer, test_ray_outside_triangle){
     Ray ray;
 
     ray.direction.x = 1;
@@ -75,12 +71,6 @@ void test_ray_outside_triangle(){
     f1.v2.z = 2;
 
 
-    bool intersected = isRayIntersectsTriangle( ray, f1);
-
-    if (intersected) {
-        print_result(false, __func__ );
-    }else{
-        print_result(true,  __func__ );
-    }
+    cr_assert(! isRayIntersectsTriangle( ray, f1));
 
 }

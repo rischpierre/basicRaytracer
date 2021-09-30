@@ -1,11 +1,12 @@
+
 #include <string.h>
 #include <unistd.h>
-#include <assert.h>
-#include "test_bmpWriter.h"
 #include "stdio.h"
+#include "../bmpWriter.h"
 
+#include "criterion/criterion.h"
 
-int test_bmpWriter(){
+Test(bmp_writer, file_is_written_on_disk){
 
     int width = 10;
     int height = 10;
@@ -32,10 +33,9 @@ int test_bmpWriter(){
 
     writeFile(width, height, *red, *green, *blue, fileName);
 
-    assert(access(fileName, F_OK) == 0);
+    cr_assert(access(fileName, F_OK) == 0);
 
     // remove file since it exists
     remove(fileName);
 
-    return 0;
 }

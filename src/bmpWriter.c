@@ -63,5 +63,5 @@ void writeFile(const int width, const int height, const float *red, const float 
 
     free(img);
     fclose(file);
-    printf("Writing image: %s", filePath);
+    printf("Writing image: %s\n", filePath);
 }
