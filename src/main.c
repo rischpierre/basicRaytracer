@@ -18,21 +18,23 @@ Scene defineExampleScene(){
     f1.normal.y = 0;
     f1.normal.z = 0;
 
+    // todo create 66 a transform matrix input
     // define transform
     float tx = 0;
     float ty = 0;
-    float tz = 1;
+    float tz = 0;
 
     // in radians
     float rx = 0;
-    float ry = M_PI/4;
+    float ry = 0;
     float rz = 0;
 //    float rz = M_PI/4;
 
-    float sx = 0.8f;
-    float sy = 0.8f;
-    float sz = 0.8f;
+    float sx = 1.f;
+    float sy = 1.f;
+    float sz = 1.f;
 
+    // todo put the transform matricies in functions
     float scaleMatrix[16] = {
             sx, 0, 0, 0,
             0, sy,  0, 0,
@@ -101,8 +103,7 @@ Scene defineExampleScene(){
     multVectMatrix44(v2, matrix44fTranslate);
 
     // todo need to recompute face normal after transformation
-
-    f1.normal = computeNormal(face);
+//    f1.normal = computeNormal(face);
 
     // todo use arrays to store the x, y, z coords.
     f1.v0.x = v0[0];
