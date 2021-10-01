@@ -5,7 +5,7 @@
 #include "bmpWriter.h"
 
 
-void writeFile(const int width, const int height, const float *red, const float *green, const float *blue, const char *filePath) {
+void writeFile(int width, int height, const float **red, const float **green, const float **blue, const char *filePath) {
 
     FILE *file;
     unsigned char *img = NULL;
@@ -17,14 +17,18 @@ void writeFile(const int width, const int height, const float *red, const float 
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            int x = i;
-            int y = (height - 1) - j;
-            int r = (int) (*((red + i * width) +j) * 255.f);
-            int g = (int) (*((green + i * width) +j) * 255.f);
-            int b = (int) (*((blue + i * width) +j) * 255.f);
+
+            int r = (int)(red[i][j] * 255.f);
+            int g = (int)(green[i][j] * 255.f);
+            int b = (int)(blue[i][j] * 255.f);
+
             if (r > 255) r = 255;
             if (g > 255) g = 255;
             if (b > 255) b = 255;
+
+            int x = i;
+            int y = (height - 1) - j;
+
             img[(x + y * width) * 3 + 2] = (unsigned char) (r);
             img[(x + y * width) * 3 + 1] = (unsigned char) (g);
             img[(x + y * width) * 3 + 0] = (unsigned char) (b);
@@ -63,5 +67,4 @@ void writeFile(const int width, const int height, const float *red, const float 
 
     free(img);
     fclose(file);
-    printf("Writing image: %s\n", filePath);
 }

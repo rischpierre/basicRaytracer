@@ -2,6 +2,7 @@
 #include <time.h>
 #include <math.h>
 #include <memory.h>
+#include <malloc.h>
 #include "geometries.h"
 #include "raytracer.h"
 #include "bmpWriter.h"
@@ -164,9 +165,8 @@ float computeColor(Face f, DirLight light) {
 
 int main(int argc, char *argv[]) {
 
-    // todo bug when increasing the resolution
-    const int resolutionY = 500;
-    const int resolutionX = 500;
+    const int resolutionY = 1000;
+    const int resolutionX = 1000;
 
     Scene scene = defineExampleScene();
 
@@ -178,9 +178,21 @@ int main(int argc, char *argv[]) {
 
     ray.origin.x = 0;
 
-    float red[resolutionX][resolutionY];
-    float green[resolutionX][resolutionY];
-    float blue[resolutionX][resolutionY];
+
+    // todo is there a way to loop over them dynamically?
+    float** red = (float**)malloc(resolutionX * sizeof(float*));
+    for (int i = 0; i < resolutionX; i++)
+        red[i] = (float*)malloc(resolutionY * sizeof(float));
+
+
+    float** green = (float**)malloc(resolutionX * sizeof(float*));
+    for (int i = 0; i < resolutionX; i++)
+        green[i] = (float*)malloc(resolutionY * sizeof(float));
+
+
+    float** blue = (float**)malloc(resolutionX * sizeof(float*));
+    for (int i = 0; i < resolutionX; i++)
+        blue[i] = (float*)malloc(resolutionY * sizeof(float));
 
 
     // todo put the rayTrace algo in a function
@@ -210,10 +222,33 @@ int main(int argc, char *argv[]) {
         }
     }
 
+
+
+
     clock_t end = clock();
     printf("render time: %f s\n", (double)(end-start)/(double)CLOCKS_PER_SEC);
+    char * imagePath = "render.bmp";
+    writeFile(resolutionX, resolutionY, red, green, blue, imagePath);
 
-    writeFile(resolutionX, resolutionY, *red, *green, *blue, "render.bmp");
+    printf("Wrote image : %s", imagePath);
+
+    // todo try to make on statement out of it
+    for (int i=0; i< resolutionX; i++){
+        free(red[i]);
+    }
+
+    free(red);
+
+    for (int i=0; i< resolutionX; i++){
+        free(green[i]);
+    }
+
+    free(green);
+
+    for (int i=0; i< resolutionX; i++){
+        free(blue[i]);
+    }
+    free(blue);
 
     return 0;
 }

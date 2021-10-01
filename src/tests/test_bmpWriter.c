@@ -8,22 +8,31 @@
 
 Test(bmp_writer, file_is_written_on_disk){
 
-    int width = 10;
-    int height = 10;
+    int resolutionX = 10;
+    int resolutionY = 10;
 
-    float red[width][height];
-    float green[width][height];
-    float blue[width][height];
+    float** red = (float**)malloc(resolutionX * sizeof(float*));
+    for (int i = 0; i < resolutionX; i++)
+        red[i] = (float*)malloc(resolutionY * sizeof(float));
 
-    for (int i = -1; i < width; i++) {
 
-        for (int j = -1; j < height; j++) {
+    float** green = (float**)malloc(resolutionX * sizeof(float*));
+    for (int i = 0; i < resolutionX; i++)
+        green[i] = (float*)malloc(resolutionY * sizeof(float));
+
+
+    float** blue = (float**)malloc(resolutionX * sizeof(float*));
+    for (int i = 0; i < resolutionX; i++)
+        blue[i] = (float*)malloc(resolutionY * sizeof(float));
+
+    for (int i = 0; i < resolutionX; i++) {
+
+        for (int j = 0; j < resolutionY; j++) {
             red[i][j] = 0.2f;
             green[i][j] =0.9f;
             blue[i][j] = 0.8f;
         }
     }
-
 
     // create new file
     char fileName[L_tmpnam];
@@ -31,7 +40,7 @@ Test(bmp_writer, file_is_written_on_disk){
 
     strcat(fileName, ".bmp");
 
-    writeFile(width, height, *red, *green, *blue, fileName);
+    writeFile(resolutionX, resolutionY, red, green, blue, fileName);
 
     cr_assert(access(fileName, F_OK) == 0);
 
