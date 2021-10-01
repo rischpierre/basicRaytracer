@@ -199,8 +199,6 @@ int main(int argc, char *argv[]) {
             ray.origin.z = interpolation1d((float)x, 0, (float)resolutionX, scene.camera.filmSizeX/2, - scene.camera.filmSizeX/2);
             ray.origin.y = interpolation1d((float)y, 0, (float)resolutionY, - scene.camera.filmSizeY/2, scene.camera.filmSizeY/2);
 
-            // todo change the color based on the direction of the light
-
             bool intersected = isRayIntersectsTriangle( ray, scene.face);
             if (intersected) {
                 float color = computeColor(scene.face, scene.light);
