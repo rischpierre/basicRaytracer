@@ -4,33 +4,25 @@
 
 
 
-typedef struct vector {
-
-    float x;
-    float y;
-    float z;
-} Vector;
-
-
 typedef struct ray{
-    Vector origin;
-    Vector direction;
+    float origin[3];
+    float direction[3];
 
 } Ray;
 
 typedef struct face{
-    Vector v0;
-    Vector v1;
-    Vector v2;
+    float v0[3];
+    float v1[3];
+    float v2[3];
 
-    Vector normal;
+    float normal[3];
 
 } Face;
 
 
 typedef struct camera{
-    Vector focalPoint;
-    Vector direction;
+    float focalPoint[3];
+    float direction[3];
     float filmSizeX;
     float filmSizeY;
 

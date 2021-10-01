@@ -17,12 +17,11 @@ Scene defineExampleScene(){
 
     // lets design a flat scene  along x, y
     // defining a triangle that is in the sight of the ray
-    Face f1;
-
-    f1.normal.x = -1;
-    f1.normal.y = 0;
-    f1.normal.z = 0;
-
+    Face f1 = {{2, 2, 1},
+               {2, -1, -2},
+               {2, -1, 2},
+               {-1, 0, 0}
+    };
 
     float v0[4] = {2, 2, 0, 1};
     float v1[4] = {2, -1, -2, 1};
@@ -34,7 +33,7 @@ Scene defineExampleScene(){
             0, 0, 0,            // rotate in rads: M_PI/4
             1.f, 1.f, 1.f       // scale
     };
-
+    // todo transform from 33 matrix to a 44 matrix in the matrix mult
     transform(v0, transformMatrix);
     transform(v1, transformMatrix);
     transform(v2, transformMatrix);
@@ -89,11 +88,7 @@ Scene defineExampleScene(){
 
 float computeColor(Face f, DirLight light) {
 
-    Vector v1;
-    v1.x = light.direction[0];
-    v1.y = light.direction[1];
-    v1.z = light.direction[2];
-    float angle = angleBetweenVectors(&v1, &f.normal);
+    float angle = angleBetweenVectors(&light.direction, &f.normal);
 
     return interpolation1d(angle, M_PI/2, M_PI, 0, 1);
 }
