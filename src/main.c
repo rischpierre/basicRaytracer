@@ -1,7 +1,6 @@
 #include <bits/types/clock_t.h>
 #include <time.h>
 #include <math.h>
-#include <memory.h>
 #include <malloc.h>
 #include "geometries.h"
 #include "raytracer.h"
@@ -179,24 +178,17 @@ int main(int argc, char *argv[]) {
     ray.origin.x = 0;
 
 
-    // todo is there a way to loop over them dynamically?
     float** red = (float**)malloc(resolutionX * sizeof(float*));
-    for (int i = 0; i < resolutionX; i++)
-        red[i] = (float*)malloc(resolutionY * sizeof(float));
-
-
     float** green = (float**)malloc(resolutionX * sizeof(float*));
-    for (int i = 0; i < resolutionX; i++)
-        green[i] = (float*)malloc(resolutionY * sizeof(float));
-
-
     float** blue = (float**)malloc(resolutionX * sizeof(float*));
-    for (int i = 0; i < resolutionX; i++)
+    for (int i = 0; i < resolutionX; i++){
+        red[i] = (float*)malloc(resolutionY * sizeof(float));
         blue[i] = (float*)malloc(resolutionY * sizeof(float));
+        green[i] = (float*)malloc(resolutionY * sizeof(float));
+    }
 
 
     // todo put the rayTrace algo in a function
-
     clock_t start = clock();
 
     for(int x = 0; x < resolutionX; x++) {
@@ -223,8 +215,6 @@ int main(int argc, char *argv[]) {
     }
 
 
-
-
     clock_t end = clock();
     printf("render time: %f s\n", (double)(end-start)/(double)CLOCKS_PER_SEC);
     char * imagePath = "render.bmp";
@@ -232,22 +222,14 @@ int main(int argc, char *argv[]) {
 
     printf("Wrote image : %s", imagePath);
 
-    // todo try to make on statement out of it
     for (int i=0; i< resolutionX; i++){
         free(red[i]);
+        free(green[i]);
+        free(blue[i]);
     }
 
     free(red);
-
-    for (int i=0; i< resolutionX; i++){
-        free(green[i]);
-    }
-
     free(green);
-
-    for (int i=0; i< resolutionX; i++){
-        free(blue[i]);
-    }
     free(blue);
 
     return 0;
