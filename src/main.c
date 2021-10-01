@@ -7,8 +7,7 @@
 #include "geometries.h"
 #include "raytracer.h"
 #include "bmpWriter.h"
-#include "utils.h"
-#include "vector.h"
+#include "mathLib.h"
 #include "transform.h"
 
 
@@ -38,37 +37,20 @@ Scene defineExampleScene(){
     transform(v1, transformMatrix);
     transform(v2, transformMatrix);
 
-
     // todo need to recompute face normal after transformation
 //    f1.normal = computeNormal(face);
 
-    // todo use arrays to store the x, y, z coords.
-    f1.v0.x = v0[0];
-    f1.v0.y = v0[1];
-    f1.v0.z = v0[2];
+    for (uint8_t i =0; i < 3; i++){
 
-    f1.v1.x = v1[0];
-    f1.v1.y = v1[1];
-    f1.v1.z = v1[2];
-
-    f1.v2.x = v2[0];
-    f1.v2.y = v2[1];
-    f1.v2.z = v2[2];
+        f1.v0[i]= v0[i];
+        f1.v1[i]= v1[i];
+        f1.v2[i]= v2[i];
+    }
 
 
-    Camera camera;
-
-    camera.focalPoint.x = 0;
-    camera.focalPoint.y = 0;
-    camera.focalPoint.z = 0;
-
-    camera.direction.x = 10;
-    camera.direction.y = 1;
-    camera.direction.z = 0;
-
-    camera.filmSizeX = 6;
-    camera.filmSizeY = 6;
-
+    Camera camera ={{0, 0, 0},
+                    {10, 1, 0},
+                    {6, 6}};
 
 
     // light on the right side
@@ -88,7 +70,7 @@ Scene defineExampleScene(){
 
 float computeColor(Face f, DirLight light) {
 
-    float angle = angleBetweenVectors(&light.direction, &f.normal);
+    float angle = angleBetweenVectors(light.direction, f.normal);
 
     return interpolation1d(angle, M_PI/2, M_PI, 0, 1);
 }
@@ -103,12 +85,8 @@ int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
 
     // this is first a test with planar projection
-    Ray ray;
-    ray.direction.x = 1;
-    ray.direction.y = 0;
-    ray.direction.z = 0;
-
-    ray.origin.x = 0;
+    Ray ray = {{1, 0, 0},
+               {0, 0, 0}};
 
 
     float** red = (float**)malloc(resolutionX * sizeof(float*));
@@ -127,10 +105,10 @@ int main(int argc, char *argv[]) {
     for(uint16_t x = 0; x < resolutionX; x++) {
         for(uint16_t y = 0; y < resolutionY; y++) {
 
-            ray.origin.z = interpolation1d((float)x, 0, (float)resolutionX, scene.camera.filmSizeX/2, - scene.camera.filmSizeX/2);
-            ray.origin.y = interpolation1d((float)y, 0, (float)resolutionY, - scene.camera.filmSizeY/2, scene.camera.filmSizeY/2);
+            ray.origin[2] = interpolation1d((float)x, 0, (float)resolutionX, scene.camera.filmSize[0]/2, - scene.camera.filmSize[0]/2);
+            ray.origin[1] = interpolation1d((float)y, 0, (float)resolutionY, - scene.camera.filmSize[1]/2, scene.camera.filmSize[1]/2);
 
-            bool intersected = isRayIntersectsTriangle( ray, scene.face);
+            bool intersected = isRayIntersectsTriangle(&ray, &scene.face);
             if (intersected) {
                 float color = computeColor(scene.face, scene.light);
                 red[x][y] = color;

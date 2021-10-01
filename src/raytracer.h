@@ -8,6 +8,6 @@
 #include "stdbool.h"
 #include "geometries.h"
 
-bool isRayIntersectsTriangle(Ray ray, Face triangle );
+bool isRayIntersectsTriangle(const Ray *ray, const Face *triangle);
 
 #endif //RAYTRACEREXPERIMENT_RAYTRACER_H

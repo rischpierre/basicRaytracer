@@ -23,8 +23,7 @@ typedef struct face{
 typedef struct camera{
     float focalPoint[3];
     float direction[3];
-    float filmSizeX;
-    float filmSizeY;
+    float filmSize[2];
 
 } Camera;
 
