@@ -31,7 +31,7 @@ add_executable(raytracerExperimentTests ${ALL_SOURCES})
 target_link_libraries(raytracerExperiment m)
 
 # testing lib
-# todo make this testing part optionnal
+# todo use git submodules to install criterion  dynamically
 find_library(CRITERION_LIBS NAMES libcriterion*)
 target_link_libraries(raytracerExperimentTests m)
 target_link_libraries(raytracerExperimentTests ${CRITERION_LIBS})

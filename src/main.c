@@ -2,6 +2,8 @@
 #include <time.h>
 #include <math.h>
 #include <malloc.h>
+#include <stdint.h>
+
 #include "geometries.h"
 #include "raytracer.h"
 #include "bmpWriter.h"
@@ -164,8 +166,8 @@ float computeColor(Face f, DirLight light) {
 
 int main(int argc, char *argv[]) {
 
-    const int resolutionY = 1000;
-    const int resolutionX = 1000;
+    const uint16_t resolutionY = 1000;
+    const uint16_t resolutionX = 1000;
 
     Scene scene = defineExampleScene();
 
@@ -181,7 +183,7 @@ int main(int argc, char *argv[]) {
     float** red = (float**)malloc(resolutionX * sizeof(float*));
     float** green = (float**)malloc(resolutionX * sizeof(float*));
     float** blue = (float**)malloc(resolutionX * sizeof(float*));
-    for (int i = 0; i < resolutionX; i++){
+    for (uint16_t i = 0; i < resolutionX; i++){
         red[i] = (float*)malloc(resolutionY * sizeof(float));
         blue[i] = (float*)malloc(resolutionY * sizeof(float));
         green[i] = (float*)malloc(resolutionY * sizeof(float));
@@ -191,8 +193,8 @@ int main(int argc, char *argv[]) {
     // todo put the rayTrace algo in a function
     clock_t start = clock();
 
-    for(int x = 0; x < resolutionX; x++) {
-        for(int y = 0; y < resolutionY; y++) {
+    for(uint16_t x = 0; x < resolutionX; x++) {
+        for(uint16_t y = 0; y < resolutionY; y++) {
 
             ray.origin.z = interpolation1d((float)x, 0, (float)resolutionX, scene.camera.filmSizeX/2, - scene.camera.filmSizeX/2);
             ray.origin.y = interpolation1d((float)y, 0, (float)resolutionY, - scene.camera.filmSizeY/2, scene.camera.filmSizeY/2);
@@ -222,7 +224,7 @@ int main(int argc, char *argv[]) {
 
     printf("Wrote image : %s", imagePath);
 
-    for (int i=0; i< resolutionX; i++){
+    for (uint16_t i=0; i< resolutionX; i++){
         free(red[i]);
         free(green[i]);
         free(blue[i]);
