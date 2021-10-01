@@ -9,6 +9,9 @@
 #include "bmpWriter.h"
 #include "utils.h"
 #include "vector.h"
+#include "transform.h"
+
+
 
 Scene defineExampleScene(){
 
@@ -20,89 +23,22 @@ Scene defineExampleScene(){
     f1.normal.y = 0;
     f1.normal.z = 0;
 
-    // todo create 66 a transform matrix input
-    // define transform
-    float tx = 0;
-    float ty = 0;
-    float tz = 0;
-
-    // in radians
-    float rx = 0;
-    float ry = 0;
-    float rz = 0;
-//    float rz = M_PI/4;
-
-    float sx = 1.f;
-    float sy = 1.f;
-    float sz = 1.f;
-
-    // todo put the transform matricies in functions
-    float scaleMatrix[16] = {
-            sx, 0, 0, 0,
-            0, sy,  0, 0,
-            0, 0, sz, 0,
-            0 , 0 , 0 ,1
-    };
-
-    float rxMatrix[16] = {
-            1, 0, 0, 0,
-            0, cosf(rx),  -sinf(rx) , 0,
-            0, sinf(rx), cosf(rx), 0,
-            0 , 0 , 0 ,1
-    };
-
-    float ryMatrix[16] = {
-            cosf(ry), 0, sinf(ry), 0,
-            0, 1,  0, 0,
-            -sinf(ry), 0, cosf(ry), 0,
-            0 , 0 , 0 , 1
-    };
-
-    float rzMatrix[16] = {
-            cosf(rz), -sinf(rz), 0, 0,
-            sinf(rz), cosf(rz), 0, 0,
-            0, 0, 1, 0,
-            0 , 0 , 0 , 1
-    };
-
-    // translate everything to the -z
-
-
-    float matrix44fTranslate[16]= {
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            tx, ty, tz, 1
-    };
 
     float v0[4] = {2, 2, 0, 1};
     float v1[4] = {2, -1, -2, 1};
     float v2[4] = {2, -1, 2, 1};
 
-    // matrix order SRT
-    multVectMatrix44(v0, scaleMatrix);
-    multVectMatrix44(v1, scaleMatrix);
-    multVectMatrix44(v2, scaleMatrix);
 
-    // rotate along x
-    multVectMatrix44(v0, rxMatrix);
-    multVectMatrix44(v1, rxMatrix);
-    multVectMatrix44(v2, rxMatrix);
+    float transformMatrix[9] = {
+            0, 0, 0,            // translate
+            0, 0, 0,            // rotate in rads: M_PI/4
+            1.f, 1.f, 1.f       // scale
+    };
 
-    // rotate along y
-    multVectMatrix44(v0, ryMatrix);
-    multVectMatrix44(v1, ryMatrix);
-    multVectMatrix44(v2, ryMatrix);
+    transform(v0, transformMatrix);
+    transform(v1, transformMatrix);
+    transform(v2, transformMatrix);
 
-    // rotate along z
-    multVectMatrix44(v0, rzMatrix);
-    multVectMatrix44(v1, rzMatrix);
-    multVectMatrix44(v2, rzMatrix);
-
-    // translate
-    multVectMatrix44(v0, matrix44fTranslate);
-    multVectMatrix44(v1, matrix44fTranslate);
-    multVectMatrix44(v2, matrix44fTranslate);
 
     // todo need to recompute face normal after transformation
 //    f1.normal = computeNormal(face);
