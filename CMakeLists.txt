@@ -16,22 +16,10 @@ file(GLOB SOURCES
         "src/*.c"
         )
 
-file(GLOB ALL_SOURCES
-        "src/tests/*.c"
-        "src/*.c"
-        "src/*.h"
-        )
-list(FILTER ALL_SOURCES EXCLUDE REGEX "src/main.c")
+add_subdirectory(Google_tests)
 
 add_executable(raytracerExperiment ${SOURCES})
-add_executable(raytracerExperimentTests ${ALL_SOURCES})
 
 
 # add math library
 target_link_libraries(raytracerExperiment m)
-
-# testing lib
-# todo use git submodules to install criterion  dynamically
-find_library(CRITERION_LIBS NAMES libcriterion*)
-target_link_libraries(raytracerExperimentTests m)
-target_link_libraries(raytracerExperimentTests ${CRITERION_LIBS})

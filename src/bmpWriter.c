@@ -5,7 +5,7 @@
 #include "bmpWriter.h"
 
 
-void writeFile(int width, int height, const float **red, const float **green, const float **blue, const char *filePath) {
+void writeBmpFile(int width, int height, float **red, float **green, float **blue, const char *filePath) {
 
     FILE *file;
     unsigned char *img = NULL;

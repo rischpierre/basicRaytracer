@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
     clock_t end = clock();
     printf("render time: %f s\n", (double)(end-start)/(double)CLOCKS_PER_SEC);
     char * imagePath = "render.bmp";
-    writeFile(resolutionX, resolutionY, red, green, blue, imagePath);
+    writeBmpFile(resolutionX, resolutionY, red, green, blue, imagePath);
 
     printf("Wrote image : %s", imagePath);
 

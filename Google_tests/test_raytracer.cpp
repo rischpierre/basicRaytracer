@@ -1,10 +1,9 @@
 
-#include "../raytracer.h"
+#include "../src/raytracer.h"
 
-#include "criterion/criterion.h"
+#include "gtest/gtest.h"
 
-
-Test(raytracer, test_ray_inside_triangle){
+TEST(raytracer, test_ray_inside_triangle){
     Ray ray = {{0, 0, 0},
                {1, 0, 0}};
 
@@ -14,11 +13,11 @@ Test(raytracer, test_ray_inside_triangle){
                {2, -1, 1},
                {-1, 0, 0}};
 
-    cr_assert(isRayIntersectsTriangle(&ray, &f1));
+    ASSERT_TRUE(isRayIntersectsTriangle(&ray, &f1));
 
 }
 
-Test(raytracer, test_ray_outside_triangle){
+TEST(raytracer, test_ray_outside_triangle){
     Ray ray = {{0, 0, 0},
                {1, 0, 0}};
 
@@ -28,6 +27,6 @@ Test(raytracer, test_ray_outside_triangle){
                {2, -1, 2},
                {-1, 0, 0}};
 
-    cr_assert(! isRayIntersectsTriangle(&ray, &f1));
+    ASSERT_TRUE(! isRayIntersectsTriangle(&ray, &f1));
 
 }

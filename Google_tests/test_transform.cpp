@@ -1,11 +1,11 @@
-#include "../transform.h"
+#include "../src/transform.h"
 
-#include <criterion/criterion.h>
 #include <math.h>
-#include <stdio.h>
+
+#include "gtest/gtest.h"
 
 
-Test(transformTests, translate_works) {
+TEST(transformTests, translate_works) {
     float v[4] = {0, 0, 0, 1};
 
     float transformMatrix[9] = {
@@ -17,11 +17,16 @@ Test(transformTests, translate_works) {
     transform(v, transformMatrix);
 
     float expected[4] = {2, 4, -2, 1};
-    cr_assert_arr_eq(v, expected, 4);
+
+    for(uint8_t i = 0; i < 4; i++){
+
+        ASSERT_FLOAT_EQ(expected[i], v[i]);
+    }
+
 }
 
 
-Test(transformTests, rotate_works) {
+TEST(transformTests, rotate_works) {
     float v[4] = {1, 0, 0, 1};
 
     float transformMatrix[9] = {
@@ -33,11 +38,15 @@ Test(transformTests, rotate_works) {
     transform(v, transformMatrix);
 
     float expected[4] = {cosf(M_PI/4), 0, 0.5f, 1.f};
-    cr_assert_arr_eq(v, expected, 4);
+
+    for(uint8_t i = 0; i < 4; i++){
+
+        ASSERT_FLOAT_EQ(expected[i], v[i]);
+    }
 
 }
 
-Test(transformTests, scale_works) {
+TEST(transformTests, scale_works) {
     float v[4] = {1, 1, 1, 1};
 
     float transformMatrix[9] = {
@@ -49,6 +58,9 @@ Test(transformTests, scale_works) {
     transform(v, transformMatrix);
 
     float expected[4] = {0.5f, 0.5f, 0.5f, 1.f};
-    cr_assert_arr_eq(v, expected, 4);
+    for(uint8_t i = 0; i < 4; i++){
+
+        ASSERT_FLOAT_EQ(expected[i], v[i]);
+    }
 
 }
