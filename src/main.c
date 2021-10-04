@@ -79,8 +79,8 @@ float computeColor(Face f, DirLight light) {
 
 int main(int argc, char *argv[]) {
 
-    const uint16_t resolutionY = 1000;
-    const uint16_t resolutionX = 1000;
+    const uint16_t resolutionY = 10;
+    const uint16_t resolutionX = 10;
 
     Scene scene = defineExampleScene();
 

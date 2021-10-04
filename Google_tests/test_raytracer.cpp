@@ -27,6 +27,6 @@ TEST(raytracer, test_ray_outside_triangle){
                {2, -1, 2},
                {-1, 0, 0}};
 
-    ASSERT_TRUE(! isRayIntersectsTriangle(&ray, &f1));
+    ASSERT_FALSE(isRayIntersectsTriangle(&ray, &f1));
 
 }
