@@ -15,7 +15,7 @@ Scene defineExampleScene() {
 
     // lets design a flat scene  along x, y
     // defining a triangle that is in the sight of the ray
-    Face f1 = {.v0={2, 2, 1},
+    Face f1 = {.v0={2, 2, 0},
             .v1={2, -1, -2},
             .v2={2, -1, 2},
             .normal={-1, 0, 0}
@@ -32,19 +32,19 @@ Scene defineExampleScene() {
             1.f, 1.f, 1.f       // scale
     };
     // todo transform from 33 matrix to a 44 matrix in the matrix mult
-    transform(v0, transformMatrix);
-    transform(v1, transformMatrix);
-    transform(v2, transformMatrix);
+//    transform(v0, transformMatrix);
+//    transform(v1, transformMatrix);
+//    transform(v2, transformMatrix);
 
     // todo need to recompute face normal after transformation
 //    f1.normal = computeNormal(face);
 
-    for (uint8_t i = 0; i < 3; i++) {
-
-        f1.v0[i] = v0[i];
-        f1.v1[i] = v1[i];
-        f1.v2[i] = v2[i];
-    }
+//    for (uint8_t i = 0; i < 3; i++) {
+//
+//        f1.v0[i] = v0[i];
+//        f1.v1[i] = v1[i];
+//        f1.v2[i] = v2[i];
+//    }
 
     Camera camera = {
             .focalPoint={0, 0, 0},
@@ -53,11 +53,7 @@ Scene defineExampleScene() {
     };
 
     // light on the right side
-    DirLight light;
-
-    light.direction[0] = 1;
-    light.direction[1] = 0;
-    light.direction[2] = 0;
+    DirLight light = {.direction={1, 0, 0}};
 
     Scene scene;
     scene.camera = camera;
@@ -83,7 +79,7 @@ int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
 
     // this is first a test with planar projection
-    Ray ray = {.origin={1, 0, 0},
+    Ray ray = {.origin={0, 0, 0},
             .direction={0, 0, 0}};
 
 
@@ -103,6 +99,7 @@ int main(int argc, char *argv[]) {
     for (uint16_t x = 0; x < resolutionX; x++) {
         for (uint16_t y = 0; y < resolutionY; y++) {
 
+            // z becomes x in screen view
             ray.origin[2] = interpolation1d((float) x, 0, (float) resolutionX, scene.camera.filmSize[0] / 2,
                                             -scene.camera.filmSize[0] / 2);
             ray.origin[1] = interpolation1d((float) y, 0, (float) resolutionY, -scene.camera.filmSize[1] / 2,
