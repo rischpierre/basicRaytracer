@@ -1,12 +1,12 @@
 
-#include <string.h>
+#include "gtest/gtest.h"
+
 #include <unistd.h>
-#include "stdio.h"
-#include "../bmpWriter.h"
+#include "../src/bmpWriter.h"
 
-#include "criterion/criterion.h"
 
-Test(bmp_writer, file_is_written_on_disk){
+
+TEST(bmp_writer, file_is_written_on_disk){
 
     int resolutionX = 10;
     int resolutionY = 10;
@@ -40,9 +40,9 @@ Test(bmp_writer, file_is_written_on_disk){
 
     strcat(fileName, ".bmp");
 
-    writeFile(resolutionX, resolutionY, red, green, blue, fileName);
+    writeBmpFile(resolutionX, resolutionY, red, green, blue, fileName);
 
-    cr_assert(access(fileName, F_OK) == 0);
+    ASSERT_EQ(access(fileName, F_OK), 0);
 
     // remove file since it exists
     remove(fileName);
