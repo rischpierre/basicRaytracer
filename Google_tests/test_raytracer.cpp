@@ -23,7 +23,7 @@ TEST(raytracer, test_ray_outside_triangle){
     // defining a triangle that is not in the sight of the ray
     Face f1 = {.v0={2, 2, 2},
                .v1={2, -1, 1},
-               .v2={2, -1, 2},
+               .v2={2, -1, 3},
                .normal={-1, 0, 0}};
 
     ASSERT_FALSE(isRayIntersectsTriangle(&ray, &f1));
