@@ -32,14 +32,11 @@ TEST(vector_tests, mult_matrix) {
     }
 }
 
-
 TEST(vector_tests, dot_product){
     float v1[3] = {1, 1, 2};
     float v2[3] = {0, 1, 4};
     ASSERT_EQ(dotProduct(v1, v2), 9);
 }
-
-
 
 TEST(vector_tests, angle_between_vectors){
     float v1[3] = {1, 0, 0};

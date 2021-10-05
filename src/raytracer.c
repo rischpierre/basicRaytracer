@@ -23,17 +23,17 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face){
 
     float tmpCross[3];
 
-    crossProductFloat(tmpCross, ray->direction, &t);
+    crossProductFloat(tmpCross, ray->direction, &t, 3);
     float Phit[3];
 
-    addVectors(Phit, ray->origin, tmpCross);
+    addVectors(Phit, ray->origin, tmpCross, 3);
 
     // check if Phit is inside triangle
     float edge0[3];
-    subVectors(edge0, face->v1, face->v0);
+    subVectors(edge0, face->v1, face->v0, 3);
 
     float C0[3];
-    subVectors(C0, Phit, face->v0);
+    subVectors(C0, Phit, face->v0, 3);
 
     float tmpCrossProduct[3];
     crossProduct(tmpCrossProduct, edge0, C0);
@@ -42,20 +42,20 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face){
     if (dotProduct(face->normal, tmpCrossProduct) < 0) return false;
 
     float edge1[3];
-    subVectors(edge1, face->v2, face->v1);
+    subVectors(edge1, face->v2, face->v1, 3);
 
     float C1[3];
-    subVectors(C1, Phit, face->v1);
+    subVectors(C1, Phit, face->v1, 3);
 
     crossProduct(tmpCrossProduct, edge1, C1);
 
     if (dotProduct(face->normal, tmpCrossProduct) < 0) return false;
 
     float edge2[3];
-    subVectors(edge2, face->v0, face->v2);
+    subVectors(edge2, face->v0, face->v2, 3);
 
     float C2[3];
-    subVectors(C2, Phit, face->v2);
+    subVectors(C2, Phit, face->v2, 3);
 
     crossProduct(tmpCrossProduct, edge2, C2);
     if (dotProduct(face->normal, tmpCrossProduct) < 0) return false;

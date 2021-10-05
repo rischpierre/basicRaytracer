@@ -21,16 +21,16 @@ Scene defineExampleScene() {
             .normal={-1, 0, 0}
     };
 
-    float v0[4] = {2, 2, 0, 1};
-    float v1[4] = {2, -1, -2, 1};
-    float v2[4] = {2, -1, 2, 1};
+//    float v0[4] = {2, 2, 0, 1};
+//    float v1[4] = {2, -1, -2, 1};
+//    float v2[4] = {2, -1, 2, 1};
 
 
-    float transformMatrix[9] = {
-            0, 0, 0,            // translate
-            0, 0, 0,            // rotate in rads: M_PI/4
-            1.f, 1.f, 1.f       // scale
-    };
+//    float transformMatrix[9] = {
+//            0, 0, 0,            // translate
+//            0, 0, 0,            // rotate in rads: M_PI/4
+//            1.f, 1.f, 1.f       // scale
+//    };
     // todo transform from 33 matrix to a 44 matrix in the matrix mult
 //    transform(v0, transformMatrix);
 //    transform(v1, transformMatrix);
@@ -73,14 +73,14 @@ float computeColor(Face f, DirLight light) {
 
 int main(int argc, char *argv[]) {
 
-    const uint16_t resolutionY = 10;
-    const uint16_t resolutionX = 10;
+    const uint16_t resolutionY = 1000;
+    const uint16_t resolutionX = 1000;
 
     Scene scene = defineExampleScene();
 
     // this is first a test with planar projection
     Ray ray = {.origin={0, 0, 0},
-            .direction={0, 0, 0}};
+            .direction={1, 0, 0}};
 
 
     float **red = (float **) malloc(resolutionX * sizeof(float *));
@@ -107,7 +107,8 @@ int main(int argc, char *argv[]) {
 
             bool intersected = isRayIntersectsTriangle(&ray, &scene.face);
             if (intersected) {
-                float color = computeColor(scene.face, scene.light);
+//                float color = computeColor(scene.face, scene.light);
+                float color = 1.f;
                 red[x][y] = color;
                 green[x][y] = color;
                 blue[x][y] = color;

@@ -12,13 +12,9 @@ void crossProduct(float* result, const float *v1, const float* v2) {
 }
 
 void multVectMatrix44(float *m1 , const float *m2) {
-
     for(int i=0; i < 4; i++) {
-
         m1[i] = m1[0] * m2[i] + m1[1] * m2[i+4] + m1[2] * m2[i+8] + m1[3] * m2[i+12];
-
     }
-
 }
 
 float dotProduct(const float *v1, const float *v2) {
@@ -38,23 +34,23 @@ float angleBetweenVectors(const float *v1, const float *v2) {
 }
 
 
-void crossProductFloat(float *result, const float *v1, const float *f) {
+void crossProductFloat(float *result, const float *v1, const float *f, uint8_t size) {
     for (uint8_t i = 0; i < 3; i++){
         result[i] = v1[i] * (*f);
 
     }
 }
 
-void addVectors(float* result, const float *v1, const float *v2) {
-    for (uint8_t i = 0; i < 2; i++){
+void addVectors(float* result, const float *v1, const float *v2, uint8_t size) {
+    for (uint8_t i = 0; i < 3; i++){
         result[i] = v1[i] + v2[i];
     }
 
 }
 
-void subVectors(float *result, const float *v1, const float *v2) {
+void subVectors(float *result, const float *v1, const float *v2, uint8_t size) {
 
-    for (uint8_t i = 0; i < 2; i++){
+    for (uint8_t i = 0; i < size; i++){
         result[i] = v1[i] - v2[i];
     }
 
