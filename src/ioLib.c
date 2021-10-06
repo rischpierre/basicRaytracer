@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <memory.h>
-#include "bmpWriter.h"
+#include "ioLib.h"
 
 
 void writeBmpFile(int width, int height, float **red, float **green, float **blue, const char *filePath) {

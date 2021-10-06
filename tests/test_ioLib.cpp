@@ -2,7 +2,7 @@
 #include "gtest/gtest.h"
 
 #include <unistd.h>
-#include "../src/bmpWriter.h"
+#include "../src/ioLib.h"
 
 
 

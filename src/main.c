@@ -6,7 +6,7 @@
 
 #include "geometries.h"
 #include "raytracer.h"
-#include "bmpWriter.h"
+#include "ioLib.h"
 #include "mathLib.h"
 #include "transform.h"
 
