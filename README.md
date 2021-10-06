@@ -10,13 +10,13 @@ https://www.scratchapixel.com/lessons/3d-basic-rendering
 - UnitTests
 - render 1 object in a .obj file
 - outputs bmp image
-- cross platform 
-
 
 ##Features todo 
 - Render a teapot
 - multithreaded
 - codestyle
+- cross platform
+- plug and play build
 
 ##Features not included
 - multisampling
