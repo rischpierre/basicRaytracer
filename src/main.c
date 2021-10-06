@@ -9,7 +9,10 @@
 #include "ioLib.h"
 #include "mathLib.h"
 #include "transform.h"
+#include "ioLib.h"
 
+// todo approximate based on the size of the file
+#define OBJ_MAX_LINES 500
 
 Scene defineExampleScene() {
 
@@ -72,6 +75,8 @@ float computeColor(Face f, DirLight light) {
 
 
 int main(int argc, char *argv[]) {
+    char **lines = (char **)malloc(500);
+    parseObjFile(lines, "../examples/triangle.obj");
 
     const uint16_t resolutionY = 1000;
     const uint16_t resolutionX = 1000;

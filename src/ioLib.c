@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <memory.h>
+#include <stdint.h>
 #include "ioLib.h"
 
 
@@ -66,5 +67,21 @@ void writeBmpFile(int width, int height, float **red, float **green, float **blu
     }
 
     free(img);
+    fclose(file);
+}
+
+
+void parseObjFile(char** lines, const char *filePath){
+    FILE *file;
+    file = fopen(filePath, "r");
+    uint8_t bufferLength = 255;
+    char buffer[bufferLength];
+    uint16_t index = 0;
+    // todo need to loop over lines here
+    while(fgets(buffer, bufferLength, file)){
+        lines[index] = buffer;
+        index++;
+    }
+
     fclose(file);
 }
