@@ -9,6 +9,9 @@ https://www.scratchapixel.com/lessons/3d-basic-rendering
 - Command line interface
 - UnitTests
 - render 1 object in a .obj file
+- outputs bmp image
+- cross platform 
+
 
 ##Features todo 
 - Render a teapot

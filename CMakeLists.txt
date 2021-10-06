@@ -16,7 +16,7 @@ file(GLOB SOURCES
         "src/*.c"
         )
 
-add_subdirectory(Google_tests)
+add_subdirectory(tests)
 
 add_executable(raytracerExperiment ${SOURCES})
 
