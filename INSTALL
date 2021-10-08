@@ -1,8 +1,17 @@
 
+INSTALLATION INSTRUCTIONS
 
+# create build directory
+mkdir build
 
-cmake -DCMAKE_BUILD_TYPE=Release
-make
+# run cmake
+cmake -B build
 
+# compile
+make ./build  # todo does it works?
 
-cmake -DCMAKE_BUILD_TYPE=Debug  -DCMAKE_DEPENDS_USE_COMPILER=FALSE
+# run raytracer
+./build/raytracerExperiment
+
+# run tests
+./build/tests/Google_tests_run
