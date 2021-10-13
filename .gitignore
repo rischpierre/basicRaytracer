@@ -1,3 +1,7 @@
+build/
+tests/lib/
+
+#
 # Prerequisites
 *.d
 *.idea

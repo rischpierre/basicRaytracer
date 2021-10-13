@@ -4,8 +4,11 @@ INSTALLATION INSTRUCTIONS
 # create build directory
 mkdir build
 
-# run cmake
-cmake -B build
+# run cmake debug mode
+cmake -B ./build -DCMAKE_BUILD_TYPE=debug
+
+# run cmake release mode
+cmake -B ./build
 
 # compile
 make ./build  # todo does it works?
