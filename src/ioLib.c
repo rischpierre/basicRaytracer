@@ -3,6 +3,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <stdint.h>
+#include <string.h>
 #include "ioLib.h"
 
 
@@ -77,10 +78,17 @@ void parseObjFile(char** lines, const char *filePath){
     uint8_t bufferLength = 255;
     char buffer[bufferLength];
     uint16_t index = 0;
-    // todo need to loop over lines here
+    // todo how to allocate dynamically a list of vertices, faces?
+    // make a linked list? use a fixed lenght array? reallocate an array memory?
+    // loop 1 time first on the faces to calculate the size?
+    int line = 1;
     while(fgets(buffer, bufferLength, file)){
-        lines[index] = buffer;
-        index++;
+        if (strncmp(buff, "vn ", 2) == 0){
+            printf("vertex n: %s", buff);
+        }else if (strncmp(buff, "v ", 2) == 0){
+            printf("vertex: %s", buff);
+        }
+        line++;
     }
 
     fclose(file);
