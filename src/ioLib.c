@@ -4,6 +4,8 @@
 #include <memory.h>
 #include <stdint.h>
 #include <string.h>
+#include <assert.h>
+#include <stdbool.h>
 #include "ioLib.h"
 
 
@@ -77,16 +79,22 @@ void parseObjFile(char** lines, const char *filePath){
     file = fopen(filePath, "r");
     uint8_t bufferLength = 255;
     char buffer[bufferLength];
-    uint16_t index = 0;
-    // todo how to allocate dynamically a list of vertices, faces?
-    // make a linked list? use a fixed lenght array? reallocate an array memory?
-    // loop 1 time first on the faces to calculate the size?
+    // todo make a linked list for the vertices and faces?
     int line = 1;
+    int objectNumber = 0;
     while(fgets(buffer, bufferLength, file)){
-        if (strncmp(buff, "vn ", 2) == 0){
-            printf("vertex n: %s", buff);
-        }else if (strncmp(buff, "v ", 2) == 0){
-            printf("vertex: %s", buff);
+        if (objectNumber > 1){
+            printf("Only one object is supported yet");
+            assert(false);
+        }
+        if (strncmp(buffer, "o ", 2) == 0){
+            objectNumber++;
+            printf("object n: %s", buffer);
+        }
+        else if (strncmp(buffer, "vn ", 2) == 0){
+            printf("vertex n: %s", buffer);
+        }else if (strncmp(buffer, "v ", 2) == 0){
+            printf("vertex: %s", buffer);
         }
         line++;
     }
