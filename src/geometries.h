@@ -24,7 +24,7 @@ typedef struct face{
 
 typedef struct obj{
     // todo this needs to be a linked list
-   Face f1;
+   Face *faceLinkedList;
 }Object;
 
 
