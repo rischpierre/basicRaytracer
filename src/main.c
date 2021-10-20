@@ -38,7 +38,7 @@ float computeColor(Face *f, DirLight light) {
 
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
-    parseObjFile(&scene, "../examples/triangle.obj");
+    parseObjFile(&scene, "../examples/twoTriangle.obj");
 
     const uint16_t resolutionY = 720;
     const uint16_t resolutionX = 1280;
@@ -73,18 +73,22 @@ int main(int argc, char *argv[]) {
 
             ray.origin[2] = interpolation1d((float) y, 0, (float) resolutionY, -scene.camera.filmSize[1] / 2,
                                             scene.camera.filmSize[1] / 2);
+            Face *currentFace;
+            currentFace = scene.object.faceLinkedList;
+            while(currentFace != NULL) {
+                bool intersected = isRayIntersectsTriangle(&ray, currentFace);
+                if (intersected) {
+                    float color = computeColor(scene.object.faceLinkedList, scene.light);
+                    red[x][y] = color;
+                    green[x][y] = color;
+                    blue[x][y] = color;
 
-            bool intersected = isRayIntersectsTriangle(&ray, scene.object.faceLinkedList);
-            if (intersected) {
-                float color = computeColor(scene.object.faceLinkedList, scene.light);
-                red[x][y] = color;
-                green[x][y] = color;
-                blue[x][y] = color;
-
-            } else {
-                red[x][y] = 0.f;
-                green[x][y] = 0.f;
-                blue[x][y] = 0.f;
+                } else {
+                    red[x][y] = 0.f;
+                    green[x][y] = 0.f;
+                    blue[x][y] = 0.f;
+                }
+                currentFace = (Face *) currentFace->next;
             }
         }
     }
