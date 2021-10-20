@@ -10,15 +10,12 @@
 #include "mathLib.h"
 
 
-// todo approximate based on the size of the file
-#define OBJ_MAX_LINES 500
-
 Scene defineExampleScene() {
 
     Camera camera = {
             .focalPoint={0, 0, 0},
             .direction={10, 1, 0},
-            .filmSize={6, 6}
+            .filmSize={6, 3.375f} // 16:9 ratio
     };
 
     // light on the right side
@@ -43,8 +40,8 @@ int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
     parseObjFile(&scene, "../examples/triangle.obj");
 
-    const uint16_t resolutionY = 1000;
-    const uint16_t resolutionX = 1000;
+    const uint16_t resolutionY = 720;
+    const uint16_t resolutionX = 1280;
 
     // this is first a test with planar projection
     Ray ray = {.origin={0, 0, 0},
@@ -69,11 +66,12 @@ int main(int argc, char *argv[]) {
 
     for (uint16_t x = 0; x < resolutionX; x++) {
         for (uint16_t y = 0; y < resolutionY; y++) {
-
-            // z becomes x in screen view
-            ray.origin[2] = interpolation1d((float) x, 0, (float) resolutionX, scene.camera.filmSize[0] / 2,
+            // world: y -> screen: x
+            // world: z -> screen: y
+            ray.origin[1] = interpolation1d((float) x, 0, (float) resolutionX, scene.camera.filmSize[0] / 2,
                                             -scene.camera.filmSize[0] / 2);
-            ray.origin[1] = interpolation1d((float) y, 0, (float) resolutionY, -scene.camera.filmSize[1] / 2,
+
+            ray.origin[2] = interpolation1d((float) y, 0, (float) resolutionY, -scene.camera.filmSize[1] / 2,
                                             scene.camera.filmSize[1] / 2);
 
             bool intersected = isRayIntersectsTriangle(&ray, scene.object.faceLinkedList);

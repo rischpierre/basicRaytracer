@@ -1,14 +1,18 @@
 # Blender v2.82 (sub 7) OBJ File: 'triangle.blend'
 # www.blender.org
-mtllib triangle.mtl
+mtllib towTriangle.mtl
 o Cube
 v 2.984060 -0.653085 -1.241375
 v 2.984060 -0.653085 0.758625
 v 2.984060 1.346915 0.758625
+v 4.084895 1.346915 1.495406
 vt 0.000000 0.000000
 vt 1.000000 0.000000
 vt 1.000000 1.000000
+vt 1.000000 1.000000
 vn -1.0000 0.0000 0.0000
+vn -0.5562 0.0000 0.8310
 usemtl Material
 s off
 f 1/1/1 2/2/1 3/3/1
+f 3/3/2 2/2/2 4/4/2
