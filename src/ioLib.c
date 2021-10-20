@@ -104,9 +104,9 @@ void parseObjFile(Scene *scene, const char *filePath){
         }
         if (strncmp(buffer, "o ", 2) == 0){
             objectNumber++;
-            printf("object n: %s", buffer);
         }
         else if (strncmp(buffer, "vn ", 2) == 0){
+
             printf("vertex n: %s", buffer);
 
         }else if (strncmp(buffer, vertexDelimiter, 2) == 0){
@@ -122,7 +122,7 @@ void parseObjFile(Scene *scene, const char *filePath){
         }else if (strncmp(buffer, "f ", 2) == 0){
             char * token = strtok(buffer, "f ");
             // todo generate a normal from the vertex normals
-            Face f = {.normal={-1, 0, 0}};
+            Face *f  = malloc(sizeof(Face));
 
             while (token != NULL){
                 // token[0] is the vertex id (1/1/1)
@@ -131,17 +131,17 @@ void parseObjFile(Scene *scene, const char *filePath){
                 // todo make this better
                 for (int i = 0; i < 3; i++){
                     if (matchingVertexId == 0){
-                        f.v0[i] = vertices[matchingVertexId][i];
+                        f->v0[i] = vertices[matchingVertexId][i];
                     }else if(matchingVertexId == 1){
-                        f.v1[i] = vertices[matchingVertexId][i];
+                        f->v1[i] = vertices[matchingVertexId][i];
                     }else{
-                        f.v2[i] = vertices[matchingVertexId][i];
+                        f->v2[i] = vertices[matchingVertexId][i];
                     }
                 }
                 token = strtok(NULL, " ");
             }
             if (firstFace == NULL){
-                firstFace = &f;
+                firstFace = f;
 
             }else{
                 if (firstFace->next == NULL){
@@ -149,14 +149,13 @@ void parseObjFile(Scene *scene, const char *filePath){
                 }
                 previousFace->next = (struct Face *) &f;
             }
-            previousFace = &f;
+            previousFace = f;
             // todo try with multiple faces
             vertexId++;
         }
         line++;
     }
-
-    object1.faceLinkedList = firstFace;
+    scene->object.faceLinkedList = firstFace;
 
     fclose(file);
 }

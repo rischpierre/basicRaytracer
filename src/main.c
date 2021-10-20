@@ -50,6 +50,10 @@ int main(int argc, char *argv[]) {
     Ray ray = {.origin={0, 0, 0},
             .direction={1, 0, 0}};
 
+    scene.object.faceLinkedList->normal[0] = -1.f;
+    scene.object.faceLinkedList->normal[1] = 0;
+    scene.object.faceLinkedList->normal[2] = 0;
+
     float **red = (float **) malloc(resolutionX * sizeof(float *));
     float **green = (float **) malloc(resolutionX * sizeof(float *));
     float **blue = (float **) malloc(resolutionX * sizeof(float *));
