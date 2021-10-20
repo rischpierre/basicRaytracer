@@ -1,8 +1,20 @@
 
+INSTALLATION INSTRUCTIONS
 
+# create build directory
+mkdir build
 
-cmake -DCMAKE_BUILD_TYPE=Release
-make
+# run cmake debug mode
+cmake -B ./build -DCMAKE_BUILD_TYPE=debug
 
+# run cmake release mode
+cmake -B ./build
 
-cmake -DCMAKE_BUILD_TYPE=Debug  -DCMAKE_DEPENDS_USE_COMPILER=FALSE
+# compile
+make ./build  # todo does it works?
+
+# run raytracer
+./build/raytracerExperiment
+
+# run tests
+./build/tests/Google_tests_run

@@ -6,15 +6,11 @@ set(CMAKE_C_STANDARD 11)
 
 include_directories(raytracerExperiment)
 
-message(STATUS "Flags: ${FLAGS}")
 string(REPLACE ";" " -I" FLAGS "${FLAGS}")
 set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${GTK3_FLAGS} ${FLAGS})
 
 
-file(GLOB SOURCES
-        "src/*.h"
-        "src/*.c"
-        )
+file(GLOB SOURCES "src/*.h" "src/*.c")
 
 add_subdirectory(tests)
 

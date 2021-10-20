@@ -2,7 +2,13 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <memory.h>
+#include <stdint.h>
+#include <string.h>
+#include <assert.h>
+#include <stdbool.h>
+#include <stdlib.h>
 #include "ioLib.h"
+#include "geometries.h"
 
 
 void writeBmpFile(int width, int height, float **red, float **green, float **blue, const char *filePath) {
@@ -66,5 +72,90 @@ void writeBmpFile(int width, int height, float **red, float **green, float **blu
     }
 
     free(img);
+    fclose(file);
+}
+
+
+void parseObjFile(Scene *scene, const char *filePath){
+    FILE *file;
+    file = fopen(filePath, "r");
+    uint8_t bufferLength = 255;
+    char buffer[bufferLength];
+
+
+    // faces are in a linked list
+    uint8_t vertexSize = 128;
+    Face *firstFace = NULL;
+    Face *previousFace = NULL;
+    float vertices[vertexSize][3];
+    char* vertexDelimiter = "v ";
+
+    Object object1;
+    object1.faceLinkedList = NULL;
+    scene->object = object1;
+
+    int line = 1;
+    int objectNumber = 0;
+    int vertexId = 0;
+    while(fgets(buffer, bufferLength, file)){
+        if (objectNumber > 1){
+            printf("Only one object is supported yet");
+            assert(false);
+        }
+        if (strncmp(buffer, "o ", 2) == 0){
+            objectNumber++;
+        }
+        else if (strncmp(buffer, "vn ", 2) == 0){
+
+            printf("vertex n: %s", buffer);
+
+        }else if (strncmp(buffer, vertexDelimiter, 2) == 0){
+            char * token = strtok(buffer, "v ");
+            int k = 0;
+            while (token != NULL){
+                vertices[vertexId][k] = (float)strtod(token, NULL);
+                token = strtok(NULL, " ");
+                k++;
+            }
+            vertexId++;
+
+        }else if (strncmp(buffer, "f ", 2) == 0){
+            char * token = strtok(buffer, "f ");
+            // todo generate a normal from the vertex normals
+            Face *f  = malloc(sizeof(Face));
+
+            while (token != NULL){
+                // token[0] is the vertex id (1/1/1)
+                int matchingVertexId = (int)strtol(&token[0], (char **)NULL, 10) - 1;
+
+                // todo make this better
+                for (int i = 0; i < 3; i++){
+                    if (matchingVertexId == 0){
+                        f->v0[i] = vertices[matchingVertexId][i];
+                    }else if(matchingVertexId == 1){
+                        f->v1[i] = vertices[matchingVertexId][i];
+                    }else{
+                        f->v2[i] = vertices[matchingVertexId][i];
+                    }
+                }
+                token = strtok(NULL, " ");
+            }
+            if (firstFace == NULL){
+                firstFace = f;
+
+            }else{
+                if (firstFace->next == NULL){
+                    firstFace->next = (struct Face *) &f;
+                }
+                previousFace->next = (struct Face *) &f;
+            }
+            previousFace = f;
+            // todo try with multiple faces
+            vertexId++;
+        }
+        line++;
+    }
+    scene->object.faceLinkedList = firstFace;
+
     fclose(file);
 }
