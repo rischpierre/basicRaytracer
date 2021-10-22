@@ -1,5 +1,6 @@
 
 
+#include <math.h>
 #include "raytracer.h"
 #include "mathLib.h"
 #include "stdio.h"
@@ -61,4 +62,14 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face){
     if (dotProduct(face->normal, tmpCrossProduct) < 0) return false;
 
     return true;
+}
+
+
+float computeColor(const float *faceNormal, const DirLight *light) {
+    float angle = angleBetweenVectors(light->direction, faceNormal);
+    float result = interpolation1d(angle, M_PI / 2, M_PI, 0, 1);
+    if (result < 0){
+        return 0.f;
+    }
+    return result;
 }

@@ -79,79 +79,94 @@ void writeBmpFile(int width, int height, float **red, float **green, float **blu
 void parseObjFile(Scene *scene, const char *filePath){
     FILE *file;
     file = fopen(filePath, "r");
-    uint8_t bufferLength = 255;
+    int bufferLength = 255;
+
+    char* vertexDelimiter = "v ";
+    char* vertexNormalDelimiter = "vn ";
+    char* objectDelimiter = "o ";
+
     char buffer[bufferLength];
 
-
-    // faces are in a linked list
-    uint8_t vertexSize = 128;
-    Face *head = NULL;
-    Face *previous = NULL;
-    float vertices[vertexSize][3];
-    char* vertexDelimiter = "v ";
-
-    Object object1;
-    object1.faces = NULL;
-    scene->object = object1;
-
-    int line = 1;
-    int objectNumber = 0;
-    int vertexId = 0;
-    while(fgets(buffer, bufferLength, file)){
-        if (objectNumber > 1){
+    // get the size of the objects, faces and vertices
+    int objectNb = 0;
+    int faceNb = 0;
+    int vertexNb = 0;
+    while(fgets(buffer, bufferLength, file)) {
+        if (objectNb > 1) {
             printf("Only one object is supported yet");
             assert(false);
         }
-        if (strncmp(buffer, "o ", 2) == 0){
-            objectNumber++;
-        }
-        else if (strncmp(buffer, "vn ", 2) == 0){
-
-//            printf("vertex n: %s", buffer);
-
+        if (strncmp(buffer, objectDelimiter, 2) == 0){
+            objectNb++;
+        }else if (strncmp(buffer, "f ", 2) == 0){
+           faceNb++;
         }else if (strncmp(buffer, vertexDelimiter, 2) == 0){
+            vertexNb++;
+        }
+    }
+
+    float vertices[vertexNb][3];
+    Face faces[faceNb];
+
+    int line = 1;
+    int vertexId = 0;
+    int faceId = 0;
+    rewind(file);
+    while(fgets(buffer, bufferLength, file)){
+
+        // vertices
+        if (strncmp(buffer, vertexDelimiter, 2) == 0){
             char * token = strtok(buffer, "v ");
-            int k = 0;
+            int coordId = 0;
             while (token != NULL){
-                vertices[vertexId][k] = (float)strtod(token, NULL);
+                vertices[vertexId][coordId] = (float)strtod(token, NULL);
                 token = strtok(NULL, " ");
-                k++;
+                coordId++;
             }
             vertexId++;
 
+        // faces
         }else if (strncmp(buffer, "f ", 2) == 0){
             char * token = strtok(buffer, "f ");
-            // todo generate a normal from the vertex normals
-            Face *current  = malloc(sizeof(Face));
-            current->normal[2] = -1;
 
+            // todo generate a normal from the vertex normals
+            Face current;
+            if(faceId == 0){
+                current.normal[0] = -1;
+                current.normal[1] = 0;
+                current.normal[2] = 0;
+            }else{
+                current.normal[0] = -0.5562f;
+                current.normal[1] = 0;
+                current.normal[2] = 0.8310f;
+            }
+
+            int coordId = 0;
             while (token != NULL){
                 // token[0] is the vertex id (1/1/1)
                 int matchingVertexId = (int)strtol(&token[0], (char **)NULL, 10) - 1;
 
                 // todo make this better
                 for (int i = 0; i < 3; i++){
-                    if (matchingVertexId == 0){
-                        current->v0[i] = vertices[matchingVertexId][i];
-                    }else if(matchingVertexId == 1){
-                        current->v1[i] = vertices[matchingVertexId][i];
+                    if (coordId == 0){
+                        current.v0[i] = vertices[matchingVertexId][i];
+                    }else if(coordId == 1){
+                        current.v1[i] = vertices[matchingVertexId][i];
                     }else{
-                        current->v2[i] = vertices[matchingVertexId][i];
+                        current.v2[i] = vertices[matchingVertexId][i];
                     }
                 }
                 token = strtok(NULL, " ");
+                coordId++;
             }
-            if (head == NULL){
-                head = current;
-
-            }else{
-                previous->next = (struct Face *) current;
-            }
-            previous = current;
-            vertexId++;
+            faces[faceId] = current;
+            faceId++;
         }
         line++;
     }
-    scene->object.faces = head;
+
+    scene->object.faces = faces;
+    scene->object.faceNb = faceNb;
+
     fclose(file);
 }

@@ -28,3 +28,21 @@ TEST(raytracer, test_ray_outside_triangle){
 
     ASSERT_FALSE(isRayIntersectsTriangle(&ray, &f1));
 }
+
+TEST(computeColor, test_computeColor){
+    DirLight light = {.direction={1, 0, 0}};
+    float faceN[3] = {-1, 0, 0};
+
+    ASSERT_EQ(computeColor(faceN, &light), 1.f);
+
+    faceN[0] = -0.5f;
+    faceN[1] = -0.5f;
+    faceN[2] = 0;
+    ASSERT_FLOAT_EQ(computeColor(faceN, &light), 0.5f);
+
+    faceN[0] = 1.f;
+    faceN[1] = 0;
+    faceN[2] = 0;
+    ASSERT_FLOAT_EQ(computeColor(faceN, &light), 0);
+}
+

@@ -15,7 +15,7 @@ Scene defineExampleScene() {
 
     Camera camera = {
             .focalPoint={0, 0, 0},
-            .direction={10, 1, 0},
+            .direction={1, 0, 0},
             .filmSize={6, 3.375f} // 16:9 ratio
     };
 
@@ -29,20 +29,9 @@ Scene defineExampleScene() {
     return scene;
 }
 
-float computeColor(Face *f, DirLight light) {
-
-    float angle = angleBetweenVectors(light.direction, f->normal);
-
-    return interpolation1d(angle, M_PI / 2, M_PI, 0, 1);
-}
-
-
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
     parseObjFile(&scene, "../examples/twoTriangle.obj");
-    printFaces(scene.object.faces);
-    exit(1);
-//     test linked list here
 
     const uint16_t resolutionY = 720;
     const uint16_t resolutionX = 1280;
@@ -73,22 +62,24 @@ int main(int argc, char *argv[]) {
 
             ray.origin[2] = interpolation1d((float) y, 0, (float) resolutionY, -scene.camera.filmSize[1] / 2,
                                             scene.camera.filmSize[1] / 2);
-            Face *currentFace;
-            currentFace = scene.object.faces;
-            while(currentFace != NULL) {
+
+            for (int i = 0; i < scene.object.faceNb; i++){
+                Face* currentFace = &scene.object.faces[i];
+                // todo bug here with face normal and intersection
                 bool intersected = isRayIntersectsTriangle(&ray, currentFace);
                 if (intersected) {
-                    float color = computeColor(scene.object.faces, scene.light);
+                    // todo unable to compute the valid color when face normal is half pointing
+                    float color = computeColor(currentFace->normal, &scene.light);
                     red[x][y] = color;
                     green[x][y] = color;
                     blue[x][y] = color;
+                    break;
 
                 } else {
                     red[x][y] = 0.f;
                     green[x][y] = 0.f;
                     blue[x][y] = 0.f;
                 }
-                currentFace = (Face *) currentFace->next;
             }
         }
     }

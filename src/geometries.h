@@ -17,13 +17,11 @@ typedef struct face{
 
     float normal[3];
 
-    // linked list of faces
-    struct Face *next;
-
 } Face;
 
 typedef struct obj{
    Face *faces;
+   int faceNb;
 }Object;
 
 
