@@ -91,7 +91,7 @@ void parseObjFile(Scene *scene, const char *filePath){
     char* vertexDelimiter = "v ";
 
     Object object1;
-    object1.faceLinkedList = NULL;
+    object1.faces = NULL;
     scene->object = object1;
 
     int line = 1;
@@ -123,7 +123,6 @@ void parseObjFile(Scene *scene, const char *filePath){
             char * token = strtok(buffer, "f ");
             // todo generate a normal from the vertex normals
             Face *current  = malloc(sizeof(Face));
-
             current->normal[2] = -1;
 
             while (token != NULL){
@@ -153,6 +152,6 @@ void parseObjFile(Scene *scene, const char *filePath){
         }
         line++;
     }
-    scene->object.faceLinkedList = head;
+    scene->object.faces = head;
     fclose(file);
 }

@@ -40,7 +40,7 @@ float computeColor(Face *f, DirLight light) {
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
     parseObjFile(&scene, "../examples/twoTriangle.obj");
-    printFaces(scene.object.faceLinkedList);
+    printFaces(scene.object.faces);
     exit(1);
 //     test linked list here
 
@@ -74,11 +74,11 @@ int main(int argc, char *argv[]) {
             ray.origin[2] = interpolation1d((float) y, 0, (float) resolutionY, -scene.camera.filmSize[1] / 2,
                                             scene.camera.filmSize[1] / 2);
             Face *currentFace;
-            currentFace = scene.object.faceLinkedList;
+            currentFace = scene.object.faces;
             while(currentFace != NULL) {
                 bool intersected = isRayIntersectsTriangle(&ray, currentFace);
                 if (intersected) {
-                    float color = computeColor(scene.object.faceLinkedList, scene.light);
+                    float color = computeColor(scene.object.faces, scene.light);
                     red[x][y] = color;
                     green[x][y] = color;
                     blue[x][y] = color;

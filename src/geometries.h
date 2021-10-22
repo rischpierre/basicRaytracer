@@ -23,8 +23,7 @@ typedef struct face{
 } Face;
 
 typedef struct obj{
-    // todo this needs to be a linked list
-   Face *faceLinkedList;
+   Face *faces;
 }Object;
 
 
