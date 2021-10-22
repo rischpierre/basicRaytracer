@@ -3,6 +3,7 @@
 #include <math.h>
 #include <malloc.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "geometries.h"
 #include "raytracer.h"
@@ -39,6 +40,9 @@ float computeColor(Face *f, DirLight light) {
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
     parseObjFile(&scene, "../examples/twoTriangle.obj");
+    printFaces(scene.object.faceLinkedList);
+    exit(1);
+//     test linked list here
 
     const uint16_t resolutionY = 720;
     const uint16_t resolutionX = 1280;
@@ -46,10 +50,6 @@ int main(int argc, char *argv[]) {
     // this is first a test with planar projection
     Ray ray = {.origin={0, 0, 0},
             .direction={1, 0, 0}};
-
-    scene.object.faceLinkedList->normal[0] = -1.f;
-    scene.object.faceLinkedList->normal[1] = 0;
-    scene.object.faceLinkedList->normal[2] = 0;
 
     float **red = (float **) malloc(resolutionX * sizeof(float *));
     float **green = (float **) malloc(resolutionX * sizeof(float *));

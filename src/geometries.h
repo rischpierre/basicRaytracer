@@ -47,4 +47,6 @@ typedef struct scene {
     Object object;
 } Scene;
 
+void printFaces(Face* head);
+
 #endif //RAYTRACEREXPERIMENT_GEOMETRIES_H

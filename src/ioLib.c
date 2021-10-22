@@ -85,8 +85,8 @@ void parseObjFile(Scene *scene, const char *filePath){
 
     // faces are in a linked list
     uint8_t vertexSize = 128;
-    Face *firstFace = NULL;
-    Face *previousFace = NULL;
+    Face *head = NULL;
+    Face *previous = NULL;
     float vertices[vertexSize][3];
     char* vertexDelimiter = "v ";
 
@@ -107,7 +107,7 @@ void parseObjFile(Scene *scene, const char *filePath){
         }
         else if (strncmp(buffer, "vn ", 2) == 0){
 
-            printf("vertex n: %s", buffer);
+//            printf("vertex n: %s", buffer);
 
         }else if (strncmp(buffer, vertexDelimiter, 2) == 0){
             char * token = strtok(buffer, "v ");
@@ -122,7 +122,9 @@ void parseObjFile(Scene *scene, const char *filePath){
         }else if (strncmp(buffer, "f ", 2) == 0){
             char * token = strtok(buffer, "f ");
             // todo generate a normal from the vertex normals
-            Face *f  = malloc(sizeof(Face));
+            Face *current  = malloc(sizeof(Face));
+
+            current->normal[2] = -1;
 
             while (token != NULL){
                 // token[0] is the vertex id (1/1/1)
@@ -131,31 +133,26 @@ void parseObjFile(Scene *scene, const char *filePath){
                 // todo make this better
                 for (int i = 0; i < 3; i++){
                     if (matchingVertexId == 0){
-                        f->v0[i] = vertices[matchingVertexId][i];
+                        current->v0[i] = vertices[matchingVertexId][i];
                     }else if(matchingVertexId == 1){
-                        f->v1[i] = vertices[matchingVertexId][i];
+                        current->v1[i] = vertices[matchingVertexId][i];
                     }else{
-                        f->v2[i] = vertices[matchingVertexId][i];
+                        current->v2[i] = vertices[matchingVertexId][i];
                     }
                 }
                 token = strtok(NULL, " ");
             }
-            if (firstFace == NULL){
-                firstFace = f;
+            if (head == NULL){
+                head = current;
 
             }else{
-                if (firstFace->next == NULL){
-                    firstFace->next = (struct Face *) &f;
-                }
-                previousFace->next = (struct Face *) &f;
+                previous->next = (struct Face *) current;
             }
-            previousFace = f;
-            // todo try with multiple faces
+            previous = current;
             vertexId++;
         }
         line++;
     }
-    scene->object.faceLinkedList = firstFace;
-
+    scene->object.faceLinkedList = head;
     fclose(file);
 }
