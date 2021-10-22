@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
 
             for (int i = 0; i < scene.object.faceNb; i++){
                 Face* currentFace = &scene.object.faces[i];
-                // todo bug here with face normal and intersection
+                // todo bug here with face normal and intersection, make the example in the unittests
                 bool intersected = isRayIntersectsTriangle(&ray, currentFace);
                 if (intersected) {
                     // todo unable to compute the valid color when face normal is half pointing
