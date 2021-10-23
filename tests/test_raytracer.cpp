@@ -10,7 +10,7 @@ TEST(raytracer, test_ray_inside_triangle){
 
     Scene s;
     parseObjFile(&s, "../../examples/triangle.obj");
-    ASSERT_TRUE(isRayIntersectsTriangle(&ray, s.object.faces));
+    ASSERT_TRUE(isRayIntersectsTriangle(&ray, s.object.faces, true));
 }
 
 TEST(raytracer, test_ray_outside_triangle){
@@ -19,7 +19,16 @@ TEST(raytracer, test_ray_outside_triangle){
 
     Scene s;
     parseObjFile(&s, "../../examples/notIntersectingYTriangle.obj");
-    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s.object.faces));
+    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s.object.faces, true));
+}
+
+TEST(raytracer, test_back_face){
+    Ray ray = {.origin={0, 0, 0},
+            .direction={0, 1, 0}};
+
+    Scene s;
+    parseObjFile(&s, "../../examples/reversedTriangle.obj");
+    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s.object.faces, true));
 }
 
 TEST(raytracer, test_ray_inside_tilted_triangle){
@@ -28,7 +37,7 @@ TEST(raytracer, test_ray_inside_tilted_triangle){
 
     Scene s;
     parseObjFile(&s, "../../examples/tiltedTriangle.obj");
-    ASSERT_TRUE(isRayIntersectsTriangle(&ray, s.object.faces));
+    ASSERT_TRUE(isRayIntersectsTriangle(&ray, s.object.faces, true));
 }
 
 TEST(computeColor, test_computeColor){

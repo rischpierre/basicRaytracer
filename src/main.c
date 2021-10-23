@@ -31,7 +31,7 @@ Scene defineExampleScene() {
 
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
-    parseObjFile(&scene, "../examples/tiltedTriangle.obj");
+    parseObjFile(&scene, "../examples/reversedTriangle.obj");
     const int resolutionY = 720;
     const int resolutionX = 1280;
 
@@ -57,6 +57,12 @@ int main(int argc, char *argv[]) {
         for (int x = 0; x < resolutionX; x++) {
             // world: x -> screen: x
             // world: z -> screen: y
+            if (x == 1250 && y == 718){
+                printf(" ");
+            }
+            if (x == 0 && y == 0){
+                printf(" ");
+            }
             ray.origin[0] = interpolation1d((float) x, 0, (float) resolutionX, -scene.camera.filmSize[0] / 2,
                                             scene.camera.filmSize[0] / 2);
 
@@ -68,7 +74,7 @@ int main(int argc, char *argv[]) {
                 if (x == 1200 && y == 10){
                     printObject(&scene.object);
                 }
-                bool intersected = isRayIntersectsTriangle(&ray, currentFace);
+                bool intersected = isRayIntersectsTriangle(&ray, currentFace, true);
                 if (intersected) {
                     // todo unable to compute the valid color when face normal is half pointing
 //                    float color = computeColor(currentFace->normal, &scene.light);

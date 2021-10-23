@@ -6,7 +6,12 @@
 #include "stdio.h"
 
 
-bool isRayIntersectsTriangle(const Ray *ray, const Face *face){
+bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCulled){
+
+    // skip if the face is back
+    if (dotProduct(ray->direction, face->normal) > 0 && isBackFaceCulled){
+        return false;
+    }
 
     // parametric equation of a plane: Ax + By + Cz + D = 0
     // where D is the distance from origin and parallel to the plane's triangle.normal
