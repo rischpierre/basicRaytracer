@@ -31,7 +31,8 @@ Scene defineExampleScene() {
 
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
-    parseObjFile(&scene, "../examples/twoTriangle.obj");
+    parseObjFile(&scene, "../examples/triangle.obj");
+    exit(1);
 
     const uint16_t resolutionY = 720;
     const uint16_t resolutionX = 1280;

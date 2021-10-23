@@ -83,6 +83,7 @@ void parseObjFile(Scene *scene, const char *filePath){
 
     char* vertexDelimiter = "v ";
     char* vertexNormalDelimiter = "vn ";
+    char* faceDelimiter = "f ";
     char* objectDelimiter = "o ";
 
     char buffer[bufferLength];
@@ -96,27 +97,30 @@ void parseObjFile(Scene *scene, const char *filePath){
             printf("Only one object is supported yet");
             assert(false);
         }
-        if (strncmp(buffer, objectDelimiter, 2) == 0){
+        if (strncmp(buffer, objectDelimiter, strlen(objectDelimiter)) == 0){
             objectNb++;
-        }else if (strncmp(buffer, "f ", 2) == 0){
+        }else if (strncmp(buffer, faceDelimiter, strlen(faceDelimiter)) == 0){
            faceNb++;
-        }else if (strncmp(buffer, vertexDelimiter, 2) == 0){
+        }else if (strncmp(buffer, vertexDelimiter, strlen(vertexDelimiter)) == 0){
             vertexNb++;
         }
     }
 
     float vertices[vertexNb][3];
+    float vertexNormals[faceNb][3];
     Face faces[faceNb];
 
     int line = 1;
     int vertexId = 0;
+    int vertexNId = 0;
     int faceId = 0;
+    Face current;
     rewind(file);
     while(fgets(buffer, bufferLength, file)){
 
         // vertices
-        if (strncmp(buffer, vertexDelimiter, 2) == 0){
-            char * token = strtok(buffer, "v ");
+        if (strncmp(buffer, vertexDelimiter, strlen(vertexDelimiter)) == 0){
+            char * token = strtok(buffer, vertexDelimiter);
             int coordId = 0;
             while (token != NULL){
                 vertices[vertexId][coordId] = (float)strtod(token, NULL);
@@ -125,37 +129,43 @@ void parseObjFile(Scene *scene, const char *filePath){
             }
             vertexId++;
 
-        // faces
-        }else if (strncmp(buffer, "f ", 2) == 0){
-            char * token = strtok(buffer, "f ");
-
-            // todo generate a normal from the vertex normals
-            Face current;
-            if(faceId == 0){
-                current.normal[0] = -1;
-                current.normal[1] = 0;
-                current.normal[2] = 0;
-            }else{
-                current.normal[0] = -0.5562f;
-                current.normal[1] = 0;
-                current.normal[2] = 0.8310f;
+            // vertex normal
+        }else if (strncmp(buffer, vertexNormalDelimiter, strlen(vertexNormalDelimiter)) == 0) {
+            char * token = strtok(buffer, vertexNormalDelimiter);
+            int coordId = 0;
+            while (token != NULL){
+                vertexNormals[vertexNId][coordId] = (float)strtod(token, NULL);
+                token = strtok(NULL, " ");
+                coordId++;
             }
+            vertexNId++;
+
+            // faces
+        }else if (strncmp(buffer, faceDelimiter, strlen(faceDelimiter)) == 0){
+            char * token = strtok(buffer, faceDelimiter);
 
             int coordId = 0;
             while (token != NULL){
-                // token[0] is the vertex id (1/1/1)
+                // token[0] is the vertex id , token[2] is the vertexN (1/1/1)
                 int matchingVertexId = (int)strtol(&token[0], (char **)NULL, 10) - 1;
+                int matchingVertexNId = (int)strtol(&token[2], (char **)NULL, 10) - 1;
 
                 // todo make this better
                 for (int i = 0; i < 3; i++){
+
                     if (coordId == 0){
+                        float n = vertexNormals[matchingVertexNId][i];
+                        if (n == 0) (n = 0); // to avoid having -0
+                        current.normal[i] = n;
                         current.v0[i] = vertices[matchingVertexId][i];
+
                     }else if(coordId == 1){
                         current.v1[i] = vertices[matchingVertexId][i];
                     }else{
                         current.v2[i] = vertices[matchingVertexId][i];
                     }
                 }
+
                 token = strtok(NULL, " ");
                 coordId++;
             }

@@ -8,11 +8,6 @@ TEST(raytracer, test_ray_inside_triangle){
     Ray ray = {.origin={0, 0, 0},
                .direction={0, 1, 0}};
 
-//    // defining a triangle that is in the sight of the ray
-//    Face f1 = {.v0={2, 2, 0},
-//               .v1={2, -1, -1},
-//               .v2={2, -1, 1},
-//               .normal={-1, 0, 0}};
     Scene s;
     parseObjFile(&s, "../examples/triangle.obj");
     ASSERT_TRUE(isRayIntersectsTriangle(&ray, s.object.faces));
