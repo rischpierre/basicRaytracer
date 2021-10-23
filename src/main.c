@@ -31,10 +31,10 @@ Scene defineExampleScene() {
 
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
-    parseObjFile(&scene, "../examples/triangle.obj");
+    parseObjFile(&scene, "../examples/tiltedTriangle.obj");
 
-    const uint16_t resolutionY = 720;
-    const uint16_t resolutionX = 1280;
+    const int resolutionY = 720;
+    const int resolutionX = 1280;
 
     // this is first a test with planar projection
     Ray ray = {.origin={0, 0, 0},
@@ -53,8 +53,9 @@ int main(int argc, char *argv[]) {
     // todo put the rayTrace algo in a function
     clock_t start = clock();
 
-    for (uint16_t x = 0; x < resolutionX; x++) {
-        for (uint16_t y = 0; y < resolutionY; y++) {
+    // scanline process from top left to bottom right
+    for (int y = resolutionY; y >= 0; y--) {
+        for (int x = 0; x < resolutionX; x++) {
             // world: x -> screen: x
             // world: z -> screen: y
             ray.origin[0] = interpolation1d((float) x, 0, (float) resolutionX, -scene.camera.filmSize[0] / 2,
