@@ -23,3 +23,8 @@ https://www.scratchapixel.com/lessons/3d-basic-rendering
 - no textures
 - only lambert shader
 - no smooth shading
+
+## conventions
+todo change conventions for the tests I made to be compatible with blender() 
+- z up and y forward: like in blender
+- origin of image: bottom left corner
