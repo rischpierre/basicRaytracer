@@ -26,10 +26,9 @@ TEST(raytracer, test_ray_inside_tilted_triangle){
     Ray ray = {.origin={0, 0, 0},
             .direction={0, 1, 0}};
 
-    // todo this test is failing
     Scene s;
     parseObjFile(&s, "../../examples/tiltedTriangle.obj");
-    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s.object.faces));
+    ASSERT_TRUE(isRayIntersectsTriangle(&ray, s.object.faces));
 }
 
 TEST(computeColor, test_computeColor){
