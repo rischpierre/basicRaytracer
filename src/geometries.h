@@ -24,6 +24,7 @@ typedef struct obj{
    int faceNb;
 }Object;
 
+void printObject(Object *o);
 
 typedef struct camera{
     float focalPoint[3];
