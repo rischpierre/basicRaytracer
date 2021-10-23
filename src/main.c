@@ -32,8 +32,6 @@ Scene defineExampleScene() {
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
     parseObjFile(&scene, "../examples/tiltedTriangle.obj");
-    printObject(&scene.object);
-    exit(1);
     const int resolutionY = 720;
     const int resolutionX = 1280;
 
@@ -67,7 +65,9 @@ int main(int argc, char *argv[]) {
 
             for (int i = 0; i < scene.object.faceNb; i++){
                 Face* currentFace = &scene.object.faces[i];
-
+                if (x == 1200 && y == 10){
+                    printObject(&scene.object);
+                }
                 bool intersected = isRayIntersectsTriangle(&ray, currentFace);
                 if (intersected) {
                     // todo unable to compute the valid color when face normal is half pointing

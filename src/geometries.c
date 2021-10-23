@@ -15,7 +15,7 @@ void printObject(Object *o){
         printf("  v0: %f %f %f\n", curr.v0[0], curr.v0[1], curr.v0[2]);
         printf("  v1: %f %f %f\n", curr.v1[0], curr.v1[1], curr.v1[2]);
         printf("  v2: %f %f %f\n", curr.v2[0], curr.v2[1], curr.v2[2]);
-        printf("  n:  %f %f %f\n", curr.v2[0], curr.v2[1], curr.v2[2]);
+        printf("  n:  %f %f %f\n", curr.normal[0], curr.normal[1], curr.normal[2]);
 
     }
     printf("----------------------\n");
