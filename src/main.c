@@ -32,14 +32,13 @@ Scene defineExampleScene() {
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
     parseObjFile(&scene, "../examples/triangle.obj");
-    exit(1);
 
     const uint16_t resolutionY = 720;
     const uint16_t resolutionX = 1280;
 
     // this is first a test with planar projection
     Ray ray = {.origin={0, 0, 0},
-            .direction={1, 0, 0}};
+            .direction={0, 1, 0}};
 
     float **red = (float **) malloc(resolutionX * sizeof(float *));
     float **green = (float **) malloc(resolutionX * sizeof(float *));
@@ -56,21 +55,22 @@ int main(int argc, char *argv[]) {
 
     for (uint16_t x = 0; x < resolutionX; x++) {
         for (uint16_t y = 0; y < resolutionY; y++) {
-            // world: y -> screen: x
+            // world: x -> screen: x
             // world: z -> screen: y
-            ray.origin[1] = interpolation1d((float) x, 0, (float) resolutionX, scene.camera.filmSize[0] / 2,
-                                            -scene.camera.filmSize[0] / 2);
+            ray.origin[0] = interpolation1d((float) x, 0, (float) resolutionX, -scene.camera.filmSize[0] / 2,
+                                            scene.camera.filmSize[0] / 2);
 
             ray.origin[2] = interpolation1d((float) y, 0, (float) resolutionY, -scene.camera.filmSize[1] / 2,
                                             scene.camera.filmSize[1] / 2);
 
             for (int i = 0; i < scene.object.faceNb; i++){
                 Face* currentFace = &scene.object.faces[i];
-                // todo bug here with face normal and intersection, make the example in the unittests
+
                 bool intersected = isRayIntersectsTriangle(&ray, currentFace);
                 if (intersected) {
                     // todo unable to compute the valid color when face normal is half pointing
-                    float color = computeColor(currentFace->normal, &scene.light);
+//                    float color = computeColor(currentFace->normal, &scene.light);
+                    float color = 1.f;
                     red[x][y] = color;
                     green[x][y] = color;
                     blue[x][y] = color;
