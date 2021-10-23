@@ -79,6 +79,12 @@ void writeBmpFile(int width, int height, float **red, float **green, float **blu
 void parseObjFile(Scene *scene, const char *filePath){
     FILE *file;
     file = fopen(filePath, "r");
+
+    if (file == NULL){
+        printf("Unable to read the file: %s", filePath);
+        exit(1);
+    }
+
     int bufferLength = 255;
 
     char* vertexDelimiter = "v ";
