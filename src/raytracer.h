@@ -1,7 +1,3 @@
-//
-// Created by pierre on 2021-09-10.
-//
-
 #ifndef RAYTRACEREXPERIMENT_RAYTRACER_H
 #define RAYTRACEREXPERIMENT_RAYTRACER_H
 
@@ -10,5 +6,6 @@
 
 bool isRayIntersectsTriangle(const Ray *ray, const Face *triangle, bool isBackFaceCulled);
 float computeColor(const float *faceNormal, const DirLight* light);
+void trace(Scene *scene);
 
 #endif //RAYTRACEREXPERIMENT_RAYTRACER_H
