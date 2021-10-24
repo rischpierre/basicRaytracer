@@ -64,6 +64,6 @@ TEST(computeColor, test_computeColor){
     faceN[0] = 1.f;
     faceN[1] = 0;
     faceN[2] = 0;
-    ASSERT_FLOAT_EQ(computeColor(faceN, &light), ambientContribution);
+    ASSERT_FLOAT_EQ(computeColor(faceN, &light), AMBIENT_CONTRIBUTION);
 }
 

@@ -78,7 +78,7 @@ float computeColor(const float *faceNormal, const DirLight *light) {
     float angle = angleBetweenVectors(light->direction, faceNormal);
     float result = interpolation1d(angle, M_PI / 2, M_PI, 0, 1);
     if (result < 0){
-        return ambientContribution;
+        return AMBIENT_CONTRIBUTION;
     }
     return result;
 }
@@ -89,30 +89,29 @@ void render(Scene *scene){
     Ray ray = {.origin={0, 0, 0},
             .direction={0, 1, 0}};
 
-    float **red = (float **) malloc(resolutionX * sizeof(float *));
-    float **green = (float **) malloc(resolutionX * sizeof(float *));
-    float **blue = (float **) malloc(resolutionX * sizeof(float *));
-    for (uint16_t i = 0; i < resolutionX; i++) {
-        red[i] = (float *) malloc(resolutionY * sizeof(float));
-        blue[i] = (float *) malloc(resolutionY * sizeof(float));
-        green[i] = (float *) malloc(resolutionY * sizeof(float));
+    float **red = (float **) malloc(RESOLUTION_X * sizeof(float *));
+    float **green = (float **) malloc(RESOLUTION_X * sizeof(float *));
+    float **blue = (float **) malloc(RESOLUTION_X * sizeof(float *));
+    for (uint16_t i = 0; i < RESOLUTION_X; i++) {
+        red[i] = (float *) malloc(RESOLUTION_Y * sizeof(float));
+        blue[i] = (float *) malloc(RESOLUTION_Y * sizeof(float));
+        green[i] = (float *) malloc(RESOLUTION_Y * sizeof(float));
     }
 
-    // todo put the rayTrace algo in a function
     clock_t start = clock();
     printObject(&scene->object);
 
     // scanline process from top left to bottom right
-    for (int y = resolutionY; y >= 0; y--) {
-        for (int x = 0; x < resolutionX; x++) {
+    for (int y = RESOLUTION_Y; y >= 0; y--) {
+        for (int x = 0; x < RESOLUTION_X; x++) {
 
             // world: x -> screen: x
             // world: z -> screen: y
-            ray.origin[0] = interpolation1d((float) x, 0, (float) resolutionX, -camFilmSizeX / 2,
-                                            camFilmSizeX / 2);
+            ray.origin[0] = interpolation1d((float) x, 0, (float) RESOLUTION_X, -CAM_FILM_SIZE_X / 2,
+                                            CAM_FILM_SIZE_X / 2);
 
-            ray.origin[2] = interpolation1d((float) y, 0, (float) resolutionY, -camFilmSizeY  / 2,
-                                            camFilmSizeY  / 2);
+            ray.origin[2] = interpolation1d((float) y, 0, (float) RESOLUTION_Y, -CAM_FILM_SIZE_Y / 2,
+                                            CAM_FILM_SIZE_Y / 2);
 
             for (int i = 0; i < scene->object.faceNb; i++){
                 Face* currentFace = &scene->object.faces[i];
@@ -134,15 +133,14 @@ void render(Scene *scene){
         }
     }
 
-
     clock_t end = clock();
     printf("render time: %f s\n", (double) (end - start) / (double) CLOCKS_PER_SEC);
     char *imagePath = "render.bmp";
-    writeBmpFile(resolutionX, resolutionY, red, green, blue, imagePath);
+    writeBmpFile(RESOLUTION_X, RESOLUTION_Y, red, green, blue, imagePath);
 
     printf("Wrote image : %s", imagePath);
 
-    for (uint16_t i = 0; i < resolutionX; i++) {
+    for (uint16_t i = 0; i < RESOLUTION_X; i++) {
         free(red[i]);
         free(green[i]);
         free(blue[i]);
@@ -151,7 +149,5 @@ void render(Scene *scene){
     free(red);
     free(green);
     free(blue);
-
-
 
 }
