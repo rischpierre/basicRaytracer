@@ -1,8 +1,5 @@
-
-
 #include <stdio.h>
 #include "geometries.h"
-
 
 
 void printObject(Object *o){
