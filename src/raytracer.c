@@ -4,6 +4,7 @@
 #include <bits/types/clock_t.h>
 #include <time.h>
 #include <malloc.h>
+#include <stdlib.h>
 #include "raytracer.h"
 #include "mathLib.h"
 #include "renderSettings.h"
@@ -83,6 +84,44 @@ float computeColor(const float *faceNormal, const DirLight *light) {
     return result;
 }
 
+void splitQuads(Object * o){
+    int quads = 0;
+    for(int fId = 0; fId < o->faceNb; fId++){
+        Face current = o->faces[fId];
+        if (current.isQuad){
+           quads++;
+        }
+    }
+    if (quads == 0) return;
+
+    int faceNb = (o->faceNb - quads) + 2 * quads;
+    Face *newFaces = malloc(sizeof(Face) * faceNb);
+    Face f;
+    int newFaceIncr = 0;
+    for(int fId = 0; fId < o->faceNb; fId++) {
+        Face c = o->faces[fId];
+        if (c.isQuad) {
+            for(int i = 0; i < 3; i++){
+
+                f.v0[i] = c.v0[i];
+                f.v1[i] = c.v2[i];
+                f.v2[i] = c.v3[i];
+                f.normal[i] = c.normal[i];
+            }
+
+            newFaces[newFaceIncr] = c;
+            newFaceIncr++;
+            newFaces[newFaceIncr] = f;
+            newFaceIncr++;
+        } else {
+            newFaces[newFaceIncr];
+            newFaceIncr++;
+        }
+    }
+    o->faces = newFaces;
+    o->faceNb = faceNb;
+}
+
 
 void render(Scene *scene){
     // this is first a test with planar projection
@@ -99,6 +138,9 @@ void render(Scene *scene){
     }
 
     clock_t start = clock();
+    printObject(&scene->object);
+    splitQuads(&scene->object);
+    printf("after\n");
     printObject(&scene->object);
 
     // scanline process from top left to bottom right

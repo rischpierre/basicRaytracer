@@ -2,7 +2,7 @@
 #include "geometries.h"
 
 
-void printObject(Object *o){
+void printObject(const Object *o){
     printf("Object: %s", o->name);
     printf("nb of faces: %d\n", o->faceNb);
     for (int faceId = 0; faceId < o->faceNb; faceId++){

@@ -3,6 +3,7 @@
 #define RAYTRACEREXPERIMENT_GEOMETRIES_H
 
 
+#include <stdbool.h>
 
 typedef struct ray{
     float origin[3];
@@ -14,7 +15,9 @@ typedef struct face{
     float v0[3];
     float v1[3];
     float v2[3];
+    float v3[3];
 
+    bool isQuad;
     float normal[3];
 
 } Face;
@@ -25,7 +28,7 @@ typedef struct obj{
    char* name;
 }Object;
 
-void printObject(Object *o);
+void printObject(const Object *o);
 
 typedef struct camera{
     float focalPoint[3];
