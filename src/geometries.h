@@ -22,6 +22,7 @@ typedef struct face{
 typedef struct obj{
    Face *faces;
    int faceNb;
+   char* name;
 }Object;
 
 void printObject(Object *o);
@@ -43,7 +44,5 @@ typedef struct scene {
     Camera camera;
     Object object;
 } Scene;
-
-void printFaces(Face* head);
 
 #endif //RAYTRACEREXPERIMENT_GEOMETRIES_H

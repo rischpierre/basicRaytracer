@@ -1,7 +1,7 @@
 # Blender v2.82 (sub 7) OBJ File: 'reversedTriangle.blend'
 # www.blender.org
 mtllib reversedTriangle.mtl
-o Cube
+o reversedTriangle
 v -1.055182 2.044973 -2.000000
 v -1.055182 2.044973 1.000000
 v 1.944818 2.044973 1.000000

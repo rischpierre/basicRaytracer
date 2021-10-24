@@ -123,12 +123,18 @@ void parseObjFile(Scene *scene, const char *filePath){
     int vertexId = 0;
     int vertexNId = 0;
     int faceId = 0;
+    char *name = malloc(sizeof(char ) * bufferLength);
     Face current;
     rewind(file);
     while(fgets(buffer, bufferLength, file)){
+        // object name
+        if (strncmp(buffer, objectDelimiter, strlen(objectDelimiter)) == 0) {
+            char *token = strtok(buffer, " ");
+            // todo remove \n on the name of the object
+            strncpy(name, &(token[2]), bufferLength);
 
-        // vertices
-        if (strncmp(buffer, vertexDelimiter, strlen(vertexDelimiter)) == 0){
+            // vertices
+        }else if (strncmp(buffer, vertexDelimiter, strlen(vertexDelimiter)) == 0){
             char * token = strtok(buffer, vertexDelimiter);
             int coordId = 0;
             while (token != NULL){
@@ -184,6 +190,7 @@ void parseObjFile(Scene *scene, const char *filePath){
         line++;
     }
 
+    scene->object.name = name;
     scene->object.faces = faces;
     scene->object.faceNb = faceNb;
 

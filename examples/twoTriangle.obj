@@ -1,7 +1,7 @@
 # Blender v2.82 (sub 7) OBJ File: 'twoTriangle.blend'
 # www.blender.org
 mtllib twoTriangle.mtl
-o Cube
+o twoTriangle
 v 1.000000 2.000000 -1.000000
 v 1.000000 2.000000 1.000000
 v -2.000000 2.000000 1.000000

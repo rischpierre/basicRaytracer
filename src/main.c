@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "geometries.h"
 #include "raytracer.h"
 #include "ioLib.h"
@@ -21,7 +23,13 @@ Scene defineExampleScene() {
 
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
-    parseObjFile(&scene, "../examples/twoTriangle.obj");
+    char *usage = "Usage:\nraytracerExperiment <objFile>\n";
+    if (argc != 2){
+        printf("Wrong arguments\n");
+        printf("%s", usage);
+        exit(1);
+    }
+    parseObjFile(&scene, argv[1]);
 
     render(&scene);
 
