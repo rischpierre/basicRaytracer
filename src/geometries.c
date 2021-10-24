@@ -1,12 +1,9 @@
-
-
 #include <stdio.h>
 #include "geometries.h"
 
 
-
 void printObject(Object *o){
-    printf("Object 1\n");
+    printf("Object: %s", o->name);
     printf("nb of faces: %d\n", o->faceNb);
     for (int faceId = 0; faceId < o->faceNb; faceId++){
         printf("----------------------\n");

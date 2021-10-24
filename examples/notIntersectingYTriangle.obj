@@ -1,7 +1,7 @@
 # Blender v2.82 (sub 7) OBJ File: 'notIntersectingYTriangle.blend'
 # www.blender.org
 mtllib notIntersectingYTriangle.mtl
-o Cube
+o notIntersectingYTriangle
 v -0.972409 2.000000 -2.000000
 v -0.972409 2.000000 1.000000
 v -3.972409 2.000000 1.000000
