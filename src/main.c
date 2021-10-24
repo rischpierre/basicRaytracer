@@ -9,18 +9,17 @@
 #include "raytracer.h"
 #include "ioLib.h"
 #include "mathLib.h"
-
+#include "renderSettings.h"
 
 Scene defineExampleScene() {
 
     Camera camera = {
             .focalPoint={0, 0, 0},
             .direction={1, 0, 0},
-            .filmSize={6, 3.375f} // 16:9 ratio
     };
 
     // light on the right side
-    DirLight light = {.direction={1, 0, 0}};
+    DirLight light = {.direction={0, 1, 0}};
 
     Scene scene;
     scene.camera = camera;
@@ -31,9 +30,8 @@ Scene defineExampleScene() {
 
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
-    parseObjFile(&scene, "../examples/reversedTriangle.obj");
-    const int resolutionY = 720;
-    const int resolutionX = 1280;
+    parseObjFile(&scene, "../examples/twoTriangle.obj");
+
 
     // this is first a test with planar projection
     Ray ray = {.origin={0, 0, 0},
@@ -51,34 +49,27 @@ int main(int argc, char *argv[]) {
 
     // todo put the rayTrace algo in a function
     clock_t start = clock();
+    printObject(&scene.object);
 
     // scanline process from top left to bottom right
     for (int y = resolutionY; y >= 0; y--) {
         for (int x = 0; x < resolutionX; x++) {
+
             // world: x -> screen: x
             // world: z -> screen: y
-            if (x == 1250 && y == 718){
-                printf(" ");
-            }
-            if (x == 0 && y == 0){
-                printf(" ");
-            }
-            ray.origin[0] = interpolation1d((float) x, 0, (float) resolutionX, -scene.camera.filmSize[0] / 2,
-                                            scene.camera.filmSize[0] / 2);
+            ray.origin[0] = interpolation1d((float) x, 0, (float) resolutionX, -camFilmSizeX / 2,
+                                            camFilmSizeX / 2);
 
-            ray.origin[2] = interpolation1d((float) y, 0, (float) resolutionY, -scene.camera.filmSize[1] / 2,
-                                            scene.camera.filmSize[1] / 2);
+            ray.origin[2] = interpolation1d((float) y, 0, (float) resolutionY, -camFilmSizeY  / 2,
+                                            camFilmSizeY  / 2);
 
             for (int i = 0; i < scene.object.faceNb; i++){
                 Face* currentFace = &scene.object.faces[i];
-                if (x == 1200 && y == 10){
-                    printObject(&scene.object);
-                }
+
                 bool intersected = isRayIntersectsTriangle(&ray, currentFace, true);
                 if (intersected) {
                     // todo unable to compute the valid color when face normal is half pointing
-//                    float color = computeColor(currentFace->normal, &scene.light);
-                    float color = 1.f;
+                    float color = computeColor(currentFace->normal, &scene.light);
                     red[x][y] = color;
                     green[x][y] = color;
                     blue[x][y] = color;

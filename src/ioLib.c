@@ -98,6 +98,7 @@ void parseObjFile(Scene *scene, const char *filePath){
     int objectNb = 0;
     int faceNb = 0;
     int vertexNb = 0;
+    int vertexNNb = 0;
     while(fgets(buffer, bufferLength, file)) {
         if (objectNb > 1) {
             printf("Only one object is supported yet");
@@ -107,13 +108,15 @@ void parseObjFile(Scene *scene, const char *filePath){
             objectNb++;
         }else if (strncmp(buffer, faceDelimiter, strlen(faceDelimiter)) == 0){
            faceNb++;
+        }else if (strncmp(buffer, vertexNormalDelimiter, strlen(vertexNormalDelimiter)) == 0){
+            vertexNNb++;
         }else if (strncmp(buffer, vertexDelimiter, strlen(vertexDelimiter)) == 0){
             vertexNb++;
         }
     }
 
     float vertices[vertexNb][3];
-    float vertexNormals[faceNb][3];
+    float vertexNormals[vertexNNb][3];
     Face faces[faceNb];
 
     int line = 1;
@@ -154,7 +157,7 @@ void parseObjFile(Scene *scene, const char *filePath){
             while (token != NULL){
                 // token[0] is the vertex id , token[2] is the vertexN (1/1/1)
                 int matchingVertexId = (int)strtol(&token[0], (char **)NULL, 10) - 1;
-                int matchingVertexNId = (int)strtol(&token[2], (char **)NULL, 10) - 1;
+                int matchingVertexNId = (int)strtol(&token[4], (char **)NULL, 10) - 1;
 
                 // todo make this better
                 for (int i = 0; i < 3; i++){

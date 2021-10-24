@@ -29,7 +29,6 @@ void printObject(Object *o);
 typedef struct camera{
     float focalPoint[3];
     float direction[3];
-    float filmSize[2];
 
 } Camera;
 

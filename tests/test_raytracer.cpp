@@ -3,6 +3,7 @@
 
 #include "gtest/gtest.h"
 #include "../src/ioLib.h"
+#include "../src/renderSettings.h"
 
 TEST(raytracer, test_ray_inside_triangle){
     Ray ray = {.origin={0, 0, 0},
@@ -40,6 +41,15 @@ TEST(raytracer, test_ray_inside_tilted_triangle){
     ASSERT_TRUE(isRayIntersectsTriangle(&ray, s.object.faces, true));
 }
 
+TEST(raytracer, test_ray_outside_tilted_triangle){
+    Ray ray = {.origin={0, 0, -1.2f},
+            .direction={0, 1, 0}};
+
+    Scene s;
+    parseObjFile(&s, "../../examples/tiltedTriangle.obj");
+    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s.object.faces, true));
+}
+
 TEST(computeColor, test_computeColor){
     DirLight light = {.direction={1, 0, 0}};
     float faceN[3] = {-1, 0, 0};
@@ -54,6 +64,6 @@ TEST(computeColor, test_computeColor){
     faceN[0] = 1.f;
     faceN[1] = 0;
     faceN[2] = 0;
-    ASSERT_FLOAT_EQ(computeColor(faceN, &light), 0);
+    ASSERT_FLOAT_EQ(computeColor(faceN, &light), ambientContribution);
 }
 
