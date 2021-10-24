@@ -157,32 +157,34 @@ void parseObjFile(Scene *scene, const char *filePath){
 
             // faces
         }else if (strncmp(buffer, faceDelimiter, strlen(faceDelimiter)) == 0){
-            char * token = strtok(buffer, faceDelimiter);
 
-            int coordId = 0;
+            char * token = strtok(buffer, faceDelimiter);
+            int faceGroupId = 0;
             while (token != NULL){
                 // token[0] is the vertex id , token[2] is the vertexN (1/1/1)
                 int matchingVertexId = (int)strtol(&token[0], (char **)NULL, 10) - 1;
                 int matchingVertexNId = (int)strtol(&token[4], (char **)NULL, 10) - 1;
 
-                // todo make this better
-                for (int i = 0; i < 3; i++){
+                for (int i = 0; i < 4; i++){
 
-                    if (coordId == 0){
+                    if (faceGroupId == 0){
                         float n = vertexNormals[matchingVertexNId][i];
                         if (n == 0) (n = 0); // to avoid having -0
                         current.normal[i] = n;
                         current.v0[i] = vertices[matchingVertexId][i];
 
-                    }else if(coordId == 1){
+                    }else if(faceGroupId == 1){
                         current.v1[i] = vertices[matchingVertexId][i];
-                    }else{
+                    }else if(faceGroupId == 2){
                         current.v2[i] = vertices[matchingVertexId][i];
+                    }else{
+                        current.v3[i] = vertices[matchingVertexId][i];
+                        current.isQuad = true;
                     }
                 }
 
                 token = strtok(NULL, " ");
-                coordId++;
+                faceGroupId++;
             }
             faces[faceId] = current;
             faceId++;

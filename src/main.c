@@ -33,5 +33,7 @@ int main(int argc, char *argv[]) {
 
     render(&scene);
 
+    // todo free the scene object memory
+
     return 0;
 }
