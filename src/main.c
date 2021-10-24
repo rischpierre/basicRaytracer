@@ -3,23 +3,23 @@
 #include <math.h>
 #include <malloc.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "geometries.h"
 #include "raytracer.h"
 #include "ioLib.h"
 #include "mathLib.h"
-
+#include "renderSettings.h"
 
 Scene defineExampleScene() {
 
     Camera camera = {
             .focalPoint={0, 0, 0},
-            .direction={10, 1, 0},
-            .filmSize={6, 3.375f} // 16:9 ratio
+            .direction={1, 0, 0},
     };
 
     // light on the right side
-    DirLight light = {.direction={1, 0, 0}};
+    DirLight light = {.direction={0, 1, 0}};
 
     Scene scene;
     scene.camera = camera;
@@ -28,28 +28,14 @@ Scene defineExampleScene() {
     return scene;
 }
 
-float computeColor(Face *f, DirLight light) {
-
-    float angle = angleBetweenVectors(light.direction, f->normal);
-
-    return interpolation1d(angle, M_PI / 2, M_PI, 0, 1);
-}
-
-
 int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
-    parseObjFile(&scene, "../examples/triangle.obj");
+    parseObjFile(&scene, "../examples/twoTriangle.obj");
 
-    const uint16_t resolutionY = 720;
-    const uint16_t resolutionX = 1280;
 
     // this is first a test with planar projection
     Ray ray = {.origin={0, 0, 0},
-            .direction={1, 0, 0}};
-
-    scene.object.faceLinkedList->normal[0] = -1.f;
-    scene.object.faceLinkedList->normal[1] = 0;
-    scene.object.faceLinkedList->normal[2] = 0;
+            .direction={0, 1, 0}};
 
     float **red = (float **) malloc(resolutionX * sizeof(float *));
     float **green = (float **) malloc(resolutionX * sizeof(float *));
@@ -63,28 +49,37 @@ int main(int argc, char *argv[]) {
 
     // todo put the rayTrace algo in a function
     clock_t start = clock();
+    printObject(&scene.object);
 
-    for (uint16_t x = 0; x < resolutionX; x++) {
-        for (uint16_t y = 0; y < resolutionY; y++) {
-            // world: y -> screen: x
+    // scanline process from top left to bottom right
+    for (int y = resolutionY; y >= 0; y--) {
+        for (int x = 0; x < resolutionX; x++) {
+
+            // world: x -> screen: x
             // world: z -> screen: y
-            ray.origin[1] = interpolation1d((float) x, 0, (float) resolutionX, scene.camera.filmSize[0] / 2,
-                                            -scene.camera.filmSize[0] / 2);
+            ray.origin[0] = interpolation1d((float) x, 0, (float) resolutionX, -camFilmSizeX / 2,
+                                            camFilmSizeX / 2);
 
-            ray.origin[2] = interpolation1d((float) y, 0, (float) resolutionY, -scene.camera.filmSize[1] / 2,
-                                            scene.camera.filmSize[1] / 2);
+            ray.origin[2] = interpolation1d((float) y, 0, (float) resolutionY, -camFilmSizeY  / 2,
+                                            camFilmSizeY  / 2);
 
-            bool intersected = isRayIntersectsTriangle(&ray, scene.object.faceLinkedList);
-            if (intersected) {
-                float color = computeColor(scene.object.faceLinkedList, scene.light);
-                red[x][y] = color;
-                green[x][y] = color;
-                blue[x][y] = color;
+            for (int i = 0; i < scene.object.faceNb; i++){
+                Face* currentFace = &scene.object.faces[i];
 
-            } else {
-                red[x][y] = 0.f;
-                green[x][y] = 0.f;
-                blue[x][y] = 0.f;
+                bool intersected = isRayIntersectsTriangle(&ray, currentFace, true);
+                if (intersected) {
+                    // todo unable to compute the valid color when face normal is half pointing
+                    float color = computeColor(currentFace->normal, &scene.light);
+                    red[x][y] = color;
+                    green[x][y] = color;
+                    blue[x][y] = color;
+                    break;
+
+                } else {
+                    red[x][y] = 0.f;
+                    green[x][y] = 0.f;
+                    blue[x][y] = 0.f;
+                }
             }
         }
     }

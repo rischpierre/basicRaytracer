@@ -17,21 +17,18 @@ typedef struct face{
 
     float normal[3];
 
-    // linked list of faces
-    struct Face *next;
-
 } Face;
 
 typedef struct obj{
-    // todo this needs to be a linked list
-   Face *faceLinkedList;
+   Face *faces;
+   int faceNb;
 }Object;
 
+void printObject(Object *o);
 
 typedef struct camera{
     float focalPoint[3];
     float direction[3];
-    float filmSize[2];
 
 } Camera;
 
@@ -46,5 +43,7 @@ typedef struct scene {
     Camera camera;
     Object object;
 } Scene;
+
+void printFaces(Face* head);
 
 #endif //RAYTRACEREXPERIMENT_GEOMETRIES_H

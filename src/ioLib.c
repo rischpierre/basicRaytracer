@@ -79,83 +79,113 @@ void writeBmpFile(int width, int height, float **red, float **green, float **blu
 void parseObjFile(Scene *scene, const char *filePath){
     FILE *file;
     file = fopen(filePath, "r");
-    uint8_t bufferLength = 255;
+
+    if (file == NULL){
+        printf("Unable to read the file: %s", filePath);
+        exit(1);
+    }
+
+    int bufferLength = 255;
+
+    char* vertexDelimiter = "v ";
+    char* vertexNormalDelimiter = "vn ";
+    char* faceDelimiter = "f ";
+    char* objectDelimiter = "o ";
+
     char buffer[bufferLength];
 
-
-    // faces are in a linked list
-    uint8_t vertexSize = 128;
-    Face *firstFace = NULL;
-    Face *previousFace = NULL;
-    float vertices[vertexSize][3];
-    char* vertexDelimiter = "v ";
-
-    Object object1;
-    object1.faceLinkedList = NULL;
-    scene->object = object1;
-
-    int line = 1;
-    int objectNumber = 0;
-    int vertexId = 0;
-    while(fgets(buffer, bufferLength, file)){
-        if (objectNumber > 1){
+    // get the size of the objects, faces and vertices
+    int objectNb = 0;
+    int faceNb = 0;
+    int vertexNb = 0;
+    int vertexNNb = 0;
+    while(fgets(buffer, bufferLength, file)) {
+        if (objectNb > 1) {
             printf("Only one object is supported yet");
             assert(false);
         }
-        if (strncmp(buffer, "o ", 2) == 0){
-            objectNumber++;
+        if (strncmp(buffer, objectDelimiter, strlen(objectDelimiter)) == 0){
+            objectNb++;
+        }else if (strncmp(buffer, faceDelimiter, strlen(faceDelimiter)) == 0){
+           faceNb++;
+        }else if (strncmp(buffer, vertexNormalDelimiter, strlen(vertexNormalDelimiter)) == 0){
+            vertexNNb++;
+        }else if (strncmp(buffer, vertexDelimiter, strlen(vertexDelimiter)) == 0){
+            vertexNb++;
         }
-        else if (strncmp(buffer, "vn ", 2) == 0){
+    }
 
-            printf("vertex n: %s", buffer);
+    float vertices[vertexNb][3];
+    float vertexNormals[vertexNNb][3];
+    Face faces[faceNb];
 
-        }else if (strncmp(buffer, vertexDelimiter, 2) == 0){
-            char * token = strtok(buffer, "v ");
-            int k = 0;
+    int line = 1;
+    int vertexId = 0;
+    int vertexNId = 0;
+    int faceId = 0;
+    Face current;
+    rewind(file);
+    while(fgets(buffer, bufferLength, file)){
+
+        // vertices
+        if (strncmp(buffer, vertexDelimiter, strlen(vertexDelimiter)) == 0){
+            char * token = strtok(buffer, vertexDelimiter);
+            int coordId = 0;
             while (token != NULL){
-                vertices[vertexId][k] = (float)strtod(token, NULL);
+                vertices[vertexId][coordId] = (float)strtod(token, NULL);
                 token = strtok(NULL, " ");
-                k++;
+                coordId++;
             }
             vertexId++;
 
-        }else if (strncmp(buffer, "f ", 2) == 0){
-            char * token = strtok(buffer, "f ");
-            // todo generate a normal from the vertex normals
-            Face *f  = malloc(sizeof(Face));
-
+            // vertex normal
+        }else if (strncmp(buffer, vertexNormalDelimiter, strlen(vertexNormalDelimiter)) == 0) {
+            char * token = strtok(buffer, vertexNormalDelimiter);
+            int coordId = 0;
             while (token != NULL){
-                // token[0] is the vertex id (1/1/1)
+                vertexNormals[vertexNId][coordId] = (float)strtod(token, NULL);
+                token = strtok(NULL, " ");
+                coordId++;
+            }
+            vertexNId++;
+
+            // faces
+        }else if (strncmp(buffer, faceDelimiter, strlen(faceDelimiter)) == 0){
+            char * token = strtok(buffer, faceDelimiter);
+
+            int coordId = 0;
+            while (token != NULL){
+                // token[0] is the vertex id , token[2] is the vertexN (1/1/1)
                 int matchingVertexId = (int)strtol(&token[0], (char **)NULL, 10) - 1;
+                int matchingVertexNId = (int)strtol(&token[4], (char **)NULL, 10) - 1;
 
                 // todo make this better
                 for (int i = 0; i < 3; i++){
-                    if (matchingVertexId == 0){
-                        f->v0[i] = vertices[matchingVertexId][i];
-                    }else if(matchingVertexId == 1){
-                        f->v1[i] = vertices[matchingVertexId][i];
+
+                    if (coordId == 0){
+                        float n = vertexNormals[matchingVertexNId][i];
+                        if (n == 0) (n = 0); // to avoid having -0
+                        current.normal[i] = n;
+                        current.v0[i] = vertices[matchingVertexId][i];
+
+                    }else if(coordId == 1){
+                        current.v1[i] = vertices[matchingVertexId][i];
                     }else{
-                        f->v2[i] = vertices[matchingVertexId][i];
+                        current.v2[i] = vertices[matchingVertexId][i];
                     }
                 }
-                token = strtok(NULL, " ");
-            }
-            if (firstFace == NULL){
-                firstFace = f;
 
-            }else{
-                if (firstFace->next == NULL){
-                    firstFace->next = (struct Face *) &f;
-                }
-                previousFace->next = (struct Face *) &f;
+                token = strtok(NULL, " ");
+                coordId++;
             }
-            previousFace = f;
-            // todo try with multiple faces
-            vertexId++;
+            faces[faceId] = current;
+            faceId++;
         }
         line++;
     }
-    scene->object.faceLinkedList = firstFace;
+
+    scene->object.faces = faces;
+    scene->object.faceNb = faceNb;
 
     fclose(file);
 }

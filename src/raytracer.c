@@ -1,22 +1,28 @@
 
 
+#include <math.h>
 #include "raytracer.h"
 #include "mathLib.h"
-#include "stdio.h"
+#include "renderSettings.h"
 
 
-bool isRayIntersectsTriangle(const Ray *ray, const Face *face){
+bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCulled){
+
+    // skip if the face is back
+    if (dotProduct(ray->direction, face->normal) > 0 && isBackFaceCulled){
+        return false;
+    }
 
     // parametric equation of a plane: Ax + By + Cz + D = 0
     // where D is the distance from origin and parallel to the plane's triangle.normal
     float D = dotProduct(face->normal, face->v0);
 
+    float NDotRayDirection = dotProduct(face->normal, ray->direction);
     // check if triangle is parallel to ray. This can cause div by 0 instead
-    if (dotProduct(face->normal, ray->direction) == 0) return false;
+    if (NDotRayDirection == 0) return false;
 
-    // compute the distance between the triangle and the origin
-    float t = (dotProduct(face->normal,  ray->origin) + D) / dotProduct(face->normal, ray->direction);
-
+    // compute the distance between the triangle and the origin of the ray
+    float t = -(dotProduct(face->normal,  ray->origin) + (float)fabs((double)D)) / NDotRayDirection;
 
     // triangle is behind the ray
     if (t < 0 ) return false;
@@ -61,4 +67,14 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face){
     if (dotProduct(face->normal, tmpCrossProduct) < 0) return false;
 
     return true;
+}
+
+
+float computeColor(const float *faceNormal, const DirLight *light) {
+    float angle = angleBetweenVectors(light->direction, faceNormal);
+    float result = interpolation1d(angle, M_PI / 2, M_PI, 0, 1);
+    if (result < 0){
+        return ambientContribution;
+    }
+    return result;
 }
