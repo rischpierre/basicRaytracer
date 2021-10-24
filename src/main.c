@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     Scene scene = defineExampleScene();
     parseObjFile(&scene, "../examples/twoTriangle.obj");
 
-    trace(&scene);
+    render(&scene);
 
     return 0;
 }

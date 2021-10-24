@@ -84,7 +84,7 @@ float computeColor(const float *faceNormal, const DirLight *light) {
 }
 
 
-void trace(Scene *scene){
+void render(Scene *scene){
     // this is first a test with planar projection
     Ray ray = {.origin={0, 0, 0},
             .direction={0, 1, 0}};
