@@ -117,7 +117,7 @@ void parseObjFile(Scene *scene, const char *filePath){
 
     float vertices[vertexNb][3];
     float vertexNormals[vertexNNb][3];
-    Face faces[faceNb];
+    Face *faces = malloc(sizeof(Face) * faceNb);
 
     int line = 1;
     int vertexId = 0;

@@ -29,8 +29,9 @@ int main(int argc, char *argv[]) {
         printf("%s", usage);
         exit(1);
     }
-    parseObjFile(&scene, argv[1]);
 
+    parseObjFile(&scene, argv[1]);
+    printObject(&scene.object);
     render(&scene);
 
     // todo free the scene object memory
