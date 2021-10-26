@@ -4,7 +4,8 @@
 #define AMBIENT_CONTRIBUTION .1f
 #define RESOLUTION_X 1280
 #define RESOLUTION_Y 720
-#define CAM_FILM_SIZE_X 6.f
-#define CAM_FILM_SIZE_Y 3.375f  // !6:9 ratio
+#define CAM_FILM_SIZE_X 3.6f   // 24 36 film back size
+#define CAM_FILM_SIZE_Y 2.25f  // !6:9 ratio
+#define CAM_FOCAL_LENGTH 5  // 50 mmm
 
 #endif //RAYTRACEREXPERIMENT_RENDERSETTINGS_H

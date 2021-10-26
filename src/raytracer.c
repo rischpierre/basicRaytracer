@@ -9,6 +9,7 @@
 #include "mathLib.h"
 #include "renderSettings.h"
 #include "ioLib.h"
+#include "transform.h"
 
 
 bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCulled){
@@ -125,8 +126,9 @@ void splitQuads(Object * o){
 
 void render(Scene *scene){
     // this is first a test with planar projection
-    Ray ray = {.origin={0, 0, 0},
-            .direction={0, 1, 0}};
+
+    Ray ray = {.origin={0, 0, 1},
+            .direction={0, CAM_FOCAL_LENGTH, 0}};
 
     float **red = (float **) malloc(RESOLUTION_X * sizeof(float *));
     float **green = (float **) malloc(RESOLUTION_X * sizeof(float *));
@@ -149,11 +151,12 @@ void render(Scene *scene){
 
             // world: x -> screen: x
             // world: z -> screen: y
-            ray.origin[0] = interpolation1d((float) x, 0, (float) RESOLUTION_X, -CAM_FILM_SIZE_X / 2,
+            ray.direction[0] = interpolation1d((float) x, 0, (float) RESOLUTION_X, -CAM_FILM_SIZE_X / 2,
                                             CAM_FILM_SIZE_X / 2);
 
-            ray.origin[2] = interpolation1d((float) y, 0, (float) RESOLUTION_Y, -CAM_FILM_SIZE_Y / 2,
+            ray.direction[2] = interpolation1d((float) y, 0, (float) RESOLUTION_Y, -CAM_FILM_SIZE_Y / 2,
                                             CAM_FILM_SIZE_Y / 2);
+
 
             for (int i = 0; i < scene->object.faceNb; i++){
                 Face* currentFace = &scene->object.faces[i];
