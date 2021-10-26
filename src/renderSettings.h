@@ -6,6 +6,6 @@
 #define RESOLUTION_Y 720
 #define CAM_FILM_SIZE_X 3.6f   // 24 36 film back size
 #define CAM_FILM_SIZE_Y 2.25f  // !6:9 ratio
-#define CAM_FOCAL_LENGTH 5  // 50 mmm
+#define CAM_FOCAL_LENGTH 3  // in mmm
 
 #endif //RAYTRACEREXPERIMENT_RENDERSETTINGS_H

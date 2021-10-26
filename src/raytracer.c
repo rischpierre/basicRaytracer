@@ -127,7 +127,7 @@ void splitQuads(Object * o){
 void render(Scene *scene){
     // this is first a test with planar projection
 
-    Ray ray = {.origin={0, 0, 1},
+    Ray ray = {.origin={0, 0, 0},
             .direction={0, CAM_FOCAL_LENGTH, 0}};
 
     float **red = (float **) malloc(RESOLUTION_X * sizeof(float *));
