@@ -31,7 +31,6 @@ int main(int argc, char *argv[]) {
     }
 
     parseObjFile(&scene, argv[1]);
-    printObject(&scene.object);
     render(&scene);
 
     // todo free the scene object memory

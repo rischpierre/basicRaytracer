@@ -96,7 +96,7 @@ void splitQuads(Object * o){
     if (quads == 0) return;
 
     int faceNb = (o->faceNb - quads) + 2 * quads;
-    Face *newFaces = malloc(sizeof(Face) * faceNb);
+    Face *newFaces = (Face*)malloc(sizeof(Face) * faceNb);
     Face f;
     int newFaceIncr = 0;
     for(int fId = 0; fId < o->faceNb; fId++) {
@@ -141,9 +141,9 @@ void render(Scene *scene){
 
     clock_t start = clock();
     printObject(&scene->object);
-    splitQuads(&scene->object);
-    printf("after\n");
-    printObject(&scene->object);
+//    splitQuads(&scene->object);
+//    printf("after\n");
+//    printObject(&scene->object);
 
     // scanline process from top left to bottom right
     for (int y = RESOLUTION_Y; y >= 0; y--) {
