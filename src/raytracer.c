@@ -15,20 +15,20 @@
 bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCulled){
 
     // skip if the face is back
-    if (dotProduct(ray->direction, face->normal) > 0 && isBackFaceCulled){
+    if (dotProduct(ray->direction, face->n) > 0 && isBackFaceCulled){
         return false;
     }
 
     // parametric equation of a plane: Ax + By + Cz + D = 0
     // where D is the distance from origin and parallel to the plane's triangle.normal
-    float D = dotProduct(face->normal, face->v0);
+    float D = dotProduct(face->n, face->v0);
 
-    float NDotRayDirection = dotProduct(face->normal, ray->direction);
+    float NDotRayDirection = dotProduct(face->n, ray->direction);
     // check if triangle is parallel to ray. This can cause div by 0 instead
     if (NDotRayDirection == 0) return false;
 
     // compute the distance between the triangle and the origin of the ray
-    float t = -(dotProduct(face->normal,  ray->origin) + (float)fabs((double)D)) / NDotRayDirection;
+    float t = -(dotProduct(face->n, ray->origin) + (float)fabs((double)D)) / NDotRayDirection;
 
     // triangle is behind the ray
     if (t < 0 ) return false;
@@ -51,7 +51,7 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCu
     crossProduct(tmpCrossProduct, edge0, C0);
 
     // P is on the right side
-    if (dotProduct(face->normal, tmpCrossProduct) < 0) return false;
+    if (dotProduct(face->n, tmpCrossProduct) < 0) return false;
 
     float edge1[3];
     subVectors(edge1, face->v2, face->v1, 3);
@@ -61,7 +61,7 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCu
 
     crossProduct(tmpCrossProduct, edge1, C1);
 
-    if (dotProduct(face->normal, tmpCrossProduct) < 0) return false;
+    if (dotProduct(face->n, tmpCrossProduct) < 0) return false;
 
     float edge2[3];
     subVectors(edge2, face->v0, face->v2, 3);
@@ -70,7 +70,7 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCu
     subVectors(C2, Phit, face->v2, 3);
 
     crossProduct(tmpCrossProduct, edge2, C2);
-    if (dotProduct(face->normal, tmpCrossProduct) < 0) return false;
+    if (dotProduct(face->n, tmpCrossProduct) < 0) return false;
 
     return true;
 }
@@ -107,7 +107,7 @@ void splitQuads(Object * o){
                 f.v0[i] = c.v0[i];
                 f.v1[i] = c.v2[i];
                 f.v2[i] = c.v3[i];
-                f.normal[i] = c.normal[i];
+                f.n[i] = c.n[i];
             }
 
             newFaces[newFaceIncr] = c;
@@ -163,7 +163,7 @@ void render(Scene *scene){
 
                 bool intersected = isRayIntersectsTriangle(&ray, currentFace, true);
                 if (intersected) {
-                    float color = computeColor(currentFace->normal, &scene->light);
+                    float color = computeColor(currentFace->n, &scene->light);
                     red[x][y] = color;
                     green[x][y] = color;
                     blue[x][y] = color;

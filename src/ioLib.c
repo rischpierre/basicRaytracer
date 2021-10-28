@@ -103,47 +103,45 @@ void parseVertices(float* vertices, const char* buffer, const int *vertexId){
     }
 }
 
-void parseFaces(Face* faces, const char* buffer, const int *faceId, const float* vertices, const float* vertexNormals){
+Face parseFace(const char *buffer, const float *vertices, const float *vertexNormals) {
 
     char tmpBuffer[BUFFER_SIZE];
     strcpy(tmpBuffer, buffer);
-    Face current;
-    char * token = strtok(tmpBuffer, TAG_VERTEX);
+    Face f;
+    char * token = strtok(tmpBuffer, TAG_FACE);
     int faceGroupId = 0;
     while (token != NULL){
         // token[0] is the vertex id , token[2] is the vertexN (1/1/1)
         int matchingVertexId = -1;
         int matchingVertexNId = -1;
         splitFaceToken(token, &matchingVertexId, &matchingVertexNId);
-        // todo break if id == -1
         if (matchingVertexNId == -1 || matchingVertexId == -1){
             printf("Unable to find the matching vertex ids");
             exit(1);
         }
 
-        for (int i = 0; i < 3; i++){
-            float vertexTmp = *(vertices + matchingVertexNId + i);
+        for (int i = 0; i < 4; i++){
+            float vertexTmp = *(vertices + matchingVertexId + i);
             if (faceGroupId == 0){
-                current.normal[i] = *(vertexNormals + matchingVertexNId + i);
-                current.v0[i] = vertexTmp;
+                f.n[i] = *(vertexNormals + matchingVertexNId + i);
+                f.v0[i] = vertexTmp;
 
             }else if(faceGroupId == 1){
-                current.v1[i] = vertexTmp;
+                f.v1[i] = vertexTmp;
 
             }else if(faceGroupId == 2){
-                current.v2[i] = vertexTmp;
+                f.v2[i] = vertexTmp;
 
             }else{
-                current.v3[i] = vertexTmp;
-                current.isQuad = true;
+                f.v3[i] = vertexTmp;
+                f.isQuad = true;
             }
         }
 
         token = strtok(NULL, " ");
         faceGroupId++;
     }
-//    faces[faceId] = current;
-    faceId++;
+    return f;
 }
 
 void parseObjFile(Scene *scene, const char *filePath){
@@ -214,7 +212,9 @@ void parseObjFile(Scene *scene, const char *filePath){
 
             // faces
         }else if (strncmp(buffer, TAG_FACE, strlen(TAG_FACE)) == 0){
-            parseFaces(faces, buffer, &faceId, *vertices, *vertexNormals);
+            Face f = parseFace(buffer, *vertices, *vertexNormals);
+            faces[faceId] = f;
+            faceId++;
         }
         line++;
     }

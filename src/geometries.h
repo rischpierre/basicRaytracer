@@ -5,24 +5,24 @@
 
 #include <stdbool.h>
 
-typedef struct ray{
+typedef struct{
     float origin[3];
     float direction[3];
 
 } Ray;
 
-typedef struct face{
+typedef struct{
     float v0[3];
     float v1[3];
     float v2[3];
     float v3[3];
 
     bool isQuad;
-    float normal[3];
+    float n[3];
 
 } Face;
 
-typedef struct obj{
+typedef struct{
    Face *faces;
    int faceNb;
    char* name;
@@ -30,19 +30,19 @@ typedef struct obj{
 
 void printObject(const Object *o);
 
-typedef struct camera{
+typedef struct{
     float focalPoint[3];
     float direction[3];
 
 } Camera;
 
-typedef struct dirLight{
+typedef struct{
     float direction[3];
 
 } DirLight;
 
 
-typedef struct scene {
+typedef struct{
     DirLight light;
     Camera camera;
     Object object;

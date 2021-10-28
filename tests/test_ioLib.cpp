@@ -22,25 +22,26 @@ TEST(parseVertices, valid_output){
     ASSERT_FLOAT_EQ(vertices[0][2], 0.296311);
 }
 
-TEST(parseFaces, valid_output){
+TEST(parseFace, valid_output){
     float vertices[4][3] = {
            1, 2, 3,
-           1, 2, 3,
-           1, 2, 3,
-           1, 2, 3,
+           4, 5, 6,
+           7, 8, 9,
+           10, 11, 12
     };
     float vertexNormals[2][3] = {
             11, 22, 33,
-            11, 22, 33,
+            12, 23, 34
     };
-    char* buffer = "f 1/1/1 2/2/1 3/3/1 4/4/2";
-    int faceId = 0;
-    Face *faces = (Face*)malloc(sizeof(Face));
-    parseFaces(faces, buffer, &faceId, *vertices, *vertexNormals);
+    char* buffer = "f 1/1/2 2/2/2 3/3/2 4/4/2";
+    Face f = parseFace(buffer, *vertices, *vertexNormals);
 
-    free(faces);
-
-    ASSERT_FLOAT_EQ(vertices[0][2], 0.296311);
+    ASSERT_FLOAT_EQ(f.v0[0], 1);
+    ASSERT_FLOAT_EQ(f.v1[0], 4);
+//    ASSERT_FLOAT_EQ(f.v3[2], 11);
+    ASSERT_FLOAT_EQ(f.n[0], 12);
+    ASSERT_FLOAT_EQ(f.n[1], 23);
+    ASSERT_FLOAT_EQ(f.n[2], 34);
 }
 
 

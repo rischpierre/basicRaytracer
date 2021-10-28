@@ -13,6 +13,6 @@ void writeBmpFile(int width, int height, float **red, float **green, float **blu
 void parseObjFile(Scene *scene, const char *filePath);
 void splitFaceToken(const char* token, int *vertexId, int *vertexNId);
 void parseVertices(float* vertices, const char* buffer, const int *vertexId);
-void parseFaces(Face* faces, const char* buffer, const int *faceId, const float* vertices, const float* vertexNormals);
+Face parseFace(const char *buffer, const float *vertices, const float *vertexNormals);
 
 #endif //RAYTRACEREXPERIMENT_IOLIB_H
