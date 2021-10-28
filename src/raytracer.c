@@ -140,10 +140,9 @@ void render(Scene *scene){
     }
 
     clock_t start = clock();
-    printObject(&scene->object);
 //    splitQuads(&scene->object);
-//    printf("after\n");
-//    printObject(&scene->object);
+    printf("after\n");
+    printObject(&scene->object);
 
     // scanline process from top left to bottom right
     for (int y = RESOLUTION_Y; y >= 0; y--) {

@@ -38,7 +38,9 @@ TEST(parseFace, valid_output){
 
     ASSERT_FLOAT_EQ(f.v0[0], 1);
     ASSERT_FLOAT_EQ(f.v1[0], 4);
-//    ASSERT_FLOAT_EQ(f.v3[2], 11);
+    ASSERT_FLOAT_EQ(f.v1[2], 6);
+    ASSERT_FLOAT_EQ(f.v1[2], 6);
+    ASSERT_FLOAT_EQ(f.v3[2], 12);
     ASSERT_FLOAT_EQ(f.n[0], 12);
     ASSERT_FLOAT_EQ(f.n[1], 23);
     ASSERT_FLOAT_EQ(f.n[2], 34);

@@ -108,10 +108,10 @@ Face parseFace(const char *buffer, const float *vertices, const float *vertexNor
     char tmpBuffer[BUFFER_SIZE];
     strcpy(tmpBuffer, buffer);
     Face f;
-    char * token = strtok(tmpBuffer, TAG_FACE);
     int faceGroupId = 0;
-    while (token != NULL){
-        // token[0] is the vertex id , token[2] is the vertexN (1/1/1)
+    char* token;
+    char* rest = tmpBuffer;
+    while ((token = strtok_r(rest, TAG_FACE, &rest))){
         int matchingVertexId = -1;
         int matchingVertexNId = -1;
         splitFaceToken(token, &matchingVertexId, &matchingVertexNId);
@@ -120,10 +120,10 @@ Face parseFace(const char *buffer, const float *vertices, const float *vertexNor
             exit(1);
         }
 
-        for (int i = 0; i < 4; i++){
-            float vertexTmp = *(vertices + matchingVertexId + i);
+        for (int i = 0; i < 3; i++){
+            float vertexTmp = *(vertices + matchingVertexId * 3 + i);
             if (faceGroupId == 0){
-                f.n[i] = *(vertexNormals + matchingVertexNId + i);
+                f.n[i] = *(vertexNormals + matchingVertexNId * 3 + i);
                 f.v0[i] = vertexTmp;
 
             }else if(faceGroupId == 1){
@@ -137,8 +137,6 @@ Face parseFace(const char *buffer, const float *vertices, const float *vertexNor
                 f.isQuad = true;
             }
         }
-
-        token = strtok(NULL, " ");
         faceGroupId++;
     }
     return f;
@@ -185,7 +183,6 @@ void parseObjFile(Scene *scene, const char *filePath){
     int vertexNId = 0;
     int faceId = 0;
     char *name = (char*)malloc(sizeof(char ) * BUFFER_SIZE);
-    Face current;
     rewind(file);
     while(fgets(buffer, BUFFER_SIZE, file)){
         // object name
