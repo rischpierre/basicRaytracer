@@ -1,6 +1,12 @@
 
 INSTALLATION INSTRUCTIONS
 
+
+# In order to run the tests, the googletest lib is needed,
+# The library can be added using git submodule:
+# git clone --recusive https://github.com/rischpierre/raytracerExperiment
+
+
 # create build directory
 mkdir build
 

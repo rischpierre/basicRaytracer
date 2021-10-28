@@ -1,10 +1,9 @@
 build/
-tests/lib/
 
 #
 # Prerequisites
 *.d
-*.idea
+.idea
 
 # Object files
 *.o
