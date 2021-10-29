@@ -11,8 +11,8 @@ Scene defineExampleScene() {
             .direction={1, 0, 0},
     };
 
-    // light on the right side
-    DirLight light = {.direction={0, 1, 0}};
+    // light on the top left side
+    DirLight light = {.direction={0.2f, 0.6f, -0.2f}};
 
     Scene scene;
     scene.camera = camera;
@@ -31,7 +31,12 @@ int main(int argc, char *argv[]) {
     }
 
     parseObjFile(&scene, argv[1]);
+    printf("-------------------------------");
+    printObject(&scene.object);
+    printf("-------------------------------");
     render(&scene);
+    printObject(&scene.object);
+    printf("-------------------------------");
 
     // todo free the scene object memory
 

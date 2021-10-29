@@ -141,8 +141,6 @@ void render(Scene *scene){
 
     clock_t start = clock();
 //    splitQuads(&scene->object);
-    printf("after\n");
-    printObject(&scene->object);
 
     // scanline process from top left to bottom right
     for (int y = RESOLUTION_Y; y >= 0; y--) {
@@ -184,7 +182,7 @@ void render(Scene *scene){
     char *imagePath = "render.bmp";
     writeBmpFile(RESOLUTION_X, RESOLUTION_Y, red, green, blue, imagePath);
 
-    printf("Wrote image : %s", imagePath);
+    printf("Wrote image : %s\n", imagePath);
 
     for (uint16_t i = 0; i < RESOLUTION_X; i++) {
         free(red[i]);
