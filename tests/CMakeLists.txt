@@ -13,6 +13,12 @@ file(GLOB TESTS_SOURCES "*.cpp" )
 
 add_executable(Google_Tests_run ${TESTS_SOURCES})
 
+# add warnings
+if (MSVC)
+    add_compile_options(/W4 /WX)
+else()
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
 
 file(GLOB ALL_SOURCES
         "../src/*.c"
