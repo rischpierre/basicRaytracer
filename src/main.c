@@ -38,5 +38,7 @@ int main(int argc, char *argv[]) {
     printObject(&scene.object);
     printf("-------------------------------");
 
+    freeScene(&scene);
+
     return 0;
 }

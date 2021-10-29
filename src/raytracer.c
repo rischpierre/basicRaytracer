@@ -1,5 +1,3 @@
-
-
 #include <math.h>
 #include <bits/types/clock_t.h>
 #include <time.h>
@@ -193,4 +191,8 @@ void render(Scene *scene){
     free(green);
     free(blue);
 
+}
+
+void freeScene(Scene *scene) {
+    free(scene->object.faces);
 }
