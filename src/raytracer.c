@@ -83,12 +83,12 @@ float computeColor(const float *faceNormal, const DirLight *light) {
     return result;
 }
 
-void splitQuads(Object * o){
+void splitQuads(Object *o) {
     int quads = 0;
     for(int fId = 0; fId < o->faceNb; fId++){
         Face current = o->faces[fId];
         if (current.isQuad){
-           quads++;
+            quads++;
         }
     }
     if (quads == 0) return;

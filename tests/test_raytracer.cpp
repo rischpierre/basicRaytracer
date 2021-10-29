@@ -67,3 +67,37 @@ TEST(computeColor, test_computeColor){
     ASSERT_FLOAT_EQ(computeColor(faceN, &light), AMBIENT_CONTRIBUTION);
 }
 
+TEST(split_quads, test_only_tri_faces){
+
+    Object o;
+    Face f= {.isQuad=false};
+    Face f2= {.isQuad=false};
+    Face faces[2] = {f2, f};
+    o.faces = faces;
+    o.faceNb = 2;
+
+    splitQuads(&o);
+    ASSERT_EQ(o.faceNb, 2);
+}
+
+TEST(split_quads_2, test_with_quad_faces){
+
+    Object o;
+    Face f= {.v0={1, 2, 3}, .v1 ={4, 5, 6}, .v2={7, 8, 9}, .v3={10, 11, 12}, .isQuad=true, .n={13, 14, 15}};
+    Face faces[1] = {f};
+    o.faces = faces;
+    o.faceNb = 1;
+
+    splitQuads(&o);
+
+    ASSERT_EQ(o.faceNb, 2);
+    ASSERT_EQ(o.faces[0].v0[0], 1);
+    ASSERT_EQ(o.faces[0].v1[2], 6);
+
+    ASSERT_EQ(o.faces[1].v0[0], 1);
+    ASSERT_EQ(o.faces[1].v1[2], 9);
+
+    ASSERT_EQ(o.faces[1].n[0], 13);
+    ASSERT_EQ(o.faces[1].n[2], 15);
+}
+

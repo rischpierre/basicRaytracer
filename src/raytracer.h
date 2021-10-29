@@ -8,5 +8,6 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *triangle, bool isBackFa
 float computeColor(const float *faceNormal, const DirLight* light);
 void render(Scene *scene);
 void freeScene(Scene *scene);
+void splitQuads(Object *o);
 
 #endif //RAYTRACEREXPERIMENT_RAYTRACER_H
