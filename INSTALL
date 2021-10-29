@@ -17,7 +17,7 @@ cmake -B ./build -DCMAKE_BUILD_TYPE=debug
 cmake -B ./build
 
 # compile
-make ./build  # todo does it works?
+make ./build
 
 # run raytracer
 ./build/raytracerExperiment

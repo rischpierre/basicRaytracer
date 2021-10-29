@@ -38,7 +38,5 @@ int main(int argc, char *argv[]) {
     printObject(&scene.object);
     printf("-------------------------------");
 
-    // todo free the scene object memory
-
     return 0;
 }

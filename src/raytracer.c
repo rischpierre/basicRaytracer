@@ -158,7 +158,6 @@ void render(Scene *scene){
             for (int i = 0; i < scene->object.faceNb; i++){
                 Face* currentFace = &scene->object.faces[i];
 
-                // todo we might need to trace the faces based on the distance from the camera instead of if they are
                 // intersected or not
                 bool intersected = isRayIntersectsTriangle(&ray, currentFace, true);
                 if (intersected) {
