@@ -15,7 +15,7 @@ void writeBmpFile(int width, int height, float **red, float **green, float **blu
 
     FILE *file;
     unsigned char *img = NULL;
-    int filesize = 54 + 3 * width * height;
+    int fileSize = 54 + 3 * width * height;
 
     img = (unsigned char *) malloc(3 * width * height);
     memset(img, 0, 3 * width * height);
@@ -24,9 +24,9 @@ void writeBmpFile(int width, int height, float **red, float **green, float **blu
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
 
-            int r = (int)(red[i][j] * 255.f);
-            int g = (int)(green[i][j] * 255.f);
-            int b = (int)(blue[i][j] * 255.f);
+            int r = (int)(red[j][i] * 255.f);
+            int g = (int)(green[j][i] * 255.f);
+            int b = (int)(blue[j][i] * 255.f);
 
             if (r > 255) r = 255;
             if (g > 255) g = 255;
@@ -45,10 +45,10 @@ void writeBmpFile(int width, int height, float **red, float **green, float **blu
     unsigned char bmpinfoheader[40] = {40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 24, 0};
     unsigned char bmppad[3] = {0, 0, 0};
 
-    bmpfileheader[2] = (unsigned char) (filesize);
-    bmpfileheader[3] = (unsigned char) (filesize >> 8);
-    bmpfileheader[4] = (unsigned char) (filesize >> 16);
-    bmpfileheader[5] = (unsigned char) (filesize >> 24);
+    bmpfileheader[2] = (unsigned char) (fileSize);
+    bmpfileheader[3] = (unsigned char) (fileSize >> 8);
+    bmpfileheader[4] = (unsigned char) (fileSize >> 16);
+    bmpfileheader[5] = (unsigned char) (fileSize >> 24);
 
     bmpinfoheader[4] = (unsigned char) (width);
     bmpinfoheader[5] = (unsigned char) (width >> 8);
@@ -182,7 +182,7 @@ void parseObjFile(Scene *scene, const char *filePath){
     int vertexId = 0;
     int vertexNId = 0;
     int faceId = 0;
-    char name[BUFFER_SIZE];
+    char *name = malloc(sizeof(*name) * BUFFER_SIZE);
 
     rewind(file);
     while(fgets(buffer, BUFFER_SIZE, file)){
@@ -218,6 +218,5 @@ void parseObjFile(Scene *scene, const char *filePath){
     scene->object.name = name;
     scene->object.faces = faces;
     scene->object.faceNb = faceNb;
-
     fclose(file);
 }
