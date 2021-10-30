@@ -2,8 +2,8 @@
 #define RAYTRACEREXPERIMENT_RENDERSETTINGS_H
 
 #define AMBIENT_CONTRIBUTION .1f
-#define RESOLUTION_W 1280
-#define RESOLUTION_H 720
+#define RESOLUTION_W 720
+#define RESOLUTION_H 409
 #define CAM_FILM_SIZE_W 3.6f   // 24 36 film back size
 #define CAM_FILM_SIZE_H 2.25f  // !6:9 ratio
 #define CAM_FOCAL_LENGTH 4  // in mmm

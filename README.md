@@ -8,7 +8,7 @@ https://www.scratchapixel.com/lessons/3d-basic-rendering
 ## Features
 - [x] Directional lights   
 - [x] Simple command line interface  
-- [x] Render 1 object in a .obj file  
+- [x] Reads Wavefront obj geometry file 
 - [x] Outputs bmp image  
 - [x] No dependencies  
 - [ ] Multithreading  
