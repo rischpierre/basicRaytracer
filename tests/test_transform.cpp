@@ -22,7 +22,6 @@ TEST(transformTests, translate_works) {
 
         ASSERT_FLOAT_EQ(expected[i], v[i]);
     }
-
 }
 
 
