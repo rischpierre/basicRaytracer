@@ -84,41 +84,34 @@ float computeColor(const float *faceNormal, const DirLight *light) {
 }
 
 void splitQuads(Object *o) {
-    int quads = 0;
+    int quadNb = 0;
     for(int fId = 0; fId < o->faceNb; fId++){
         Face current = o->faces[fId];
         if (current.isQuad){
-            quads++;
+            quadNb++;
         }
     }
-    if (quads == 0) return;
+    if (quadNb == 0) return;
+    int newFaceNb =  (o->faceNb - quadNb) + 2 * quadNb;
+    o->faces = (Face *)realloc(o->faces, sizeof(Face) * newFaceNb);
 
-    int faceNb = (o->faceNb - quads) + 2 * quads;
-    Face *newFaces = (Face*)malloc(sizeof(Face) * faceNb);
-    Face f;
-    int newFaceIncr = 0;
-    for(int fId = 0; fId < o->faceNb; fId++) {
-        Face c = o->faces[fId];
+    int newFaceId = o->faceNb;
+    for(int currentFaceId = 0; currentFaceId < o->faceNb; currentFaceId++) {
+        Face c = o->faces[currentFaceId];
         if (c.isQuad) {
-            for(int i = 0; i < 3; i++){
-
+            Face f;
+            for (int i = 0; i < 3; i++) {
                 f.v0[i] = c.v0[i];
                 f.v1[i] = c.v2[i];
                 f.v2[i] = c.v3[i];
                 f.n[i] = c.n[i];
+                f.isQuad = false;
             }
-
-            newFaces[newFaceIncr] = c;
-            newFaceIncr++;
-            newFaces[newFaceIncr] = f;
-            newFaceIncr++;
-        } else {
-            newFaces[newFaceIncr];
-            newFaceIncr++;
+            o->faces[newFaceId] = f;
+            newFaceId++;
         }
     }
-    o->faces = newFaces;
-    o->faceNb = faceNb;
+    o->faceNb = newFaceNb;
 }
 
 

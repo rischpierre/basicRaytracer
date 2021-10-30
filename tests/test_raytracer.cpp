@@ -84,7 +84,8 @@ TEST(split_quads_2, test_with_quad_faces){
 
     Object o;
     Face f= {.v0={1, 2, 3}, .v1 ={4, 5, 6}, .v2={7, 8, 9}, .v3={10, 11, 12}, .isQuad=true, .n={13, 14, 15}};
-    Face faces[1] = {f};
+    Face* faces = (Face*)malloc(sizeof(Face) * 1);
+    faces[0] = f;
     o.faces = faces;
     o.faceNb = 1;
 
@@ -99,5 +100,7 @@ TEST(split_quads_2, test_with_quad_faces){
 
     ASSERT_EQ(o.faces[1].n[0], 13);
     ASSERT_EQ(o.faces[1].n[2], 15);
+
+    free(o.faces);
 }
 
