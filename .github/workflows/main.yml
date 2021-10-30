@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Unittests
 
 # Controls when the workflow will run
 on:
@@ -36,4 +36,4 @@ jobs:
           make
           cd tests
           make
-          ./Google_tests_run
+          ./Google_Tests_run
