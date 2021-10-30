@@ -88,4 +88,13 @@ TEST(bmp_writer, file_is_written_on_disk){
     // remove file since it exists
     remove(fileName);
 
+    for (int i = 0; i < resolutionX; i++) {
+        free(red[i]);
+        free(green[i]);
+        free(blue[i]);
+    }
+
+    free(red);
+    free(green);
+    free(blue);
 }
