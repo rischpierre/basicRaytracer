@@ -141,6 +141,11 @@ void render(Scene *scene){
 
     // scanline process from top left to bottom right
     for (int y = RESOLUTION_H - 1; y >= 0; y--) {
+
+        // log progress
+        int percent = (int)(((float)RESOLUTION_H - (float)y)/(float)RESOLUTION_H * 100);
+        printf("%d %% \r", percent);
+
         for (int x = 0; x < RESOLUTION_W; x++) {
 
             // world: x -> screen: x
@@ -174,7 +179,7 @@ void render(Scene *scene){
     }
 
     clock_t end = clock();
-    printf("render time: %f s\n", (double) (end - start) / (double) CLOCKS_PER_SEC);
+    printf("\nrender time: %f s\n", (double) (end - start) / (double) CLOCKS_PER_SEC);
     char *imagePath = "render.bmp";
     writeBmpFile(RESOLUTION_W, RESOLUTION_H, red, green, blue, imagePath);
 
