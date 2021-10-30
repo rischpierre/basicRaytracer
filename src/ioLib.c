@@ -107,7 +107,7 @@ Face parseFace(const char *buffer, const float *vertices, const float *vertexNor
 
     char tmpBuffer[BUFFER_SIZE];
     strcpy(tmpBuffer, buffer);
-    Face f;
+    Face f = {.isQuad=false};
     int faceGroupId = 0;
     char* token;
     char* rest = tmpBuffer;
