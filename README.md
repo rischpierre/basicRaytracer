@@ -4,24 +4,24 @@
 ![example workflow](https://github.com/rischpierre/raytracerExperiment/actions/workflows/main.yml/badge.svg)
 
 
-##References
+## References
 https://www.scratchapixel.com/lessons/3d-basic-rendering
 
-##Features included
+## Features included
 - 1 directional light 
 - Command line interface
 - UnitTests
 - render 1 object in a .obj file
 - outputs bmp image
 
-##Features todo 
+## Features todo 
 - Render a teapot
 - multithreaded
 - codestyle
 - cross platform
 - plug and play build
 
-##Features not included
+## Features not included
 - multisampling
 - no textures
 - only lambert shader
