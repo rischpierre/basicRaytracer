@@ -28,7 +28,7 @@ typedef struct{
    char* name;
 }Object;
 
-void printObject(const Object *o);
+void printObject(const Object *o, bool details);
 
 typedef struct{
     float focalPoint[3];

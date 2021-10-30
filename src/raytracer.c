@@ -138,7 +138,9 @@ void render(Scene *scene){
     }
 
     clock_t start = clock();
-//    splitQuads(&scene->object);
+    printObject(&scene->object, false);
+    splitQuads(&scene->object);
+    printObject(&scene->object, false);
 
     // scanline process from top left to bottom right
     for (int y = RESOLUTION_Y; y >= 0; y--) {
@@ -195,4 +197,6 @@ void render(Scene *scene){
 
 void freeScene(Scene *scene) {
     free(scene->object.faces);
+    free(scene->object.name);
+    free(scene);
 }

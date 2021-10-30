@@ -4,8 +4,7 @@
 #include "raytracer.h"
 #include "ioLib.h"
 
-Scene defineExampleScene() {
-
+void defineExampleScene(Scene *scene) {
     Camera camera = {
             .focalPoint={0, 0, 0},
             .direction={1, 0, 0},
@@ -14,15 +13,14 @@ Scene defineExampleScene() {
     // light on the top left side
     DirLight light = {.direction={0.2f, 0.6f, -0.2f}};
 
-    Scene scene;
-    scene.camera = camera;
-    scene.light = light;
+    scene->camera = camera;
+    scene->light = light;
 
-    return scene;
 }
 
 int main(int argc, char *argv[]) {
-    Scene scene = defineExampleScene();
+    Scene *scene = malloc(sizeof(*scene));
+    defineExampleScene(scene);
     char *usage = "Usage:\nraytracerExperiment <objFile>\n";
     if (argc != 2){
         printf("Wrong arguments\n");
@@ -30,15 +28,11 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    parseObjFile(&scene, argv[1]);
-    printf("-------------------------------");
-    printObject(&scene.object);
-    printf("-------------------------------");
-    render(&scene);
-    printObject(&scene.object);
-    printf("-------------------------------");
-
-    freeScene(&scene);
+    parseObjFile(scene, argv[1]);
+    printObject(&scene->object, false);
+//    render(&scene);
+//
+    freeScene(scene);
 
     return 0;
 }
