@@ -32,5 +32,6 @@ jobs:
         run: |
           mkdir build
           cmake -B ./build -DCMAKE_BUILD_TYPE=debug
+          make ./build
           ./build/raytracerExperiment ../examples/cube.obj
           ./build/tests/Google_tests_run
