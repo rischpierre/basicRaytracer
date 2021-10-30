@@ -28,11 +28,12 @@ jobs:
           submodules: recursive
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: unittests
         run: |
           mkdir build
           cmake -B ./build -DCMAKE_BUILD_TYPE=debug
           cd build
           make
-          ./raytracerExperiment ../examples/cube.obj
-          ./tests/Google_tests_run
+          cd tests
+          make
+          ./Google_tests_run
