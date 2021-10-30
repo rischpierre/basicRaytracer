@@ -30,8 +30,8 @@ int main(int argc, char *argv[]) {
 
     parseObjFile(scene, argv[1]);
     printObject(&scene->object, false);
-//    render(&scene);
-//
+    render(scene);
+
     freeScene(scene);
 
     return 0;

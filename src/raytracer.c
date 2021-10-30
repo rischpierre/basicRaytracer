@@ -128,31 +128,28 @@ void render(Scene *scene){
     Ray ray = {.origin={0, 0, 0},
             .direction={0, CAM_FOCAL_LENGTH, 0}};
 
-    float **red = (float **) malloc(RESOLUTION_X * sizeof(float *));
-    float **green = (float **) malloc(RESOLUTION_X * sizeof(float *));
-    float **blue = (float **) malloc(RESOLUTION_X * sizeof(float *));
-    for (uint16_t i = 0; i < RESOLUTION_X; i++) {
-        red[i] = (float *) malloc(RESOLUTION_Y * sizeof(float));
-        blue[i] = (float *) malloc(RESOLUTION_Y * sizeof(float));
-        green[i] = (float *) malloc(RESOLUTION_Y * sizeof(float));
+    float **red = (float **) malloc(RESOLUTION_H * sizeof(float *));
+    float **green = (float **) malloc(RESOLUTION_H * sizeof(float *));
+    float **blue = (float **) malloc(RESOLUTION_H * sizeof(float *));
+    for (int i = 0; i < RESOLUTION_H; i++) {
+        red[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
+        green[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
+        blue[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
     }
 
     clock_t start = clock();
-    printObject(&scene->object, false);
-    splitQuads(&scene->object);
-    printObject(&scene->object, false);
 
     // scanline process from top left to bottom right
-    for (int y = RESOLUTION_Y; y >= 0; y--) {
-        for (int x = 0; x < RESOLUTION_X; x++) {
+    for (int y = RESOLUTION_H - 1; y >= 0; y--) {
+        for (int x = 0; x < RESOLUTION_W; x++) {
 
             // world: x -> screen: x
             // world: z -> screen: y
-            ray.direction[0] = interpolation1d((float) x, 0, (float) RESOLUTION_X, -CAM_FILM_SIZE_X / 2,
-                                            CAM_FILM_SIZE_X / 2);
+            ray.direction[0] = interpolation1d((float) x, 0, (float) RESOLUTION_W, -CAM_FILM_SIZE_W / 2,
+                                               CAM_FILM_SIZE_W / 2);
 
-            ray.direction[2] = interpolation1d((float) y, 0, (float) RESOLUTION_Y, -CAM_FILM_SIZE_Y / 2,
-                                            CAM_FILM_SIZE_Y / 2);
+            ray.direction[2] = interpolation1d((float) y, 0, (float) RESOLUTION_H, -CAM_FILM_SIZE_H / 2,
+                                               CAM_FILM_SIZE_H / 2);
 
 
             for (int i = 0; i < scene->object.faceNb; i++){
@@ -162,15 +159,15 @@ void render(Scene *scene){
                 bool intersected = isRayIntersectsTriangle(&ray, currentFace, true);
                 if (intersected) {
                     float color = computeColor(currentFace->n, &scene->light);
-                    red[x][y] = color;
-                    green[x][y] = color;
-                    blue[x][y] = color;
+                    red[y][x] = color;
+                    green[y][x] = color;
+                    blue[y][x] = color;
                     break;
 
                 } else {
-                    red[x][y] = 0.f;
-                    green[x][y] = 0.f;
-                    blue[x][y] = 0.f;
+                    red[y][x] = 0;
+                    green[y][x] = 0;
+                    blue[y][x] = 0;
                 }
             }
         }
@@ -179,11 +176,11 @@ void render(Scene *scene){
     clock_t end = clock();
     printf("render time: %f s\n", (double) (end - start) / (double) CLOCKS_PER_SEC);
     char *imagePath = "render.bmp";
-    writeBmpFile(RESOLUTION_X, RESOLUTION_Y, red, green, blue, imagePath);
+    writeBmpFile(RESOLUTION_W, RESOLUTION_H, red, green, blue, imagePath);
 
     printf("Wrote image : %s\n", imagePath);
 
-    for (uint16_t i = 0; i < RESOLUTION_X; i++) {
+    for (int i = 0; i < RESOLUTION_H; i++) {
         free(red[i]);
         free(green[i]);
         free(blue[i]);
