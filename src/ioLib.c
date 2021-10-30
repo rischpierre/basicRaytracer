@@ -182,7 +182,7 @@ void parseObjFile(Scene *scene, const char *filePath){
     int vertexId = 0;
     int vertexNId = 0;
     int faceId = 0;
-    char *name = malloc(sizeof(*name) * BUFFER_SIZE);
+    char *name = (char *)malloc(sizeof(*name) * BUFFER_SIZE);
 
     rewind(file);
     while(fgets(buffer, BUFFER_SIZE, file)){

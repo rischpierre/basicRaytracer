@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     }
 
     parseObjFile(scene, argv[1]);
-    printObject(&scene->object, false);
+    printObject(&scene->object, true);
     render(scene);
 
     freeScene(scene);
