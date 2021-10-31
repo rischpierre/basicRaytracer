@@ -10,7 +10,7 @@
 #include "transform.h"
 
 
-bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCulled){
+bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCulled, float* distance){
 
     // skip if the face is back
     if (dotProduct(ray->direction, face->n) > 0 && isBackFaceCulled){
@@ -26,10 +26,10 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCu
     if (NDotRayDirection == 0) return false;
 
     // compute the distance between the triangle and the origin of the ray
-    float t = -(dotProduct(face->n, ray->origin) + (float)fabs((double)D)) / NDotRayDirection;
+    *distance = -(dotProduct(face->n, ray->origin) + (float)fabs((double)D)) / NDotRayDirection;
 
     // triangle is behind the ray
-    if (t < 0 ) return false;
+    if (distance < 0 ) return false;
 
     float tmpCross[3];
 
@@ -152,24 +152,33 @@ void render(Scene *scene){
             ray.direction[2] = interpolation1d((float) y, 0, (float) RESOLUTION_H, -CAM_FILM_SIZE_H / 2,
                                                CAM_FILM_SIZE_H / 2);
 
+            float distance = WORLD_MAX_DISTANCE;
+            float maxDistance = WORLD_MAX_DISTANCE;
+            Face *nearestFace;
+            for (int i = 0; i < scene->object.faceNb; i++) {
+                Face *currentFace = &scene->object.faces[i];
 
-            for (int i = 0; i < scene->object.faceNb; i++){
-                Face* currentFace = &scene->object.faces[i];
-
-                // intersected or not
-                bool intersected = isRayIntersectsTriangle(&ray, currentFace, true);
-                if (intersected) {
-                    float color = computeColor(currentFace->n, &scene->light);
-                    red[y][x] = color;
-                    green[y][x] = color;
-                    blue[y][x] = color;
-                    break;
-
-                } else {
-                    red[y][x] = 0;
-                    green[y][x] = 0;
-                    blue[y][x] = 0;
+                bool intersected = isRayIntersectsTriangle(&ray, currentFace, false, &distance);
+                if (!intersected) {
+                    continue;
                 }
+
+                if (distance < maxDistance) {
+                    maxDistance = distance;
+                    nearestFace = currentFace;
+                }
+            }
+
+            if (nearestFace == NULL) {
+                red[y][x] = 0;
+                green[y][x] = 0;
+                blue[y][x] = 0;
+            }else {
+                float color = computeColor(currentFace->n, &scene->light);
+                red[y][x] = color;
+                green[y][x] = color;
+                blue[y][x] = color;
+
             }
         }
     }
