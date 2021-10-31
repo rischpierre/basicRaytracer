@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "geometries.h"
 #include "raytracer.h"
 #include "ioLib.h"
+#include "renderSettings.h"
 
 void defineExampleScene(Scene *scene) {
     Camera camera = {
@@ -18,7 +20,13 @@ void defineExampleScene(Scene *scene) {
 
 }
 
+void validateRenderSettings(){
+    assert(RESOLUTION_DIVIDER % 2 == 0);
+}
+
 int main(int argc, char *argv[]) {
+    validateRenderSettings();
+
     Scene *scene = malloc(sizeof(*scene));
     defineExampleScene(scene);
     char *usage = "Usage:\nraytracerExperiment <objFile>\n";

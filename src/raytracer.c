@@ -13,7 +13,7 @@
 bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCulled, float* distance){
 
     // skip if the face is back
-    if (dotProduct(ray->direction, face->n) > 0 && isBackFaceCulled){
+    if (isBackFaceCulled && dotProduct(ray->direction, face->n) > 0){
         return false;
     }
 
@@ -29,11 +29,11 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCu
     *distance = -(dotProduct(face->n, ray->origin) + (float)fabs((double)D)) / NDotRayDirection;
 
     // triangle is behind the ray
-    if (distance < 0 ) return false;
+    if (*distance < 0 ) return false;
 
     float tmpCross[3];
 
-    crossProductFloat(tmpCross, ray->direction, &t, 3);
+    crossProductFloat(tmpCross, ray->direction, distance, 3);
     float Phit[3];
 
     addVectors(Phit, ray->origin, tmpCross, 3);
@@ -154,7 +154,11 @@ void render(Scene *scene){
 
             float distance = WORLD_MAX_DISTANCE;
             float maxDistance = WORLD_MAX_DISTANCE;
-            Face *nearestFace;
+            Face *nearestFace = NULL;
+            if (y ==  125 -16 && x == 583){
+                printf("est\n");
+            }
+            // todo bug isolate face 557
             for (int i = 0; i < scene->object.faceNb; i++) {
                 Face *currentFace = &scene->object.faces[i];
 
@@ -174,7 +178,7 @@ void render(Scene *scene){
                 green[y][x] = 0;
                 blue[y][x] = 0;
             }else {
-                float color = computeColor(currentFace->n, &scene->light);
+                float color = computeColor(nearestFace->n, &scene->light);
                 red[y][x] = color;
                 green[y][x] = color;
                 blue[y][x] = color;
@@ -186,6 +190,9 @@ void render(Scene *scene){
     clock_t end = clock();
     printf("\nrender time: %f s\n", (double) (end - start) / (double) CLOCKS_PER_SEC);
     char *imagePath = "render.bmp";
+
+    printf("%f\n", red[44-16][78]);
+
     writeBmpFile(RESOLUTION_W, RESOLUTION_H, red, green, blue, imagePath);
 
     printf("Wrote image : %s\n", imagePath);
