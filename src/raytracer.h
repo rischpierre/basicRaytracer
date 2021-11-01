@@ -4,7 +4,7 @@
 #include "stdbool.h"
 #include "geometries.h"
 
-bool isRayIntersectsTriangle(const Ray *ray, const Face *triangle, bool isBackFaceCulled, float* distance);
+bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance);
 float computeColor(const float *faceNormal, const DirLight* light);
 void render(Scene *scene);
 void freeScene(Scene *scene);

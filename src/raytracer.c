@@ -10,65 +10,40 @@
 #include "transform.h"
 
 
-bool isRayIntersectsTriangle(const Ray *ray, const Face *face, bool isBackFaceCulled, float* distance){
+bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) {
 
-    // skip if the face is back
-    if (isBackFaceCulled && dotProduct(ray->direction, face->n) > 0){
+    float edge1[3], edge2[3], p[3], q[3], t[3];
+    float det, u, v, invertedDet;
+
+    // find the two edges arround V0
+    subVectors(edge1, face->v1, face->v0, 3);
+    subVectors(edge2, face->v2, face->v0, 3);
+
+    //  get p
+    crossProduct(p, ray->direction, edge2);
+
+    det = dotProduct(edge1, p);
+    if (det > -RAY_TRACING_THRESHOLD && det < RAY_TRACING_THRESHOLD)
         return false;
-    }
 
-    // parametric equation of a plane: Ax + By + Cz + D = 0
-    // where D is the distance from origin and parallel to the plane's triangle.normal
-    float D = dotProduct(face->n, face->v0);
+    // precompute the inverse of the determinant
+    invertedDet = 1.f / det;
 
-    float NDotRayDirection = dotProduct(face->n, ray->direction);
-    // check if triangle is parallel to ray. This can cause div by 0 instead
-    if (NDotRayDirection == 0) return false;
+    // distance from V to ray origin
+    subVectors(t, ray->origin, face->v0, 3);
 
-    // compute the distance between the triangle and the origin of the ray
-    *distance = -(dotProduct(face->n, ray->origin) + (float)fabs((double)D)) / NDotRayDirection;
+    // calculate u param
+    u = dotProduct(t, p) * invertedDet;
+    if (u < 0 || u > 1.f)  // the hit point is outside of the triangle
+        return false;
 
-    // triangle is behind the ray
-    if (*distance < 0 ) return false;
+    // calculate v param
+    crossProduct(q, t, edge1);
+    v = dotProduct(ray->direction, q) * invertedDet;
+    if ( v < 0 || u + v > 1.f)  // hit point outside triangle
+        return false;
 
-    float tmpCross[3];
-
-    crossProductFloat(tmpCross, ray->direction, distance, 3);
-    float Phit[3];
-
-    addVectors(Phit, ray->origin, tmpCross, 3);
-
-    // check if Phit is inside triangle
-    float edge0[3];
-    subVectors(edge0, face->v1, face->v0, 3);
-
-    float C0[3];
-    subVectors(C0, Phit, face->v0, 3);
-
-    float tmpCrossProduct[3];
-    crossProduct(tmpCrossProduct, edge0, C0);
-
-    // P is on the right side
-    if (dotProduct(face->n, tmpCrossProduct) < 0) return false;
-
-    float edge1[3];
-    subVectors(edge1, face->v2, face->v1, 3);
-
-    float C1[3];
-    subVectors(C1, Phit, face->v1, 3);
-
-    crossProduct(tmpCrossProduct, edge1, C1);
-
-    if (dotProduct(face->n, tmpCrossProduct) < 0) return false;
-
-    float edge2[3];
-    subVectors(edge2, face->v0, face->v2, 3);
-
-    float C2[3];
-    subVectors(C2, Phit, face->v2, 3);
-
-    crossProduct(tmpCrossProduct, edge2, C2);
-    if (dotProduct(face->n, tmpCrossProduct) < 0) return false;
+    *distance = dotProduct(edge2, q) * invertedDet;
 
     return true;
 }
@@ -132,17 +107,17 @@ void render(Scene *scene){
 
     clock_t start = clock();
 
-    splitQuads(&scene->object);
-
-    printObject(&scene->object, false);
-
-
+    int printIncrement = RESOLUTION_H / 10;
     // scanline process from top left to bottom right
+    printf("0 %%");
     for (int y = RESOLUTION_H - 1; y >= 0; y--) {
 
         // log progress
-        int percent = (int)(((float)RESOLUTION_H - (float)y)/(float)RESOLUTION_H * 100);
-        printf("%d %% \r", percent);
+        if (y % printIncrement == 0){
+            int percent = ((RESOLUTION_H - y) * 100)/RESOLUTION_H;
+            printf("\r%d %%", percent);
+            fflush(stdout);
+        }
 
         for (int x = 0; x < RESOLUTION_W; x++) {
 
@@ -158,18 +133,11 @@ void render(Scene *scene){
             float maxDistance = WORLD_MAX_DISTANCE;
             Face *nearestFace = NULL;
 
-
-
             for (int i = 0; i < scene->object.faceNb; i++) {
-
-                // todo bug with wierd faces ie. face 827
-                if (y ==   180-81 && x == 274 && i == 827){
-                    printf("test\n");
-                }
 
                 Face *currentFace = &scene->object.faces[i];
 
-                bool intersected = isRayIntersectsTriangle(&ray, currentFace, true, &distance);
+                bool intersected = isRayIntersectsTriangle(&ray, currentFace, &distance);
                 if (!intersected) {
                     continue;
                 }
@@ -191,11 +159,6 @@ void render(Scene *scene){
                 green[y][x] = color;
                 blue[y][x] = color;
 
-                // todo trace pixel in red in order to see it
-                if (y ==   180-81 && x == 274){
-                    red[y][x] = 1.f;
-                }
-
             }
         }
     }
@@ -203,8 +166,6 @@ void render(Scene *scene){
     clock_t end = clock();
     printf("\nrender time: %f s\n", (double) (end - start) / (double) CLOCKS_PER_SEC);
     char *imagePath = "render.bmp";
-
-    printf("%f\n", red[44-16][78]);
 
     writeBmpFile(RESOLUTION_W, RESOLUTION_H, red, green, blue, imagePath);
 

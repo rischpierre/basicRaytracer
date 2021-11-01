@@ -22,7 +22,7 @@ void defineExampleScene(Scene *scene) {
 }
 
 void validateRenderSettings(){
-    assert(RESOLUTION_DIVIDER % 2 == 0);
+    assert(RESOLUTION_DIVIDER % 2 == 0 || RESOLUTION_DIVIDER == 1);
 }
 
 int main(int argc, char *argv[]) {
@@ -36,9 +36,12 @@ int main(int argc, char *argv[]) {
         printf("%s", usage);
         exit(1);
     }
-
+    printf("Parsing object...\n");
     parseObjFile(scene, argv[1]);
+    splitQuads(&scene->object);
 
+    printObject(&scene->object, false);
+    printf("Rendering...\n");
     render(scene);
 
     freeScene(scene);
