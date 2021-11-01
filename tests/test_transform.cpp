@@ -3,6 +3,7 @@
 #include <math.h>
 
 #include "gtest/gtest.h"
+#include "../src/geometries.h"
 
 
 TEST(transformTests, translate_works) {
@@ -62,4 +63,25 @@ TEST(transformTests, scale_works) {
         ASSERT_FLOAT_EQ(expected[i], v[i]);
     }
 
+}
+
+TEST(computeBbox, validBBox){
+
+    float bbox[6];
+
+    Face faces[1];
+    Object o = {.faces=faces, .faceNb=1, .name="test"};
+    Face f = {.v0={1, 2, -3}, .v1={-4, 5, 6}, .v2={7, 8, 9}};
+    faces[0] = f;
+
+    computeBBox(&o, bbox);
+
+    ASSERT_FLOAT_EQ(bbox[0], -4);
+    ASSERT_FLOAT_EQ(bbox[1], 7);
+
+    ASSERT_FLOAT_EQ(bbox[2], 2);
+    ASSERT_FLOAT_EQ(bbox[3], 8);
+
+    ASSERT_FLOAT_EQ(bbox[4], -3);
+    ASSERT_FLOAT_EQ(bbox[5], 9);
 }

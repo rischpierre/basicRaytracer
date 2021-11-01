@@ -8,10 +8,10 @@
 TEST(raytracer, test_ray_inside_triangle){
     Ray ray = {.origin={0, 0, 0},
                .direction={0, 1, 0}};
-
+    float d;
     Scene *s = (Scene *)malloc(sizeof(Scene));
     parseObjFile(s, "../../examples/triangle.obj");
-    ASSERT_TRUE(isRayIntersectsTriangle(&ray, s->object.faces, true));
+    ASSERT_TRUE(isRayIntersectsTriangle(&ray, s->object.faces, true, &d));
     freeScene(s);
 }
 
@@ -19,19 +19,20 @@ TEST(raytracer, test_ray_outside_triangle){
     Ray ray = {.origin={0, 0, 0},
             .direction={0, 1, 0}};
 
+    float d;
     Scene *s = (Scene *)malloc(sizeof(Scene));
     parseObjFile(s, "../../examples/notIntersectingYTriangle.obj");
-    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s->object.faces, true));
+    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s->object.faces, true, &d));
     freeScene(s);
 }
 
 TEST(raytracer, test_back_face){
     Ray ray = {.origin={0, 0, 0},
             .direction={0, 1, 0}};
-
+    float d;
     Scene *s = (Scene *)malloc(sizeof(Scene));
     parseObjFile(s, "../../examples/reversedTriangle.obj");
-    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s->object.faces, true));
+    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s->object.faces, true, &d));
     freeScene(s);
 }
 
@@ -40,8 +41,9 @@ TEST(raytracer, test_ray_inside_tilted_triangle){
             .direction={0, 1, 0}};
 
     Scene *s = (Scene *)malloc(sizeof(Scene));
+    float d;
     parseObjFile(s, "../../examples/tiltedTriangle.obj");
-    ASSERT_TRUE(isRayIntersectsTriangle(&ray, s->object.faces, true));
+    ASSERT_TRUE(isRayIntersectsTriangle(&ray, s->object.faces, true, &d));
     freeScene(s);
 }
 
@@ -50,8 +52,9 @@ TEST(raytracer, test_ray_outside_tilted_triangle){
             .direction={0, 1, 0}};
 
     Scene *s = (Scene *)malloc(sizeof(Scene));
+    float d;
     parseObjFile(s, "../../examples/tiltedTriangle.obj");
-    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s->object.faces, true));
+    ASSERT_FALSE(isRayIntersectsTriangle(&ray, s->object.faces, true, &d));
     freeScene(s);
 }
 

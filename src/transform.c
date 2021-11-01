@@ -1,7 +1,10 @@
 
 #include "transform.h"
 #include "mathLib.h"
+#include "renderSettings.h"
 #include <math.h>
+#include <float.h>
+#include <stdio.h>
 
 
 void transform(float *v, float *tm){
@@ -45,4 +48,61 @@ void transform(float *v, float *tm){
     multVectMatrix44(v, ryMatrix);
     multVectMatrix44(v, rzMatrix);
     multVectMatrix44(v, matrix44fTranslate);
+}
+
+
+void printBBox(const float* bbox){
+
+    printf("bbox: x-: %f x+ %f  |  ", bbox[0], bbox[1]);
+    printf("y-: %f y+ %f  |   ", bbox[2], bbox[3]);
+    printf("z-: %f z+ %f", bbox[5], bbox[4]);
+    printf("\n");
+}
+
+void computeBBox(const Object *o, float* bbox){
+
+    float maxCoordX = -WORLD_MAX_DISTANCE;
+    float maxCoordY = -WORLD_MAX_DISTANCE;
+    float maxCoordZ = -WORLD_MAX_DISTANCE;
+
+    float minCoordX = WORLD_MAX_DISTANCE;
+    float minCoordY = WORLD_MAX_DISTANCE;
+    float minCoordZ = WORLD_MAX_DISTANCE;
+
+    Face *current;
+    for (int i = 0; i < o->faceNb; i++) {
+        current = &o->faces[i];
+
+        // loop over every vertex in the face
+        for(int v=0; v < 3; v++){
+            // loop over attributes of struct
+            float x = *(current->v0 + 3 * v + 0);
+            float y = *(current->v0 + 3 * v + 1);
+            float z = *(current->v0 + 3 * v + 2);
+
+            if (x < minCoordX)
+                minCoordX = x;
+            if (x > maxCoordX)
+                maxCoordX = x;
+
+            if (y < minCoordY)
+                minCoordY = y;
+            if (y > maxCoordY)
+                maxCoordY = y;
+
+            if (z < minCoordZ)
+                minCoordZ = z;
+            if (z > maxCoordZ)
+                maxCoordZ = z;        }
+    }
+
+    bbox[0] = minCoordX;
+    bbox[1] = maxCoordX;
+
+    bbox[2] = minCoordY;
+    bbox[3] = maxCoordY;
+
+    bbox[4] = minCoordZ;
+    bbox[5] = maxCoordZ;
+
 }
