@@ -54,8 +54,8 @@ void transform(float *v, float *tm){
 void printBBox(const float* bbox){
 
     printf("bbox: x-: %f x+ %f  |  ", bbox[0], bbox[1]);
-    printf("y-: %f y+ %f  |   ", bbox[2], bbox[3]);
-    printf("z-: %f z+ %f", bbox[5], bbox[4]);
+    printf("y-: %f y+: %f  |   ", bbox[2], bbox[3]);
+    printf("z-: %f z+: %f", bbox[4], bbox[5]);
     printf("\n");
 }
 
