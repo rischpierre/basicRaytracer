@@ -18,5 +18,3 @@ void printObject(const Object *o, bool details){
     }
     printf("----------------------\n");
 }
-
-
