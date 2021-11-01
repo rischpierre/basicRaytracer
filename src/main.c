@@ -38,9 +38,7 @@ int main(int argc, char *argv[]) {
     }
 
     parseObjFile(scene, argv[1]);
-    float bbox[6];
-    computeBBox(&scene->object, bbox);
-    printBBox(bbox);
+
     render(scene);
 
     freeScene(scene);
