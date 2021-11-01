@@ -157,14 +157,19 @@ void render(Scene *scene){
             float distance = WORLD_MAX_DISTANCE;
             float maxDistance = WORLD_MAX_DISTANCE;
             Face *nearestFace = NULL;
-            if (y ==  125 -16 && x == 583){
-                printf("est\n");
-            }
-            // todo bug isolate face 557
+
+
+
             for (int i = 0; i < scene->object.faceNb; i++) {
+
+                // todo bug with wierd faces ie. face 827
+                if (y ==   180-81 && x == 274 && i == 827){
+                    printf("test\n");
+                }
+
                 Face *currentFace = &scene->object.faces[i];
 
-                bool intersected = isRayIntersectsTriangle(&ray, currentFace, false, &distance);
+                bool intersected = isRayIntersectsTriangle(&ray, currentFace, true, &distance);
                 if (!intersected) {
                     continue;
                 }
@@ -181,9 +186,15 @@ void render(Scene *scene){
                 blue[y][x] = 0;
             }else {
                 float color = computeColor(nearestFace->n, &scene->light);
+
                 red[y][x] = color;
                 green[y][x] = color;
                 blue[y][x] = color;
+
+                // todo trace pixel in red in order to see it
+                if (y ==   180-81 && x == 274){
+                    red[y][x] = 1.f;
+                }
 
             }
         }
