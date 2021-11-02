@@ -16,6 +16,4 @@ add_subdirectory(tests)
 
 add_executable(raytracerExperiment ${SOURCES})
 
-
-# add math library
-target_link_libraries(raytracerExperiment m)
+target_link_libraries(raytracerExperiment m pthread)

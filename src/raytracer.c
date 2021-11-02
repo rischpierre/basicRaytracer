@@ -3,6 +3,8 @@
 #include <time.h>
 #include <malloc.h>
 #include <stdlib.h>
+#include <pthread.h>
+
 #include "raytracer.h"
 #include "mathLib.h"
 #include "renderSettings.h"
@@ -69,9 +71,7 @@ void splitQuads(Object *o) {
     if (quadNb == 0) return;
     int newFaceNb =  (o->faceNb - quadNb) + 2 * quadNb;
     o->faces = (Face *)realloc(o->faces, sizeof(Face) * newFaceNb);
-
-    int newFaceId = o->faceNb;
-    for(int currentFaceId = 0; currentFaceId < o->faceNb; currentFaceId++) {
+int newFaceId = o->faceNb; for(int currentFaceId = 0; currentFaceId < o->faceNb; currentFaceId++) {
         Face c = o->faces[currentFaceId];
         if (c.isQuad) {
             Face f;
@@ -89,6 +89,83 @@ void splitQuads(Object *o) {
     o->faceNb = newFaceNb;
 }
 
+struct args{
+
+    Scene *scene;
+    Ray *ray;
+    float** red;
+    float** green;
+    float** blue;
+    int start;
+    int end;
+    char* threadName;
+};
+
+
+void *renderLoop(void* arguments){
+
+    struct args *args = arguments;
+    printf("Starting thread: %s\n", args->threadName);
+
+//    int printIncrement = RESOLUTION_H / 10;
+    // scanline process from top left to bottom right
+
+//    printf("0 %%");
+    for (int y = args->start; y < args->end; y++) {
+
+        // log progress
+//        if (y % printIncrement == 0){
+//            int percent = ((RESOLUTION_H - y) * 100)/RESOLUTION_H;
+//            printf("\r%d %%", percent);
+//            fflush(stdout);
+//        }
+
+        for (int x = 0; x < RESOLUTION_W; x++) {
+
+            // world: x -> screen: x
+            // world: z -> screen: y
+            args->ray->direction[0] = interpolation1d((float) x, 0, (float) RESOLUTION_W, -CAM_FILM_SIZE_W / 2,
+                                               CAM_FILM_SIZE_W / 2);
+
+            args->ray->direction[2] = interpolation1d((float) y, 0, (float) RESOLUTION_H, -CAM_FILM_SIZE_H / 2,
+                                               CAM_FILM_SIZE_H / 2);
+
+            float distance = WORLD_MAX_DISTANCE;
+            float maxDistance = WORLD_MAX_DISTANCE;
+            Face *nearestFace = NULL;
+
+            for (int i = 0; i < args->scene->object.faceNb; i++) {
+
+                Face *currentFace = &args->scene->object.faces[i];
+
+                bool intersected = isRayIntersectsTriangle(args->ray, currentFace, &distance);
+                if (!intersected) {
+                    continue;
+                }
+
+                if (distance < maxDistance) {
+                    maxDistance = distance;
+                    nearestFace = currentFace;
+                }
+            }
+
+            if (nearestFace == NULL) {
+                args->red[y][x] = 0;
+                args->green[y][x] = 0;
+                args->blue[y][x] = 0;
+            }else {
+                float color = computeColor(nearestFace->n, &args->scene->light);
+
+                args->red[y][x] = color;
+                args->green[y][x] = color;
+                args->blue[y][x] = color;
+
+            }
+        }
+    }
+
+
+}
 
 void render(Scene *scene){
     // this is first a test with planar projection
@@ -105,63 +182,20 @@ void render(Scene *scene){
         blue[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
     }
 
+    pthread_t t1;
+    pthread_t t2;
+
+    struct args args1 = {.scene=scene, .ray=&ray, .red=red, .green=green, .blue=blue, .start=0, .end=RESOLUTION_H/2, .threadName="t1"};
+    struct args args2 = {.scene=scene, .ray=&ray, .red=red, .green=green, .blue=blue, .start=RESOLUTION_H/2, .end=RESOLUTION_H, .threadName="t2"};
+
     clock_t start = clock();
 
-    int printIncrement = RESOLUTION_H / 10;
-    // scanline process from top left to bottom right
-    printf("0 %%");
-    for (int y = RESOLUTION_H - 1; y >= 0; y--) {
+    pthread_create(&t1, NULL, &renderLoop, (void*)&args1);
+    pthread_create(&t2, NULL, &renderLoop, (void*)&args2);
 
-        // log progress
-        if (y % printIncrement == 0){
-            int percent = ((RESOLUTION_H - y) * 100)/RESOLUTION_H;
-            printf("\r%d %%", percent);
-            fflush(stdout);
-        }
+    pthread_join(t1, NULL);
+    pthread_join(t2, NULL);
 
-        for (int x = 0; x < RESOLUTION_W; x++) {
-
-            // world: x -> screen: x
-            // world: z -> screen: y
-            ray.direction[0] = interpolation1d((float) x, 0, (float) RESOLUTION_W, -CAM_FILM_SIZE_W / 2,
-                                               CAM_FILM_SIZE_W / 2);
-
-            ray.direction[2] = interpolation1d((float) y, 0, (float) RESOLUTION_H, -CAM_FILM_SIZE_H / 2,
-                                               CAM_FILM_SIZE_H / 2);
-
-            float distance = WORLD_MAX_DISTANCE;
-            float maxDistance = WORLD_MAX_DISTANCE;
-            Face *nearestFace = NULL;
-
-            for (int i = 0; i < scene->object.faceNb; i++) {
-
-                Face *currentFace = &scene->object.faces[i];
-
-                bool intersected = isRayIntersectsTriangle(&ray, currentFace, &distance);
-                if (!intersected) {
-                    continue;
-                }
-
-                if (distance < maxDistance) {
-                    maxDistance = distance;
-                    nearestFace = currentFace;
-                }
-            }
-
-            if (nearestFace == NULL) {
-                red[y][x] = 0;
-                green[y][x] = 0;
-                blue[y][x] = 0;
-            }else {
-                float color = computeColor(nearestFace->n, &scene->light);
-
-                red[y][x] = color;
-                green[y][x] = color;
-                blue[y][x] = color;
-
-            }
-        }
-    }
 
     clock_t end = clock();
     printf("\nrender time: %f s\n", (double) (end - start) / (double) CLOCKS_PER_SEC);
