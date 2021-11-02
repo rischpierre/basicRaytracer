@@ -109,18 +109,7 @@ void *renderLoop(void* arguments){
     struct args *args = arguments;
     printf("Starting thread: %d\n", args->threadId);
 
-//    int printIncrement = RESOLUTION_H / 10;
-    // scanline process from top left to bottom right
-
-//    printf("0 %%");
     for (int y = args->start; y < args->end; y++) {
-
-        // log progress
-//        if (y % printIncrement == 0){
-//            int percent = ((RESOLUTION_H - y) * 100)/RESOLUTION_H;
-//            printf("\r%d %%", percent);
-//            fflush(stdout);
-//        }
 
         for (int x = 0; x < RESOLUTION_W; x++) {
 
@@ -185,7 +174,8 @@ void render(Scene *scene){
 
     // todo clock does not work in multithreading???
 
-    clock_t startTime = clock();
+    struct timespec startTime, finishTime;
+    clock_gettime(CLOCK_MONOTONIC, &startTime);
 
     int threadCount = 8;
     pthread_t threads[threadCount];
@@ -209,9 +199,10 @@ void render(Scene *scene){
         pthread_join(threads[i], NULL);
     }
 
-
-    clock_t end = clock();
-    printf("\nrender time: %f s\n", (double) (end - startTime) / (double) CLOCKS_PER_SEC);
+    clock_gettime(CLOCK_MONOTONIC, &finishTime);
+    double elapsed = (double)(finishTime.tv_sec - startTime.tv_sec);
+    elapsed += (double)((finishTime.tv_nsec - startTime.tv_nsec)/1000000000.0);
+    printf("\nrender time: %f s\n", (float)elapsed);
     char *imagePath = "render.bmp";
 
     writeBmpFile(RESOLUTION_W, RESOLUTION_H, red, green, blue, imagePath);
