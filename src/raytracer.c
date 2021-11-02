@@ -144,6 +144,22 @@ void *renderLoop(void* arguments){
 
 }
 
+
+unsigned int getNumThreads(){
+
+    unsigned int eax=11,ebx=0,ecx=1,edx=0;
+
+    asm volatile("cpuid"
+    : "=a" (eax),
+    "=b" (ebx),
+    "=c" (ecx),
+    "=d" (edx)
+    : "0" (eax), "2" (ecx)
+    : );
+
+    return ebx;
+}
+
 void render(Scene *scene){
     // this is first a test with planar projection
 
@@ -156,12 +172,11 @@ void render(Scene *scene){
         blue[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
     }
 
-    // todo get the numbers of threads using the system
-
     struct timespec startTime, finishTime;
     clock_gettime(CLOCK_MONOTONIC, &startTime);
 
-    int threadCount = 8;
+    unsigned int threadCount = getNumThreads();
+    printf("Using %d threads\n", threadCount);
     pthread_t threads[threadCount];
 
     int start = 0;
