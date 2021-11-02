@@ -161,8 +161,6 @@ void *renderLoop(void* arguments){
 void render(Scene *scene){
     // this is first a test with planar projection
 
-
-
     float **red = (float **) malloc(RESOLUTION_H * sizeof(float *));
     float **green = (float **) malloc(RESOLUTION_H * sizeof(float *));
     float **blue = (float **) malloc(RESOLUTION_H * sizeof(float *));
@@ -172,7 +170,10 @@ void render(Scene *scene){
         blue[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
     }
 
-    // todo clock does not work in multithreading???
+    // todo print progress using a callback or something?
+    // todo update the unittest with the renderArgs, put the render args in the header
+    // todo add the renderLoop function in the .h file
+    // todo get the numbers of threads using the system
 
     struct timespec startTime, finishTime;
     clock_gettime(CLOCK_MONOTONIC, &startTime);
