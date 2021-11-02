@@ -1,5 +1,4 @@
 #include <math.h>
-#include <bits/types/clock_t.h>
 #include <time.h>
 #include <malloc.h>
 #include <stdlib.h>
@@ -9,7 +8,6 @@
 #include "mathLib.h"
 #include "renderSettings.h"
 #include "ioLib.h"
-#include "transform.h"
 
 
 bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) {
@@ -89,16 +87,6 @@ int newFaceId = o->faceNb; for(int currentFaceId = 0; currentFaceId < o->faceNb;
     o->faceNb = newFaceNb;
 }
 
-struct args{
-
-    Scene *scene;
-    float** red;
-    float** green;
-    float** blue;
-    int start;
-    int end;
-    int threadId;
-};
 
 
 void *renderLoop(void* arguments){
@@ -106,8 +94,7 @@ void *renderLoop(void* arguments){
     Ray ray = {.origin={0, 0, 0},
             .direction={0, CAM_FOCAL_LENGTH, 0}};
 
-    struct args *args = arguments;
-    printf("Starting thread: %d\n", args->threadId);
+    struct renderArgs *args = (struct renderArgs*)arguments;
 
     for (int y = args->start; y < args->end; y++) {
 
@@ -154,7 +141,6 @@ void *renderLoop(void* arguments){
             }
         }
     }
-    printf("finish thread %d\n", args->threadId);
 
 }
 
@@ -170,9 +156,6 @@ void render(Scene *scene){
         blue[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
     }
 
-    // todo print progress using a callback or something?
-    // todo update the unittest with the renderArgs, put the render args in the header
-    // todo add the renderLoop function in the .h file
     // todo get the numbers of threads using the system
 
     struct timespec startTime, finishTime;
@@ -183,12 +166,13 @@ void render(Scene *scene){
 
     int start = 0;
     int lineIncrement = RESOLUTION_H/threadCount;
-    struct args arguments[threadCount];
+    struct renderArgs arguments[threadCount];
 
     for (int i = 0; i < threadCount; ++i) {
         pthread_t t;
 
-        struct args args1 = {.scene=scene, .red=red, .green=green, .blue=blue, .start=start, .end=start+lineIncrement, .threadId=i};
+        struct renderArgs args1 = {.scene=scene, .red=red, .green=green,
+                .blue=blue, .start=start, .end=start+lineIncrement, .threadId=i};
         arguments[i] = args1;
 
         pthread_create(&t, NULL, &renderLoop, (void*)&arguments[i]);
