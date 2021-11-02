@@ -97,7 +97,7 @@ struct args{
     float** blue;
     int start;
     int end;
-    char* threadName;
+    int threadId;
 };
 
 
@@ -107,7 +107,7 @@ void *renderLoop(void* arguments){
             .direction={0, CAM_FOCAL_LENGTH, 0}};
 
     struct args *args = arguments;
-    printf("Starting thread: %s\n", args->threadName);
+    printf("Starting thread: %d\n", args->threadId);
 
 //    int printIncrement = RESOLUTION_H / 10;
     // scanline process from top left to bottom right
@@ -165,7 +165,7 @@ void *renderLoop(void* arguments){
             }
         }
     }
-
+    printf("finish thread %d\n", args->threadId);
 
 }
 
@@ -183,23 +183,35 @@ void render(Scene *scene){
         blue[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
     }
 
-    pthread_t t1;
-    pthread_t t2;
+    // todo clock does not work in multithreading???
 
-    struct args args1 = {.scene=scene, .red=red, .green=green, .blue=blue, .start=0, .end=RESOLUTION_H/2, .threadName="t1"};
-    struct args args2 = {.scene=scene, .red=red, .green=green, .blue=blue, .start=RESOLUTION_H/2, .end=RESOLUTION_H, .threadName="t2"};
+    clock_t startTime = clock();
 
-    clock_t start = clock();
+    int threadCount = 8;
+    pthread_t threads[threadCount];
 
-    pthread_create(&t1, NULL, &renderLoop, (void*)&args1);
-    pthread_create(&t2, NULL, &renderLoop, (void*)&args2);
+    int start = 0;
+    int lineIncrement = RESOLUTION_H/threadCount;
+    struct args arguments[threadCount];
 
-    pthread_join(t1, NULL);
-    pthread_join(t2, NULL);
+    for (int i = 0; i < threadCount; ++i) {
+        pthread_t t;
+
+        struct args args1 = {.scene=scene, .red=red, .green=green, .blue=blue, .start=start, .end=start+lineIncrement, .threadId=i};
+        arguments[i] = args1;
+
+        pthread_create(&t, NULL, &renderLoop, (void*)&arguments[i]);
+        threads[i] = t;
+        start += lineIncrement;
+    }
+
+    for (int i = 0; i < threadCount; ++i) {
+        pthread_join(threads[i], NULL);
+    }
 
 
     clock_t end = clock();
-    printf("\nrender time: %f s\n", (double) (end - start) / (double) CLOCKS_PER_SEC);
+    printf("\nrender time: %f s\n", (double) (end - startTime) / (double) CLOCKS_PER_SEC);
     char *imagePath = "render.bmp";
 
     writeBmpFile(RESOLUTION_W, RESOLUTION_H, red, green, blue, imagePath);
