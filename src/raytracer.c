@@ -92,7 +92,6 @@ int newFaceId = o->faceNb; for(int currentFaceId = 0; currentFaceId < o->faceNb;
 struct args{
 
     Scene *scene;
-    Ray *ray;
     float** red;
     float** green;
     float** blue;
@@ -103,6 +102,9 @@ struct args{
 
 
 void *renderLoop(void* arguments){
+
+    Ray ray = {.origin={0, 0, 0},
+            .direction={0, CAM_FOCAL_LENGTH, 0}};
 
     struct args *args = arguments;
     printf("Starting thread: %s\n", args->threadName);
@@ -124,10 +126,10 @@ void *renderLoop(void* arguments){
 
             // world: x -> screen: x
             // world: z -> screen: y
-            args->ray->direction[0] = interpolation1d((float) x, 0, (float) RESOLUTION_W, -CAM_FILM_SIZE_W / 2,
+            ray.direction[0] = interpolation1d((float) x, 0, (float) RESOLUTION_W, -CAM_FILM_SIZE_W / 2,
                                                CAM_FILM_SIZE_W / 2);
 
-            args->ray->direction[2] = interpolation1d((float) y, 0, (float) RESOLUTION_H, -CAM_FILM_SIZE_H / 2,
+            ray.direction[2] = interpolation1d((float) y, 0, (float) RESOLUTION_H, -CAM_FILM_SIZE_H / 2,
                                                CAM_FILM_SIZE_H / 2);
 
             float distance = WORLD_MAX_DISTANCE;
@@ -138,7 +140,7 @@ void *renderLoop(void* arguments){
 
                 Face *currentFace = &args->scene->object.faces[i];
 
-                bool intersected = isRayIntersectsTriangle(args->ray, currentFace, &distance);
+                bool intersected = isRayIntersectsTriangle(&ray, currentFace, &distance);
                 if (!intersected) {
                     continue;
                 }
@@ -170,8 +172,7 @@ void *renderLoop(void* arguments){
 void render(Scene *scene){
     // this is first a test with planar projection
 
-    Ray ray = {.origin={0, 0, 0},
-            .direction={0, CAM_FOCAL_LENGTH, 0}};
+
 
     float **red = (float **) malloc(RESOLUTION_H * sizeof(float *));
     float **green = (float **) malloc(RESOLUTION_H * sizeof(float *));
@@ -185,8 +186,8 @@ void render(Scene *scene){
     pthread_t t1;
     pthread_t t2;
 
-    struct args args1 = {.scene=scene, .ray=&ray, .red=red, .green=green, .blue=blue, .start=0, .end=RESOLUTION_H/2, .threadName="t1"};
-    struct args args2 = {.scene=scene, .ray=&ray, .red=red, .green=green, .blue=blue, .start=RESOLUTION_H/2, .end=RESOLUTION_H, .threadName="t2"};
+    struct args args1 = {.scene=scene, .red=red, .green=green, .blue=blue, .start=0, .end=RESOLUTION_H/2, .threadName="t1"};
+    struct args args2 = {.scene=scene, .red=red, .green=green, .blue=blue, .start=RESOLUTION_H/2, .end=RESOLUTION_H, .threadName="t2"};
 
     clock_t start = clock();
 
