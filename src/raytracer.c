@@ -1,13 +1,13 @@
 #include <math.h>
-#include <bits/types/clock_t.h>
 #include <time.h>
 #include <malloc.h>
 #include <stdlib.h>
+#include <pthread.h>
+
 #include "raytracer.h"
 #include "mathLib.h"
 #include "renderSettings.h"
 #include "ioLib.h"
-#include "transform.h"
 
 
 bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) {
@@ -69,9 +69,7 @@ void splitQuads(Object *o) {
     if (quadNb == 0) return;
     int newFaceNb =  (o->faceNb - quadNb) + 2 * quadNb;
     o->faces = (Face *)realloc(o->faces, sizeof(Face) * newFaceNb);
-
-    int newFaceId = o->faceNb;
-    for(int currentFaceId = 0; currentFaceId < o->faceNb; currentFaceId++) {
+int newFaceId = o->faceNb; for(int currentFaceId = 0; currentFaceId < o->faceNb; currentFaceId++) {
         Face c = o->faces[currentFaceId];
         if (c.isQuad) {
             Face f;
@@ -90,34 +88,15 @@ void splitQuads(Object *o) {
 }
 
 
-void render(Scene *scene){
-    // this is first a test with planar projection
+
+void *renderLoop(void* arguments){
 
     Ray ray = {.origin={0, 0, 0},
             .direction={0, CAM_FOCAL_LENGTH, 0}};
 
-    float **red = (float **) malloc(RESOLUTION_H * sizeof(float *));
-    float **green = (float **) malloc(RESOLUTION_H * sizeof(float *));
-    float **blue = (float **) malloc(RESOLUTION_H * sizeof(float *));
-    for (int i = 0; i < RESOLUTION_H; i++) {
-        red[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
-        green[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
-        blue[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
-    }
+    struct renderArgs *args = (struct renderArgs*)arguments;
 
-    clock_t start = clock();
-
-    int printIncrement = RESOLUTION_H / 10;
-    // scanline process from top left to bottom right
-    printf("0 %%");
-    for (int y = RESOLUTION_H - 1; y >= 0; y--) {
-
-        // log progress
-        if (y % printIncrement == 0){
-            int percent = ((RESOLUTION_H - y) * 100)/RESOLUTION_H;
-            printf("\r%d %%", percent);
-            fflush(stdout);
-        }
+    for (int y = args->start; y < args->end; y++) {
 
         for (int x = 0; x < RESOLUTION_W; x++) {
 
@@ -133,9 +112,9 @@ void render(Scene *scene){
             float maxDistance = WORLD_MAX_DISTANCE;
             Face *nearestFace = NULL;
 
-            for (int i = 0; i < scene->object.faceNb; i++) {
+            for (int i = 0; i < args->scene->object.faceNb; i++) {
 
-                Face *currentFace = &scene->object.faces[i];
+                Face *currentFace = &args->scene->object.faces[i];
 
                 bool intersected = isRayIntersectsTriangle(&ray, currentFace, &distance);
                 if (!intersected) {
@@ -149,22 +128,81 @@ void render(Scene *scene){
             }
 
             if (nearestFace == NULL) {
-                red[y][x] = 0;
-                green[y][x] = 0;
-                blue[y][x] = 0;
+                args->red[y][x] = 0;
+                args->green[y][x] = 0;
+                args->blue[y][x] = 0;
             }else {
-                float color = computeColor(nearestFace->n, &scene->light);
+                float color = computeColor(nearestFace->n, &args->scene->light);
 
-                red[y][x] = color;
-                green[y][x] = color;
-                blue[y][x] = color;
+                args->red[y][x] = color;
+                args->green[y][x] = color;
+                args->blue[y][x] = color;
 
             }
         }
     }
 
-    clock_t end = clock();
-    printf("\nrender time: %f s\n", (double) (end - start) / (double) CLOCKS_PER_SEC);
+}
+
+
+unsigned int getNumThreads(){
+
+    unsigned int eax=11,ebx=0,ecx=1,edx=0;
+
+    asm volatile("cpuid"
+    : "=a" (eax),
+    "=b" (ebx),
+    "=c" (ecx),
+    "=d" (edx)
+    : "0" (eax), "2" (ecx)
+    : );
+
+    return ebx;
+}
+
+void render(Scene *scene){
+    // this is first a test with planar projection
+
+    float **red = (float **) malloc(RESOLUTION_H * sizeof(float *));
+    float **green = (float **) malloc(RESOLUTION_H * sizeof(float *));
+    float **blue = (float **) malloc(RESOLUTION_H * sizeof(float *));
+    for (int i = 0; i < RESOLUTION_H; i++) {
+        red[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
+        green[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
+        blue[i] = (float *) malloc(RESOLUTION_W * sizeof(float));
+    }
+
+    struct timespec startTime, finishTime;
+    clock_gettime(CLOCK_MONOTONIC, &startTime);
+
+    unsigned int threadCount = getNumThreads();
+    printf("Using %d threads\n", threadCount);
+    pthread_t threads[threadCount];
+
+    int start = 0;
+    int lineIncrement = RESOLUTION_H/threadCount;
+    struct renderArgs arguments[threadCount];
+
+    for (int i = 0; i < threadCount; ++i) {
+        pthread_t t;
+
+        struct renderArgs args1 = {.scene=scene, .red=red, .green=green,
+                .blue=blue, .start=start, .end=start+lineIncrement, .threadId=i};
+        arguments[i] = args1;
+
+        pthread_create(&t, NULL, &renderLoop, (void*)&arguments[i]);
+        threads[i] = t;
+        start += lineIncrement;
+    }
+
+    for (int i = 0; i < threadCount; ++i) {
+        pthread_join(threads[i], NULL);
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &finishTime);
+    double elapsed = (double)(finishTime.tv_sec - startTime.tv_sec);
+    elapsed += (double)((finishTime.tv_nsec - startTime.tv_nsec)/1000000000.0);
+    printf("\nrender time: %f s\n", (float)elapsed);
     char *imagePath = "render.bmp";
 
     writeBmpFile(RESOLUTION_W, RESOLUTION_H, red, green, blue, imagePath);
