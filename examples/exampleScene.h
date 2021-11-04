@@ -8,8 +8,8 @@
 void generateRig(Scene *scene){
 
     Camera camera = {
-            .focalPoint={3, 0, 0},
-            .direction={-0.5f, 0.5f, 0},
+            .focalPoint={0, 0, 0},
+            .direction={0, 0, 0},
     };
 
     // light on the top left side
@@ -23,7 +23,7 @@ void generateRig(Scene *scene){
 void generateExampleScene(Scene *scene){
 
     generateRig(scene);
-    parseObjFile(scene, "monkey.obj");
+    parseObjFile(scene, "../examples/monkey.obj");
     scene->isAnimated = true;
     scene->startFrame = 101;
     scene->endFrame = 103;

@@ -38,9 +38,10 @@ int main(int argc, char *argv[]) {
         generateExampleScene(scene);
 
         printObject(&scene->object, false);
-        printf("Rendering...\n");
 
-        for (unsigned int frame = scene->startFrame; frame < scene->endFrame; ++frame) {
+        for (unsigned int frame = scene->startFrame; frame <= scene->endFrame; ++frame) {
+            printf("Rendering frame %d ...\n", frame);
+
             char frameStr[5];
             char imageName[50] = "render";
 
