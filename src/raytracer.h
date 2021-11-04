@@ -6,7 +6,7 @@
 
 bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance);
 float computeColor(const float *faceNormal, const DirLight* light);
-void render(Scene *scene);
+void render(Scene *scene, char *imagePath);
 void freeScene(Scene *scene);
 void splitQuads(Object *o);
 void *renderLoop(void* arguments);

@@ -46,6 +46,9 @@ typedef struct{
     DirLight light;
     Camera camera;
     Object object;
+    bool isAnimated;
+    unsigned int startFrame;
+    unsigned int endFrame;
 } Scene;
 
 #endif //RAYTRACEREXPERIMENT_GEOMETRIES_H

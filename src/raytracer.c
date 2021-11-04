@@ -91,10 +91,10 @@ int newFaceId = o->faceNb; for(int currentFaceId = 0; currentFaceId < o->faceNb;
 
 void *renderLoop(void* arguments){
 
-    Ray ray = {.origin={0, 0, 0},
-            .direction={0, CAM_FOCAL_LENGTH, 0}};
-
     struct renderArgs *args = (struct renderArgs*)arguments;
+
+    Ray ray = {.origin=*args->scene->camera.focalPoint,
+            .direction=*args->scene->camera.direction};
 
     for (int y = args->start; y < args->end; y++) {
 
@@ -160,7 +160,7 @@ unsigned int getNumThreads(){
     return ebx;
 }
 
-void render(Scene *scene){
+void render(Scene *scene, char *imagePath) {
     // this is first a test with planar projection
 
     float **red = (float **) malloc(RESOLUTION_H * sizeof(float *));
@@ -203,7 +203,6 @@ void render(Scene *scene){
     double elapsed = (double)(finishTime.tv_sec - startTime.tv_sec);
     elapsed += (double)((finishTime.tv_nsec - startTime.tv_nsec)/1000000000.0);
     printf("\nrender time: %f s\n", (float)elapsed);
-    char *imagePath = "render.bmp";
 
     writeBmpFile(RESOLUTION_W, RESOLUTION_H, red, green, blue, imagePath);
 

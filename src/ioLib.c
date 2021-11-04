@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "ioLib.h"
 #include "geometries.h"
+#include "raytracer.h"
 
 
 void writeBmpFile(int width, int height, float **red, float **green, float **blue, const char *filePath) {
@@ -218,5 +219,8 @@ void parseObjFile(Scene *scene, const char *filePath){
     scene->object.name = name;
     scene->object.faces = faces;
     scene->object.faceNb = faceNb;
+
+    splitQuads(&scene->object);
+
     fclose(file);
 }
