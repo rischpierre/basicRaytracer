@@ -2,13 +2,14 @@
 #define RAYTRACEREXPERIMENT_EXAMPLESCENE_H
 
 
-
+#include <math.h>
 #include "../src/geometries.h"
+#include "../src/transform.h"
 
 void generateRig(Scene *scene){
 
     Camera camera = {
-            .focalPoint={0, 0, 0},
+            .origin={0, -5, 0},
             .direction={0, 0, 0},
     };
 
@@ -23,10 +24,19 @@ void generateRig(Scene *scene){
 void generateExampleScene(Scene *scene){
 
     generateRig(scene);
-    parseObjFile(scene, "../examples/monkey.obj");
     scene->isAnimated = true;
     scene->startFrame = 101;
     scene->endFrame = 103;
+
+    parseObjFile(scene, "../examples/monkey.obj");
+
+    float transformMatrix[9] = {
+            0, 0, 0,
+            0, 0, M_PI/4,
+            1, 1, 1,
+    };
+
+    transformObject(&scene->object, transformMatrix);
 }
 
 

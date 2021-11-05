@@ -59,6 +59,18 @@ void printBBox(const float* bbox){
     printf("\n");
 }
 
+
+void transformObject(Object *object, float* tm){
+
+    for (int i = 0; i < object->faceNb; ++i) {
+
+        transform(object->faces[i].v0, tm);
+        transform(object->faces[i].v1, tm);
+        transform(object->faces[i].v2, tm);
+    }
+
+}
+
 void computeBBox(const Object *o, float* bbox){
 
     float maxCoordX = -WORLD_MAX_DISTANCE;

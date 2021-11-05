@@ -31,7 +31,7 @@ typedef struct{
 void printObject(const Object *o, bool details);
 
 typedef struct{
-    float focalPoint[3];
+    float origin[3];
     float direction[3];
 
 } Camera;

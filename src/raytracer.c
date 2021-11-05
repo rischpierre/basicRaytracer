@@ -94,11 +94,11 @@ void *renderLoop(void* arguments){
     struct renderArgs *args = (struct renderArgs*)arguments;
 
     // todo need to get the ray direction from the camera
-    Ray ray = {.origin=*args->scene->camera.focalPoint,
+    Ray ray = {.origin={args->scene->camera.origin[0],args->scene->camera.origin[1], args->scene->camera.origin[2]},
 //            .direction=*args->scene->camera.direction};
-    .direction={0, CAM_FOCAL_LENGTH, 0}};
+                .direction={0, CAM_FOCAL_LENGTH, 0}};
 
-for (int y = args->start; y < args->end; y++) {
+    for (int y = args->start; y < args->end; y++) {
 
         for (int x = 0; x < RESOLUTION_W; x++) {
 
