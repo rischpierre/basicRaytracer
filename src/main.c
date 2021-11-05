@@ -43,15 +43,17 @@ int main(int argc, char *argv[]) {
             printf("Rendering frame %d ...\n", frame);
 
             char frameStr[5];
-            char imageName[50] = "render";
+            char imageName[50] = "render.";
 
             sprintf(frameStr, "%04d", frame);
             strcat(imageName, frameStr);
             strcat(imageName, ".bmp");
 
             render(scene, imageName);
-
+            transformObject(&scene->object, scene->object.transformMatrix);
         }
+        // todo try to launch ffmpeg here as a subprocess
+        //ffmpeg -framerate 25 -i render.%04d.bmp -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4^C
 
 
     }else{

@@ -10,3 +10,4 @@ void computeBBox(const Object *o, float* bbox);
 void transformObject(Object *o, float* tm);
 
 #endif //RAYTRACEREXPERIMENT_TRANSFORM_H
+

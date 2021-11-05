@@ -22,22 +22,25 @@ void generateRig(Scene *scene){
 
 
 void generateExampleScene(Scene *scene){
-
+    unsigned int frameNb = FPS * 2;
     generateRig(scene);
     scene->isAnimated = true;
-    scene->startFrame = 101;
-    scene->endFrame = 103;
-
+    scene->startFrame = 1;
+    scene->endFrame = scene->startFrame + frameNb;
     parseObjFile(scene, "../examples/monkey.obj");
 
-    float transformMatrix[9] = {
-            0, 0, 0,
-            0, 0, M_PI/4,
-            1, 1, 1,
-    };
+    // todo inline matrix definition would be nice here
+    scene->object.transformMatrix[0] = 0;
+    scene->object.transformMatrix[1] = 0;
+    scene->object.transformMatrix[2] = 0;
 
-    transformObject(&scene->object, transformMatrix);
+    scene->object.transformMatrix[3] = 0;
+    scene->object.transformMatrix[4] = 0;
+    scene->object.transformMatrix[5] = 2 * M_PI/frameNb;
+
+    scene->object.transformMatrix[6] = 1;
+    scene->object.transformMatrix[7] = 1;
+    scene->object.transformMatrix[8] = 1;
 }
-
 
 #endif //RAYTRACEREXPERIMENT_EXAMPLESCENE_H
