@@ -62,3 +62,11 @@ float interpolation1d(float x, float x1, float x2, float y1, float y2) {
     return ((y2 - y1) * x + x2 * y1 - x1 * y2) / (x2 - x1);
 
 }
+
+void transposeM44(float *r_m44, const float *m44) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; ++j) {
+            r_m44[ 4*i + j] = m44[4*j + i];
+        }
+    }
+}

@@ -26,7 +26,7 @@ typedef struct {
     Face *faces;
     int faceNb;
     char *name;
-    float transformMatrix[9];
+    float worldMatrix[16];
 } Object;
 
 void printObject(const Object *o, bool details);

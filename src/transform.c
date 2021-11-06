@@ -8,9 +8,9 @@
 
 void transform(float *v, float *tm) {
     float matrix44fTranslate[16] = {
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
+            1,     0,     0,     0,
+            0,     1,     0,     0,
+            0,     0,     1,     0,
             tm[0], tm[1], tm[2], 1
     };
 

@@ -25,4 +25,6 @@ void subVectors(float *result, const float *v1, const float *v2, uint8_t size);
 
 float interpolation1d(float x, float x1, float x2, float y1, float y2);
 
+void transposeM44(float *r_m44, const float *m44);
+
 #endif //RAYTRACEREXPERIMENT_MATHLIB_H

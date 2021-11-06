@@ -53,3 +53,25 @@ TEST(utils, interpolation1d) {
     ASSERT_EQ(interpolation1d(50, 0, 100, -3, 3),  0.0);
     ASSERT_EQ(interpolation1d(10, 0, 100, -10, 10), -8);
 }
+
+TEST(transpose, transposeMatrix) {
+
+    float m[16] = {
+                1 , 2 , 3 , 4 ,
+                5 , 6 , 7 , 8 ,
+                9 , 10, 11, 12,
+                13, 14, 15, 16
+    };
+
+    float exp[16] = {
+            1, 5, 9 , 13,
+            2, 6, 10, 14,
+            3, 7, 11, 15,
+            4, 8, 12, 16
+   };
+    float res[16] = {0};
+    transposeM44(res, m);
+    for (int i = 0; i < 16; ++i) {
+        ASSERT_EQ(res[i], exp[i]);
+    }
+}

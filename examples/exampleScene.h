@@ -29,18 +29,11 @@ void generateExampleScene(Scene *scene) {
     scene->endFrame = scene->startFrame + frameNb;
     parseObjFile(scene, "../examples/monkey.obj");
 
-    // todo inline matrix definition would be nice here
-    scene->object.transformMatrix[0] = 0;
-    scene->object.transformMatrix[1] = 0;
-    scene->object.transformMatrix[2] = 0;
-
-    scene->object.transformMatrix[3] = 0;
-    scene->object.transformMatrix[4] = 0;
-    scene->object.transformMatrix[5] = 2 * M_PI / frameNb;
-
-    scene->object.transformMatrix[6] = 1;
-    scene->object.transformMatrix[7] = 1;
-    scene->object.transformMatrix[8] = 1;
+    float transformControls[9] = {
+           0, 0, 0,
+           0, 0, 2 * M_PI / frameNb,
+           1, 1, 1
+    };
 }
 
 #endif //RAYTRACEREXPERIMENT_EXAMPLESCENE_H
