@@ -4,10 +4,13 @@
 
 #include "geometries.h"
 
-void printBBox(const float* bbox);
+void printBBox(const float *bbox);
+
 void transform(float *v, float *tm);
-void computeBBox(const Object *o, float* bbox);
-void transformObject(Object *o, float* tm);
+
+void computeBBox(const Object *o, float *bbox);
+
+void transformObject(Object *o, float *tm);
 
 #endif //RAYTRACEREXPERIMENT_TRANSFORM_H
 

@@ -40,7 +40,7 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
     // calculate v param
     crossProduct(q, t, edge1);
     v = dotProduct(ray->direction, q) * invertedDet;
-    if ( v < 0 || u + v > 1.f)  // hit point outside triangle
+    if (v < 0 || u + v > 1.f)  // hit point outside triangle
         return false;
 
     *distance = dotProduct(edge2, q) * invertedDet;
@@ -52,7 +52,7 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
 float computeColor(const float *faceNormal, const DirLight *light) {
     float angle = angleBetweenVectors(light->direction, faceNormal);
     float result = interpolation1d(angle, M_PI / 2, M_PI, 0, 1);
-    if (result < 0){
+    if (result < 0) {
         return AMBIENT_CONTRIBUTION;
     }
     return result;
@@ -60,16 +60,17 @@ float computeColor(const float *faceNormal, const DirLight *light) {
 
 void splitQuads(Object *o) {
     int quadNb = 0;
-    for(int fId = 0; fId < o->faceNb; fId++){
+    for (int fId = 0; fId < o->faceNb; fId++) {
         Face current = o->faces[fId];
-        if (current.isQuad){
+        if (current.isQuad) {
             quadNb++;
         }
     }
     if (quadNb == 0) return;
-    int newFaceNb =  (o->faceNb - quadNb) + 2 * quadNb;
-    o->faces = (Face *)realloc(o->faces, sizeof(Face) * newFaceNb);
-int newFaceId = o->faceNb; for(int currentFaceId = 0; currentFaceId < o->faceNb; currentFaceId++) {
+    int newFaceNb = (o->faceNb - quadNb) + 2 * quadNb;
+    o->faces = (Face *) realloc(o->faces, sizeof(Face) * newFaceNb);
+    int newFaceId = o->faceNb;
+    for (int currentFaceId = 0; currentFaceId < o->faceNb; currentFaceId++) {
         Face c = o->faces[currentFaceId];
         if (c.isQuad) {
             Face f;
@@ -88,15 +89,15 @@ int newFaceId = o->faceNb; for(int currentFaceId = 0; currentFaceId < o->faceNb;
 }
 
 
+void *renderLoop(void *arguments) {
 
-void *renderLoop(void* arguments){
-
-    struct renderArgs *args = (struct renderArgs*)arguments;
+    struct renderArgs *args = (struct renderArgs *) arguments;
 
     // todo need to get the ray direction from the camera
-    Ray ray = {.origin={args->scene->camera.origin[0],args->scene->camera.origin[1], args->scene->camera.origin[2]},
+    Ray ray = {.origin={args->scene->camera.origin[0], args->scene->camera.origin[1],
+                        args->scene->camera.origin[2]},
 //            .direction=*args->scene->camera.direction};
-                .direction={0, CAM_FOCAL_LENGTH, 0}};
+            .direction={0, CAM_FOCAL_LENGTH, 0}};
 
     for (int y = args->start; y < args->end; y++) {
 
@@ -133,7 +134,7 @@ void *renderLoop(void* arguments){
                 args->red[y][x] = 0;
                 args->green[y][x] = 0;
                 args->blue[y][x] = 0;
-            }else {
+            } else {
                 float color = computeColor(nearestFace->n, &args->scene->light);
 
                 args->red[y][x] = color;
@@ -147,9 +148,9 @@ void *renderLoop(void* arguments){
 }
 
 
-unsigned int getNumThreads(){
+unsigned int getNumThreads() {
 
-    unsigned int eax=11,ebx=0,ecx=1,edx=0;
+    unsigned int eax = 11, ebx = 0, ecx = 1, edx = 0;
 
     asm volatile("cpuid"
     : "=a" (eax),
@@ -182,17 +183,17 @@ void render(Scene *scene, char *imagePath) {
     pthread_t threads[threadCount];
 
     int start = 0;
-    int lineIncrement = RESOLUTION_H/threadCount;
+    int lineIncrement = RESOLUTION_H / threadCount;
     struct renderArgs arguments[threadCount];
 
     for (int i = 0; i < threadCount; ++i) {
         pthread_t t;
 
         struct renderArgs args1 = {.scene=scene, .red=red, .green=green,
-                .blue=blue, .start=start, .end=start+lineIncrement, .threadId=i};
+                .blue=blue, .start=start, .end=start + lineIncrement, .threadId=i};
         arguments[i] = args1;
 
-        pthread_create(&t, NULL, &renderLoop, (void*)&arguments[i]);
+        pthread_create(&t, NULL, &renderLoop, (void *) &arguments[i]);
         threads[i] = t;
         start += lineIncrement;
     }
@@ -202,9 +203,9 @@ void render(Scene *scene, char *imagePath) {
     }
 
     clock_gettime(CLOCK_MONOTONIC, &finishTime);
-    double elapsed = (double)(finishTime.tv_sec - startTime.tv_sec);
-    elapsed += (double)((finishTime.tv_nsec - startTime.tv_nsec)/1000000000.0);
-    printf("\nrender time: %f s\n", (float)elapsed);
+    double elapsed = (double) (finishTime.tv_sec - startTime.tv_sec);
+    elapsed += (double) ((finishTime.tv_nsec - startTime.tv_nsec) / 1000000000.0);
+    printf("\nrender time: %f s\n", (float) elapsed);
 
     writeBmpFile(RESOLUTION_W, RESOLUTION_H, red, green, blue, imagePath);
 

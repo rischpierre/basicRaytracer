@@ -6,7 +6,7 @@
 #include "../src/geometries.h"
 #include "../src/transform.h"
 
-void generateRig(Scene *scene){
+void generateRig(Scene *scene) {
 
     Camera camera = {
             .origin={0, -5, 0},
@@ -21,7 +21,7 @@ void generateRig(Scene *scene){
 }
 
 
-void generateExampleScene(Scene *scene){
+void generateExampleScene(Scene *scene) {
     unsigned int frameNb = FPS * 2;
     generateRig(scene);
     scene->isAnimated = true;
@@ -36,7 +36,7 @@ void generateExampleScene(Scene *scene){
 
     scene->object.transformMatrix[3] = 0;
     scene->object.transformMatrix[4] = 0;
-    scene->object.transformMatrix[5] = 2 * M_PI/frameNb;
+    scene->object.transformMatrix[5] = 2 * M_PI / frameNb;
 
     scene->object.transformMatrix[6] = 1;
     scene->object.transformMatrix[7] = 1;

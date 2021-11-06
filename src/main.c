@@ -9,7 +9,7 @@
 #include "renderSettings.h"
 #include "../examples/exampleScene.h"
 
-void validateRenderSettings(){
+void validateRenderSettings() {
     assert(RESOLUTION_DIVIDER % 2 == 0 || RESOLUTION_DIVIDER == 1);
 }
 
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
                   "If no object file is provided, the example scene will be used";
 
     // generate scene from given .obj file
-    if (argc == 2){
+    if (argc == 2) {
         // todo need to generate a basic lighting and camera here
         generateRig(scene);
         scene->isAnimated = false;
@@ -33,8 +33,8 @@ int main(int argc, char *argv[]) {
         printf("Rendering...\n");
         render(scene, "render.bmp");
 
-    // animated example scene
-    }else if(argc == 1){
+        // animated example scene
+    } else if (argc == 1) {
         generateExampleScene(scene);
 
         printObject(&scene->object, false);
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
         //ffmpeg -framerate 25 -i render.%04d.bmp -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4^C
 
 
-    }else{
+    } else {
         printf("Wrong arguments\n");
         printf("%s", usage);
         exit(1);
