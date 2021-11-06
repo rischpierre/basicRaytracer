@@ -3,12 +3,11 @@
 #include "mathLib.h"
 #include "renderSettings.h"
 #include <math.h>
-#include <float.h>
 #include <stdio.h>
 
 
-void transform(float *v, float *tm){
-    float matrix44fTranslate[16]= {
+void transform(float *v, float *tm) {
+    float matrix44fTranslate[16] = {
             1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
@@ -17,30 +16,30 @@ void transform(float *v, float *tm){
 
     float rxMatrix[16] = {
             1, 0, 0, 0,
-            0, cosf(tm[3]),  -sinf(tm[3]) , 0,
+            0, cosf(tm[3]), -sinf(tm[3]), 0,
             0, sinf(tm[3]), cosf(tm[3]), 0,
-            0 , 0 , 0 ,1
+            0, 0, 0, 1
     };
 
     float ryMatrix[16] = {
             cosf(tm[4]), 0, sinf(tm[4]), 0,
-            0, 1,  0, 0,
+            0, 1, 0, 0,
             -sinf(tm[4]), 0, cosf(tm[4]), 0,
-            0 , 0 , 0 , 1
+            0, 0, 0, 1
     };
 
     float rzMatrix[16] = {
             cosf(tm[5]), -sinf(tm[5]), 0, 0,
             sinf(tm[5]), cosf(tm[5]), 0, 0,
             0, 0, 1, 0,
-            0 , 0 , 0 , 1
+            0, 0, 0, 1
     };
 
     float scaleMatrix[16] = {
             tm[6], 0, 0, 0,
-            0, tm[7],  0, 0,
+            0, tm[7], 0, 0,
             0, 0, tm[8], 0,
-            0 , 0 , 0 ,1
+            0, 0, 0, 1
     };
 
     multVectMatrix44(v, scaleMatrix);
@@ -51,7 +50,7 @@ void transform(float *v, float *tm){
 }
 
 
-void printBBox(const float* bbox){
+void printBBox(const float *bbox) {
 
     printf("bbox: x-: %f x+ %f  |  ", bbox[0], bbox[1]);
     printf("y-: %f y+: %f  |   ", bbox[2], bbox[3]);
@@ -60,7 +59,7 @@ void printBBox(const float* bbox){
 }
 
 
-void transformObject(Object *object, float* tm){
+void transformObject(Object *object, float *tm) {
 
     for (int i = 0; i < object->faceNb; ++i) {
 
@@ -71,7 +70,7 @@ void transformObject(Object *object, float* tm){
 
 }
 
-void computeBBox(const Object *o, float* bbox){
+void computeBBox(const Object *o, float *bbox) {
 
     float maxCoordX = -WORLD_MAX_DISTANCE;
     float maxCoordY = -WORLD_MAX_DISTANCE;
@@ -86,7 +85,7 @@ void computeBBox(const Object *o, float* bbox){
         current = &o->faces[i];
 
         // loop over every vertex in the face
-        for(int v=0; v < 3; v++){
+        for (int v = 0; v < 3; v++) {
             // loop over attributes of struct
             float x = *(current->v0 + 3 * v + 0);
             float y = *(current->v0 + 3 * v + 1);
@@ -105,7 +104,8 @@ void computeBBox(const Object *o, float* bbox){
             if (z < minCoordZ)
                 minCoordZ = z;
             if (z > maxCoordZ)
-                maxCoordZ = z;        }
+                maxCoordZ = z;
+        }
     }
 
     bbox[0] = minCoordX;
