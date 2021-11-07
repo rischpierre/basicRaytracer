@@ -64,9 +64,11 @@ void transformObject(Object *object) {
         multV33M44(object->faces[i].v1, object->worldMatrix);
         multV33M44(object->faces[i].v2, object->worldMatrix);
     }
+
     // reset world matrix to avoid exponential transform
     initIdentityM44(object->worldMatrix);
-    // transform normals
+
+    // todo transform normals with the inverse transposed matrix
 //    for (int i = 0; i < object->faceNb; ++i) {
 //
 //        transform(object->faces[i].n, tm);
