@@ -29,10 +29,10 @@ https://www.scratchapixel.com/lessons/3d-basic-rendering
 
 ### Installation
 Gcc and Cmake are the only requirements for this project.
-Please follow the [INSTALL](INSTALL) for more information.
+Follow the [INSTALL](INSTALL) for more information.
 
 ### Usage
 ```shell
-/.raytracerExperiment <objFile>
+.raytracerExperiment <objFile>
 ```
 If no object file is given, an [example scene](examples/exampleScene.h) is rendered.
