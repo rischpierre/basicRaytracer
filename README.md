@@ -14,6 +14,7 @@ It has been tested on ubuntu-20.
 - [x] Outputs bmp image  
 - [x] Multithreading  
 - [x] Basic support for transform
+- [ ] Smooth shading
 - [ ] Support for multiple objects
 - [ ] Shadows
 - [ ] Blinn shader 
