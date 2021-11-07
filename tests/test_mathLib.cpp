@@ -75,3 +75,27 @@ TEST(transpose, transposeMatrix) {
         ASSERT_EQ(res[i], exp[i]);
     }
 }
+
+TEST(matrixTests, inverseMatrix){
+    float m[16] = {
+            2, 0, 0, 0,
+            0, 1, 4, 0,
+            5, 0, 1, 0,
+            0, 0, 0, 1
+   };
+
+    float exp[16] = {
+           0.5f  , 0, 0 , 0,
+           10    , 1, -4, 0,
+           -5.0/2, 0, 1 , 0,
+           0     , 0, 0 , 1
+    };
+    float result[16];
+    invertM44(result, m);
+    for (int i = 0; i < 16; ++i) {
+        ASSERT_EQ(result[i], exp[i]);
+    }
+}
+
+
+
