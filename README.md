@@ -9,6 +9,7 @@ It has been tested on ubuntu-20.
 
 ### Roadmap 
 - [x] Command line interface  
+- [x] Use unittests
 - [x] Directional lights
 - [x] Reads obj geometry file 
 - [x] Outputs bmp image  
