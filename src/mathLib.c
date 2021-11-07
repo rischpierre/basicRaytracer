@@ -112,7 +112,7 @@ void transposeM44(float *r_m44, const float *m44) {
 }
 
 
-bool invertM44(float*r_m44, const float* m)
+bool invertM44(float *r_m44, const float* m)
 {
     float inv[16], det;
     int i;

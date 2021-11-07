@@ -60,19 +60,24 @@ void printBBox(const float *bbox) {
 void transformObject(Object *object) {
     // transform points
     for (int i = 0; i < object->faceNb; ++i) {
-        multV33M44(object->faces[i].v0, object->worldMatrix);
-        multV33M44(object->faces[i].v1, object->worldMatrix);
-        multV33M44(object->faces[i].v2, object->worldMatrix);
+        multV33M44(object->faces[i].v0, *object->worldMatrix);
+        multV33M44(object->faces[i].v1, *object->worldMatrix);
+        multV33M44(object->faces[i].v2, *object->worldMatrix);
+    }
+
+
+    // generate the transpose of the inverse of the world matrix
+    float transposeInverseMatrix[4][4], inverseMatrix[4][4];
+    invertM44(*inverseMatrix, *object->worldMatrix);
+    transposeM44(*transposeInverseMatrix, *inverseMatrix);
+
+    // todo transform normals with the inverse transposed matrix
+    for (int i = 0; i < object->faceNb; ++i) {
+        multV33M44(object->faces[i].n, *transposeInverseMatrix);
     }
 
     // reset world matrix to avoid exponential transform
     initIdentityM44(object->worldMatrix);
-
-    // todo transform normals with the inverse transposed matrix
-//    for (int i = 0; i < object->faceNb; ++i) {
-//
-//        transform(object->faces[i].n, tm);
-//    }
 }
 
 void computeBBox(const Object *o, float *bbox) {

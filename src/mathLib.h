@@ -31,4 +31,6 @@ void transposeM44(float *r_m44, const float *m44);
 
 bool invertM44(float *r_m44, const float *m44);
 
+void multV33M44(float v[3], const float m[16]);
+
 #endif //RAYTRACEREXPERIMENT_MATHLIB_H
