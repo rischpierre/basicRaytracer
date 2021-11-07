@@ -22,18 +22,12 @@ void generateRig(Scene *scene) {
 
 
 void generateExampleScene(Scene *scene) {
-    unsigned int frameNb = FPS * 2;
     generateRig(scene);
     scene->isAnimated = true;
     scene->startFrame = 1;
-    scene->endFrame = scene->startFrame + frameNb;
+    scene->endFrame = 24 * 2;
     parseObjFile(scene, "../examples/monkey.obj");
 
-    float transformControls[9] = {
-           0, 0, 0,
-           0, 0, 2 * M_PI / frameNb,
-           1, 1, 1
-    };
 }
 
 #endif //RAYTRACEREXPERIMENT_EXAMPLESCENE_H

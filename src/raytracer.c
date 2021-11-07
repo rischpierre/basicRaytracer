@@ -8,6 +8,7 @@
 #include "mathLib.h"
 #include "renderSettings.h"
 #include "ioLib.h"
+#include "transform.h"
 
 
 bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) {
@@ -165,6 +166,8 @@ unsigned int getNumThreads() {
 
 void render(Scene *scene, char *imagePath) {
     // this is first a test with planar projection
+
+    transformObject(&scene->object);
 
     float **red = (float **) malloc(RESOLUTION_H * sizeof(float *));
     float **green = (float **) malloc(RESOLUTION_H * sizeof(float *));

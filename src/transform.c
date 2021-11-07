@@ -6,48 +6,46 @@
 #include <stdio.h>
 
 
-void transform(float *v, float *tm) {
-    float matrix44fTranslate[16] = {
-            1,     0,     0,     0,
-            0,     1,     0,     0,
-            0,     0,     1,     0,
-            tm[0], tm[1], tm[2], 1
+void applyTransform(Object *o, const float translate[3], const float rotate[3], const float scale[3]){
+    float matrix44fTranslate[4][4] = {
+            1, 0, 0, translate[0],
+            0, 1, 0, translate[1],
+            0, 0, 1, translate[2],
+            0, 0 , 0, 1
     };
-
-    float rxMatrix[16] = {
+    float rxMatrix[4][4] = {
             1, 0, 0, 0,
-            0, cosf(tm[3]), -sinf(tm[3]), 0,
-            0, sinf(tm[3]), cosf(tm[3]), 0,
+            0, cosf(rotate[0]), -sinf(rotate[0]), 0,
+            0, sinf(rotate[0]), cosf(rotate[0]), 0,
             0, 0, 0, 1
     };
-
-    float ryMatrix[16] = {
-            cosf(tm[4]), 0, sinf(tm[4]), 0,
+    float ryMatrix[4][4] = {
+            cosf(rotate[1]), 0, sinf(rotate[1]), 0,
             0, 1, 0, 0,
-            -sinf(tm[4]), 0, cosf(tm[4]), 0,
+            -sinf(rotate[1]), 0, cosf(rotate[1]), 0,
             0, 0, 0, 1
     };
-
-    float rzMatrix[16] = {
-            cosf(tm[5]), -sinf(tm[5]), 0, 0,
-            sinf(tm[5]), cosf(tm[5]), 0, 0,
+    float rzMatrix[4][4] = {
+            cosf(rotate[2]), -sinf(rotate[2]), 0, 0,
+            sinf(rotate[2]), cosf(rotate[2]), 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1
     };
 
-    float scaleMatrix[16] = {
-            tm[6], 0, 0, 0,
-            0, tm[7], 0, 0,
-            0, 0, tm[8], 0,
+    float scaleMatrix[4][4] = {
+            scale[0], 0, 0, 0,
+            0, scale[1], 0, 0,
+            0, 0, scale[2], 0,
             0, 0, 0, 1
     };
 
-    multVectMatrix44(v, scaleMatrix);
-    multVectMatrix44(v, rxMatrix);
-    multVectMatrix44(v, ryMatrix);
-    multVectMatrix44(v, rzMatrix);
-    multVectMatrix44(v, matrix44fTranslate);
-}
+    multM44M44(matrix44fTranslate, o->worldMatrix);
+    multM44M44(rxMatrix, o->worldMatrix);
+    multM44M44(ryMatrix, o->worldMatrix);
+    multM44M44(rzMatrix, o->worldMatrix);
+    multM44M44(scaleMatrix, o->worldMatrix);
+
+};
 
 
 void printBBox(const float *bbox) {
@@ -59,15 +57,20 @@ void printBBox(const float *bbox) {
 }
 
 
-void transformObject(Object *object, float *tm) {
-
+void transformObject(Object *object) {
+    // transform points
     for (int i = 0; i < object->faceNb; ++i) {
-
-        transform(object->faces[i].v0, tm);
-        transform(object->faces[i].v1, tm);
-        transform(object->faces[i].v2, tm);
+        multV33M44(object->faces[i].v0, object->worldMatrix);
+        multV33M44(object->faces[i].v1, object->worldMatrix);
+        multV33M44(object->faces[i].v2, object->worldMatrix);
     }
-
+    // reset world matrix to avoid exponential transform
+    initIdentityM44(object->worldMatrix);
+    // transform normals
+//    for (int i = 0; i < object->faceNb; ++i) {
+//
+//        transform(object->faces[i].n, tm);
+//    }
 }
 
 void computeBBox(const Object *o, float *bbox) {

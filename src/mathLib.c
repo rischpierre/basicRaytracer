@@ -11,11 +11,51 @@ void crossProduct(float *result, const float *v1, const float *v2) {
 
 }
 
-void multVectMatrix44(float *m1, const float *m2) {
-    for (int i = 0; i < 4; i++) {
-        m1[i] = m1[0] * m2[i] + m1[1] * m2[i + 4] + m1[2] * m2[i + 8] + m1[3] * m2[i + 12];
+void initIdentityM44(float m[4][4]){
+
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            if (i == j){
+                m[i][j] = 1;
+            }else{
+                m[i][j] = 0;
+            }
+        }
     }
 }
+
+void multM44M44(const float m1[4][4], float m2[4][4]){
+    float result[4][4];
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            result[i][j] = 0;
+
+            for (int k = 0; k < 4; k++) {
+                result[i][j] += m1[i][k] * m2[k][j];
+            }
+        }
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            m2[i][j] = result[i][j];
+        }
+    }
+
+}
+
+void multV33M44(float v[3], const float m[16]){
+    float res[3];
+    res[0] = v[0] * m[0] + v[1] * m[1] + v[2] * m[2] + 1 * m[3];
+    res[1] = v[0] * m[4] + v[1] * m[5] + v[2] * m[6] + 1 * m[7];
+    res[2] = v[0] * m[8] + v[1] * m[9] + v[2] * m[10] + 1 * m[11];
+
+    for (int i = 0; i < 3; ++i) {
+        v[i] = res[i];
+    }
+}
+
+
 
 float dotProduct(const float *v1, const float *v2) {
 

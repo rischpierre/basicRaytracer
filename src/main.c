@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
 
     // generate scene from given .obj file
     if (argc == 2) {
-        // todo need to generate a basic lighting and camera here
         generateRig(scene);
         scene->isAnimated = false;
         printf("Parsing object...\n");
@@ -31,6 +30,14 @@ int main(int argc, char *argv[]) {
 
         printObject(&scene->object, false);
         printf("Rendering...\n");
+
+        // todo test with transform here
+        float translate[3] = {0, 0, 0};
+        float rotate[3] = {0, 0, (2 * M_PI)/4};
+        float scale[3] = {1, 1, 1};
+
+        applyTransform(&scene->object, translate, rotate, scale);
+
         render(scene, "render.bmp");
 
         // animated example scene
@@ -50,10 +57,17 @@ int main(int argc, char *argv[]) {
             strcat(imageName, ".bmp");
 
             render(scene, imageName);
-            transformObject(&scene->object, scene->object.transformMatrix);
+
+            // todo move it in the example scene
+            float translate[3] = {0, 0, 0};
+            float rotate[3] = {0, 0, (2.0f * (float)M_PI)/(float)(scene->endFrame - scene->startFrame)};
+            float scale[3] = {1, 1, 1};
+
+            applyTransform(&scene->object, translate, rotate, scale);
+
         }
-        // todo try to launch ffmpeg here as a subprocess
-        //ffmpeg -framerate 25 -i render.%04d.bmp -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4^C
+        // todo put this command in a script folder:
+        //
 
 
     } else {

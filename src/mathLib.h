@@ -9,7 +9,11 @@
 
 void crossProduct(float *result, const float *v1, const float *v2);
 
-void multVectMatrix44(float *m1, const float *m2);
+//void multVectMatrix44(float *m1, const float *m2);
+
+void multM44M44(const float m1[4][4], float m2[4][4]);
+
+void initIdentityM44(float m[4][4]);
 
 float dotProduct(const float *v1, const float *v2);
 

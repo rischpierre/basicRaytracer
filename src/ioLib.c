@@ -10,6 +10,7 @@
 #include "ioLib.h"
 #include "geometries.h"
 #include "raytracer.h"
+#include "mathLib.h"
 
 
 void writeBmpFile(int width, int height, float **red, float **green, float **blue, const char *filePath) {
@@ -219,6 +220,10 @@ void parseObjFile(Scene *scene, const char *filePath) {
     scene->object.name = name;
     scene->object.faces = faces;
     scene->object.faceNb = faceNb;
+
+    // define object's default world matrix
+    // todo put this elsewhere, maybe an obj initializer?
+    initIdentityM44(scene->object.worldMatrix);
 
     splitQuads(&scene->object);
 
