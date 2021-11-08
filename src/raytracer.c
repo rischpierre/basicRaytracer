@@ -81,13 +81,18 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
 }
 
 
-float computeColor(const float *faceNormal, const DirLight *light) {
+void computeColor(float color[3], const float *faceNormal, const DirLight *light) {
     float angle = angleBetweenVectors(light->direction, faceNormal);
     float result = interpolation1d(angle, M_PI / 2, M_PI, 0, 1);
     if (result < 0) {
-        return AMBIENT_CONTRIBUTION;
+        color[0] = BG_COLOR_R;
+        color[1] = BG_COLOR_G;
+        color[2] = BG_COLOR_B;
+    } else {
+        color[0] = result;
+        color[1] = result;
+        color[2] = result;
     }
-    return result;
 }
 
 void splitQuads(Object *o) {
@@ -163,15 +168,16 @@ void *renderLoop(void *arguments) {
             }
 
             if (nearestFace == NULL) {
-                args->red[y][x] = 0;
-                args->green[y][x] = 0;
-                args->blue[y][x] = 0;
+                args->red[y][x] = BG_COLOR_R;
+                args->green[y][x] = BG_COLOR_G;
+                args->blue[y][x] = BG_COLOR_B;
             } else {
-                float color = computeColor(nearestFace->n, &args->scene->light);
+                float color[3];
+                computeColor(color, nearestFace->n, &args->scene->light);
 
-                args->red[y][x] = color;
-                args->green[y][x] = color;
-                args->blue[y][x] = color;
+                args->red[y][x] = color[0];
+                args->green[y][x] = color[1];
+                args->blue[y][x] = color[2];
 
             }
         }

@@ -57,6 +57,7 @@ typedef struct {
     int faceNb;
     const char *name;
     float worldMatrix[4][4];
+    float color[3];
 } Object;
 
 void printObject(const Object *o, bool details);
