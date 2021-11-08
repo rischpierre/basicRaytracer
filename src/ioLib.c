@@ -257,5 +257,10 @@ void parseObjFile(Scene *scene, const char *filePath) {
 
     splitQuads(&scene->object);
 
+    // define color object here, in the future get info from mtl file
+    scene->object.color[0] = 1.0f;
+    scene->object.color[1] = 0.9f;
+    scene->object.color[2] = 0.85f;
+
     fclose(file);
 }

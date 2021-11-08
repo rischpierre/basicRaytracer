@@ -80,24 +80,25 @@ TEST(raytracer, test_ray_outside_tilted_triangle) {
 }
 
 TEST(computeColor, test_computeColor){
+    float objectColor[3] = {1, 1, 1};
     DirLight light = {{1, 0, 0}};
     float faceN[3] = {-1, 0, 0};
     float color[3] = {0, 0, 0};
-    computeColor(color, faceN, &light);
+    computeColor(color, faceN, &light, objectColor);
     ASSERT_EQ(color[0], 1.f);
 
     faceN[0] = -0.5f;
     faceN[1] = -0.5f;
     faceN[2] = 0;
     float color2[3] = {0, 0, 0};
-    computeColor(color2, faceN, &light);
+    computeColor(color2, faceN, &light, objectColor);
     ASSERT_FLOAT_EQ(color2[0], 0.5f);
 
     faceN[0] = 1.f;
     faceN[1] = 0;
     faceN[2] = 0;
     float color3[3] = {0, 0, 0};
-    computeColor(color3, faceN, &light);
+    computeColor(color3, faceN, &light, objectColor);
     ASSERT_FLOAT_EQ(color3[0], BG_COLOR_R);
 }
 

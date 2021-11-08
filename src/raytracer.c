@@ -81,17 +81,19 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
 }
 
 
-void computeColor(float color[3], const float *faceNormal, const DirLight *light) {
+void
+computeColor(float color[3], const float *faceNormal, const DirLight *light, const float objectColor[3]) {
     float angle = angleBetweenVectors(light->direction, faceNormal);
     float result = interpolation1d(angle, M_PI / 2, M_PI, 0, 1);
+
     if (result < 0) {
         color[0] = BG_COLOR_R;
         color[1] = BG_COLOR_G;
         color[2] = BG_COLOR_B;
     } else {
-        color[0] = result;
-        color[1] = result;
-        color[2] = result;
+        color[0] = result * objectColor[0];
+        color[1] = result * objectColor[1];
+        color[2] = result * objectColor[2];
     }
 }
 
@@ -173,7 +175,7 @@ void *renderLoop(void *arguments) {
                 args->blue[y][x] = BG_COLOR_B;
             } else {
                 float color[3];
-                computeColor(color, nearestFace->n, &args->scene->light);
+                computeColor(color, nearestFace->n, &args->scene->light, args->scene->object.color);
 
                 args->red[y][x] = color[0];
                 args->green[y][x] = color[1];
