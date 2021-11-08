@@ -25,7 +25,9 @@ It has been tested on ubuntu-20.
 - The units are in cm.
 
 ### References
-https://www.scratchapixel.com/lessons/3d-basic-rendering
+
+- [Coding style](https://github.com/MaJerle/c-code-style)
+- [Rendering theory: scratchapixel](https://www.scratchapixel.com/lessons/3d-basic-rendering)
 
 ### Installation
 Gcc and Cmake are the only requirements for this project.
