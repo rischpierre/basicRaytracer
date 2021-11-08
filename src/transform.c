@@ -19,14 +19,14 @@ void applyTransform(Object *o, const float translate[3], const float rotate[3], 
             {1, 0,               0,                0},
             {0, cosf(rotate[0]), -sinf(rotate[0]), 0},
             {0, sinf(rotate[0]), cosf(rotate[0]),  0},
-            {0, 0,               0}
+            {0, 0, 0, 1}
     };
 
     const float ryMatrix[4][4] = {
             {cosf(rotate[1]),  0, sinf(rotate[1]), 0},
             {0,                1, 0,               0},
             {-sinf(rotate[1]), 0, cosf(rotate[1]), 0},
-            {0,                0, 0}
+            {0, 0, 0, 1}
     };
     const float rzMatrix[4][4] = {
             {cosf(rotate[2]), -sinf(rotate[2]), 0, 0},
