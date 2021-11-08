@@ -54,7 +54,7 @@ struct renderArgs {
     float **blue;
     int start;
     int end;
-    int threadId;
+    unsigned int threadId;
 };
 
 #endif //RAYTRACEREXPERIMENT_RAYTRACER_H

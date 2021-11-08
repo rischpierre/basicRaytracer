@@ -30,77 +30,28 @@
 
 #include "../src/transform.h"
 
-#include <math.h>
-
 #include "gtest/gtest.h"
 
-
-TEST(transformTests, translate_works) {
-    float v[4] = {0, 0, 0, 1};
-
-    float transformMatrix[9] = {
-            2, 4, -2,            // translate
-            0, 0, 0,            // rotate in rads: M_PI/4
-            1.f, 1.f, 1.f       // scale
-    };
-
-    transformVec3(v, transformMatrix);
-
-    float expected[4] = {2, 4, -2, 1};
-
-    for(uint8_t i = 0; i < 4; i++){
-
-        ASSERT_FLOAT_EQ(expected[i], v[i]);
-    }
-}
-
-
-TEST(transformTests, rotate_works) {
-    float v[4] = {1, 0, 0, 1};
-
-    float transformMatrix[9] = {
-            0, 0, 0,
-            0, M_PI/4, 0,
-            1.f, 1.f, 1.f
-    };
-
-    transformVec3(v, transformMatrix);
-
-    float expected[4] = {cosf(M_PI/4), 0, 0.5f, 1.f};
-
-    for(uint8_t i = 0; i < 4; i++){
-
-        ASSERT_FLOAT_EQ(expected[i], v[i]);
-    }
-
-}
-
-TEST(transformTests, scale_works) {
-    float v[4] = {1, 1, 1, 1};
-
-    float transformMatrix[9] = {
-            0, 0, 0,
-            0, 0, 0,
-            .5f, .5f, .5f
-    };
-
-    transformVec3(v, transformMatrix);
-
-    float expected[4] = {0.5f, 0.5f, 0.5f, 1.f};
-    for(uint8_t i = 0; i < 4; i++){
-
-        ASSERT_FLOAT_EQ(expected[i], v[i]);
-    }
-
-}
 
 TEST(computeBbox, validBBox){
 
     float bbox[6];
 
     Face faces[1];
-    Object o = {.faces=faces, .faceNb=1, .name="test"};
-    Face f = {.v0={1, 2, -3}, .v1={-4, 5, 6}, .v2={7, 8, 9}};
+    const char *name = "test";
+    Object o;
+    o.faces = faces;
+    o.faceNb = 1;
+    o.name = name;
+
+    Face f = {
+            {1, 2, -3},
+            {-4, 5, 6},
+            {7, 8, 9},
+            {0, 1, 0},
+            false,
+            {0, 1, 0}
+    };
     faces[0] = f;
 
     computeBBox(&o, bbox);

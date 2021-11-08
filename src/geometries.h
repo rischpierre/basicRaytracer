@@ -55,7 +55,7 @@ typedef struct {
 typedef struct {
     Face *faces;
     int faceNb;
-    char *name;
+    const char *name;
     float worldMatrix[4][4];
 } Object;
 

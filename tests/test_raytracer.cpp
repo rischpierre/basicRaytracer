@@ -36,43 +36,43 @@
 #include "../src/renderSettings.h"
 
 TEST(raytracer, test_ray_inside_triangle) {
-    Ray ray = {.origin={0, 0, 0},
-            .direction={0, 1, 0}};
+    Ray ray = {{0, 0, 0},
+               {0, 1, 0}};
     float d;
-    Scene *s = (Scene *)malloc(sizeof(Scene));
+    Scene *s = (Scene *) malloc(sizeof(Scene));
     parseObjFile(s, "../../examples/triangle.obj");
     ASSERT_TRUE(isRayIntersectsTriangle(&ray, s->object.faces, &d));
     freeScene(s);
 }
 
-TEST(raytracer, test_ray_outside_triangle){
-    Ray ray = {.origin={0, 0, 0},
-            .direction={0, 1, 0}};
+TEST(raytracer, test_ray_outside_triangle) {
+    Ray ray = {{0, 0, 0},
+               {0, 1, 0}};
 
     float d;
-    Scene *s = (Scene *)malloc(sizeof(Scene));
+    Scene *s = (Scene *) malloc(sizeof(Scene));
     parseObjFile(s, "../../examples/notIntersectingYTriangle.obj");
     ASSERT_FALSE(isRayIntersectsTriangle(&ray, s->object.faces, &d));
     freeScene(s);
 }
 
 
-TEST(raytracer, test_ray_inside_tilted_triangle){
-    Ray ray = {.origin={0, 0, 0},
-            .direction={0, 1, 0}};
+TEST(raytracer, test_ray_inside_tilted_triangle) {
+    Ray ray = {{0, 0, 0},
+               {0, 1, 0}};
 
-    Scene *s = (Scene *)malloc(sizeof(Scene));
+    Scene *s = (Scene *) malloc(sizeof(Scene));
     float d;
     parseObjFile(s, "../../examples/tiltedTriangle.obj");
     ASSERT_TRUE(isRayIntersectsTriangle(&ray, s->object.faces, &d));
     freeScene(s);
 }
 
-TEST(raytracer, test_ray_outside_tilted_triangle){
-    Ray ray = {.origin={0, 0, -1.2f},
-            .direction={0, 1, 0}};
+TEST(raytracer, test_ray_outside_tilted_triangle) {
+    Ray ray = {{0, 0, -1.2f},
+               {0, 1, 0}};
 
-    Scene *s = (Scene *)malloc(sizeof(Scene));
+    Scene *s = (Scene *) malloc(sizeof(Scene));
     float d;
     parseObjFile(s, "../../examples/tiltedTriangle.obj");
     ASSERT_FALSE(isRayIntersectsTriangle(&ray, s->object.faces, &d));
@@ -80,7 +80,7 @@ TEST(raytracer, test_ray_outside_tilted_triangle){
 }
 
 TEST(computeColor, test_computeColor){
-    DirLight light = {.direction={1, 0, 0}};
+    DirLight light = {{1, 0, 0}};
     float faceN[3] = {-1, 0, 0};
 
     ASSERT_EQ(computeColor(faceN, &light), 1.f);
@@ -96,11 +96,14 @@ TEST(computeColor, test_computeColor){
     ASSERT_FLOAT_EQ(computeColor(faceN, &light), AMBIENT_CONTRIBUTION);
 }
 
-TEST(split_quads, test_only_tri_faces){
+TEST(split_quads, test_only_tri_faces) {
 
     Object o;
-    Face f= {.isQuad=false};
-    Face f2= {.isQuad=false};
+    Face f;
+    Face f2;
+    f.isQuad = false;
+    f2.isQuad = false;
+
     Face faces[2] = {f2, f};
     o.faces = faces;
     o.faceNb = 2;
@@ -109,11 +112,18 @@ TEST(split_quads, test_only_tri_faces){
     ASSERT_EQ(o.faceNb, 2);
 }
 
-TEST(split_quads_2, test_with_quad_faces){
+TEST(split_quads_2, test_with_quad_faces) {
 
     Object o;
-    Face f= {.v0={1, 2, 3}, .v1 ={4, 5, 6}, .v2={7, 8, 9}, .v3={10, 11, 12}, .isQuad=true, .n={13, 14, 15}};
-    Face* faces = (Face*)malloc(sizeof(Face) * 1);
+    Face f = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9},
+            {10, 11, 12},
+            true,
+            {13, 14, 15}
+    };
+    Face *faces = (Face *) malloc(sizeof(Face) * 1);
     faces[0] = f;
     o.faces = faces;
     o.faceNb = 1;

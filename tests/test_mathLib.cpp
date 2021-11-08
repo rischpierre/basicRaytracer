@@ -51,7 +51,10 @@ TEST(vector_tests, cross_product) {
 
 TEST(vector_tests, mult_matrix) {
 
-    float matrix44fTranslate[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 2, 2, 1};
+    float matrix44fTranslate[16] = {1, 0, 0, 2,
+                                    0, 1, 0, 2,
+                                    0, 0, 1, 2,
+                                    0, 0, 0, 1};
     float vector[4] = {1, 1, 1, 1};
     float vectorExpected[4] = {3, 3, 3, 1};
 

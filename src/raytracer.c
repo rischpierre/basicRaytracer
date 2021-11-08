@@ -260,6 +260,6 @@ void render(Scene *scene, char *imagePath) {
 
 void freeScene(Scene *scene) {
     free(scene->object.faces);
-    free(scene->object.name);
+    free((char *) scene->object.name);
     free(scene);
 }
