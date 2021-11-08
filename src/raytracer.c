@@ -146,6 +146,7 @@ void *renderLoop(void *arguments) {
         }
     }
 
+    return NULL;
 }
 
 

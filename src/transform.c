@@ -6,37 +6,39 @@
 #include <stdio.h>
 
 
-void applyTransform(Object *o, const float translate[3], const float rotate[3], const float scale[3]){
+void applyTransform(Object *o, const float translate[3], const float rotate[3], const float scale[3]) {
     float matrix44fTranslate[4][4] = {
             1, 0, 0, translate[0],
             0, 1, 0, translate[1],
             0, 0, 1, translate[2],
-            0, 0 , 0, 1
-    };
-    float rxMatrix[4][4] = {
-            1, 0, 0, 0,
-            0, cosf(rotate[0]), -sinf(rotate[0]), 0,
-            0, sinf(rotate[0]), cosf(rotate[0]), 0,
-            0, 0, 0, 1
-    };
-    float ryMatrix[4][4] = {
-            cosf(rotate[1]), 0, sinf(rotate[1]), 0,
-            0, 1, 0, 0,
-            -sinf(rotate[1]), 0, cosf(rotate[1]), 0,
-            0, 0, 0, 1
-    };
-    float rzMatrix[4][4] = {
-            cosf(rotate[2]), -sinf(rotate[2]), 0, 0,
-            sinf(rotate[2]), cosf(rotate[2]), 0, 0,
-            0, 0, 1, 0,
             0, 0, 0, 1
     };
 
+    float rxMatrix[4][4] = {
+            1,0              ,0               ,0,
+            0,cosf(rotate[0]),-sinf(rotate[0]),0,
+            0,sinf(rotate[0]),cosf(rotate[0]) ,0,
+            0,0              ,0               ,1
+    };
+
+    float ryMatrix[4][4] = {
+            cosf(rotate[1]) ,0,sinf(rotate[1]),0,
+            0               ,1,0              ,0,
+            -sinf(rotate[1]),0,cosf(rotate[1]),0,
+            0               ,0,0              ,1
+    };
+    float rzMatrix[4][4] = {
+            cosf(rotate[2]),-sinf(rotate[2]),0,0,
+            sinf(rotate[2]),cosf(rotate[2]) ,0,0,
+            0              ,0               ,1,0,
+            0              ,0               ,0,1
+   };
+
     float scaleMatrix[4][4] = {
-            scale[0], 0, 0, 0,
-            0, scale[1], 0, 0,
-            0, 0, scale[2], 0,
-            0, 0, 0, 1
+            scale[0],0       ,0       ,0,
+         0       ,scale[1],0       ,0,
+         0       ,0       ,scale[2],0,
+         0       ,0       ,0       ,1
     };
 
     multM44M44(matrix44fTranslate, o->worldMatrix);

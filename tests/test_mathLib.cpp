@@ -25,7 +25,7 @@ TEST(vector_tests, mult_matrix) {
     float vector[4] = {1, 1, 1, 1};
     float vectorExpected[4] = {3, 3, 3, 1};
 
-    multVectMatrix44(vector, matrix44fTranslate);
+    multV33M44(vector, matrix44fTranslate);
 
     for (int i = 0; i < 4; i++) {
         ASSERT_EQ(vector[i], vectorExpected[i]);

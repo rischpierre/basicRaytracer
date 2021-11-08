@@ -3,7 +3,6 @@
 #include <math.h>
 
 #include "gtest/gtest.h"
-#include "../src/geometries.h"
 
 
 TEST(transformTests, translate_works) {

@@ -31,13 +31,6 @@ int main(int argc, char *argv[]) {
         printObject(&scene->object, false);
         printf("Rendering...\n");
 
-        // todo test with transform here
-        float translate[3] = {0, 0, 0};
-        float rotate[3] = {0, 0, (2 * M_PI)/4};
-        float scale[3] = {1, 1, 1};
-
-        applyTransform(&scene->object, translate, rotate, scale);
-
         render(scene, "render.bmp");
 
         // animated example scene
@@ -60,15 +53,12 @@ int main(int argc, char *argv[]) {
 
             // todo move it in the example scene
             float translate[3] = {0, 0, 0};
-            float rotate[3] = {0, 0, (2.0f * (float)M_PI)/(float)(scene->endFrame - scene->startFrame)};
+            float rotate[3] = {0, 0, (2.0f * (float) M_PI) / (float) (scene->endFrame - scene->startFrame)};
             float scale[3] = {1, 1, 1};
 
             applyTransform(&scene->object, translate, rotate, scale);
 
         }
-        // todo put this command in a script folder:
-        //
-
 
     } else {
         printf("Wrong arguments\n");
