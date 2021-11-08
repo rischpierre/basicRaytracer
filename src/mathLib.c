@@ -73,23 +73,23 @@ float angleBetweenVectors(const float *v1, const float *v2) {
 }
 
 
-void crossProductFloat(float *result, const float *v1, const float *f, uint8_t size) {
-    for (uint8_t i = 0; i < 3; i++) {
+void crossProductFloat(float *result, const float *v1, const float *f) {
+    for (uint8_t i = 0; i < 3; i++){
         result[i] = v1[i] * (*f);
 
     }
 }
 
-void addVectors(float *result, const float *v1, const float *v2, uint8_t size) {
-    for (uint8_t i = 0; i < 3; i++) {
+void addVectors(float* result, const float *v1, const float *v2) {
+    for (uint8_t i = 0; i < 3; i++){
         result[i] = v1[i] + v2[i];
     }
 
 }
 
-void subVectors(float *result, const float *v1, const float *v2, uint8_t size) {
+void subVectors(float *result, const float *v1, const float *v2) {
 
-    for (uint8_t i = 0; i < size; i++) {
+    for (uint8_t i = 0; i < 3; i++){
         result[i] = v1[i] - v2[i];
     }
 

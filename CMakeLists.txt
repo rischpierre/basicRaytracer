@@ -1,19 +1,21 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(raytracerExperiment C)
+project(basicRaytracer C)
 
 set(CMAKE_C_STANDARD 11)
 
-include_directories(raytracerExperiment)
+include_directories(basicRaytracer)
 
-string(REPLACE ";" " -I" FLAGS "${FLAGS}")
-set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${GTK3_FLAGS} ${FLAGS})
-
+if (MSVC)
+    add_compile_options(/W4 /WX)
+else()
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
 
 file(GLOB SOURCES "src/*.h" "src/*.c" "examples/*.h")
 
 add_subdirectory(tests)
 
-add_executable(raytracerExperiment ${SOURCES})
+add_executable(basicRaytracer ${SOURCES})
 
-target_link_libraries(raytracerExperiment m pthread)
+target_link_libraries(basicRaytracer pthread m)

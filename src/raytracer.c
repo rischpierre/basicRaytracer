@@ -17,8 +17,8 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
     float det, u, v, invertedDet;
 
     // find the two edges arround V0
-    subVectors(edge1, face->v1, face->v0, 3);
-    subVectors(edge2, face->v2, face->v0, 3);
+    subVectors(edge1, face->v1, face->v0);
+    subVectors(edge2, face->v2, face->v0);
 
     //  get p
     crossProduct(p, ray->direction, edge2);
@@ -31,7 +31,7 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
     invertedDet = 1.f / det;
 
     // distance from V to ray origin
-    subVectors(t, ray->origin, face->v0, 3);
+    subVectors(t, ray->origin, face->v0);
 
     // calculate u param
     u = dotProduct(t, p) * invertedDet;
@@ -190,7 +190,7 @@ void render(Scene *scene, char *imagePath) {
     int lineIncrement = RESOLUTION_H / threadCount;
     struct renderArgs arguments[threadCount];
 
-    for (int i = 0; i < threadCount; ++i) {
+    for (unsigned int i = 0; i < threadCount; ++i) {
         pthread_t t;
 
         struct renderArgs args1 = {.scene=scene, .red=red, .green=green,
@@ -202,7 +202,7 @@ void render(Scene *scene, char *imagePath) {
         start += lineIncrement;
     }
 
-    for (int i = 0; i < threadCount; ++i) {
+    for (unsigned int i = 0; i < threadCount; ++i) {
         pthread_join(threads[i], NULL);
     }
 

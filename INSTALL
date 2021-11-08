@@ -20,7 +20,7 @@ cmake -B ./build
 make ./build
 
 # run raytracer
-./build/raytracerExperiment
+./build/basicRaytracer
 
 # run tests
 ./build/tests/Google_tests_run
