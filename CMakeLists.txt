@@ -12,7 +12,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-file(GLOB SOURCES "src/*.h" "src/*.c")
+file(GLOB SOURCES "src/*.h" "src/*.c" "examples/*.h")
 
 add_subdirectory(tests)
 

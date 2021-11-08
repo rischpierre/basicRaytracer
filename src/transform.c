@@ -3,55 +3,55 @@
 #include "mathLib.h"
 #include "renderSettings.h"
 #include <math.h>
-#include <float.h>
 #include <stdio.h>
 
 
-void transform(float *v, float *tm){
-    float matrix44fTranslate[16]= {
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            tm[0], tm[1], tm[2], 1
+void applyTransform(Object *o, const float translate[3], const float rotate[3], const float scale[3]) {
+    const float matrix44fTranslate[4][4] = {
+            {1, 0, 0, translate[0]},
+            {0, 1, 0, translate[1]},
+            {0, 0, 1, translate[2]},
+            {0, 0, 0, 1}
+
     };
 
-    float rxMatrix[16] = {
-            1, 0, 0, 0,
-            0, cosf(tm[3]),  -sinf(tm[3]) , 0,
-            0, sinf(tm[3]), cosf(tm[3]), 0,
-            0 , 0 , 0 ,1
+    const float rxMatrix[4][4] = {
+            {1, 0,               0,                0},
+            {0, cosf(rotate[0]), -sinf(rotate[0]), 0},
+            {0, sinf(rotate[0]), cosf(rotate[0]),  0},
+            {0, 0, 0, 1}
     };
 
-    float ryMatrix[16] = {
-            cosf(tm[4]), 0, sinf(tm[4]), 0,
-            0, 1,  0, 0,
-            -sinf(tm[4]), 0, cosf(tm[4]), 0,
-            0 , 0 , 0 , 1
+    const float ryMatrix[4][4] = {
+            {cosf(rotate[1]),  0, sinf(rotate[1]), 0},
+            {0,                1, 0,               0},
+            {-sinf(rotate[1]), 0, cosf(rotate[1]), 0},
+            {0, 0, 0, 1}
+    };
+    const float rzMatrix[4][4] = {
+            {cosf(rotate[2]), -sinf(rotate[2]), 0, 0},
+            {sinf(rotate[2]), cosf(rotate[2]),  0, 0},
+            {0,               0,                1, 0},
+            {0,               0,                0, 1}
     };
 
-    float rzMatrix[16] = {
-            cosf(tm[5]), -sinf(tm[5]), 0, 0,
-            sinf(tm[5]), cosf(tm[5]), 0, 0,
-            0, 0, 1, 0,
-            0 , 0 , 0 , 1
+    const float scaleMatrix[4][4] = {
+            {scale[0], 0,        0,        0},
+            {0,        scale[1], 0,        0},
+            {0,        0,        scale[2], 0},
+            {0,        0,        0,        1}
     };
 
-    float scaleMatrix[16] = {
-            tm[6], 0, 0, 0,
-            0, tm[7],  0, 0,
-            0, 0, tm[8], 0,
-            0 , 0 , 0 ,1
-    };
+    multM44M44(matrix44fTranslate, o->worldMatrix);
+    multM44M44(rxMatrix, o->worldMatrix);
+    multM44M44(ryMatrix, o->worldMatrix);
+    multM44M44(rzMatrix, o->worldMatrix);
+    multM44M44(scaleMatrix, o->worldMatrix);
 
-    multVectMatrix44(v, scaleMatrix);
-    multVectMatrix44(v, rxMatrix);
-    multVectMatrix44(v, ryMatrix);
-    multVectMatrix44(v, rzMatrix);
-    multVectMatrix44(v, matrix44fTranslate);
 }
 
 
-void printBBox(const float* bbox){
+void printBBox(const float *bbox) {
 
     printf("bbox: x-: %f x+ %f  |  ", bbox[0], bbox[1]);
     printf("y-: %f y+: %f  |   ", bbox[2], bbox[3]);
@@ -59,7 +59,31 @@ void printBBox(const float* bbox){
     printf("\n");
 }
 
-void computeBBox(const Object *o, float* bbox){
+
+void transformObject(Object *object) {
+    // transform points
+    for (int i = 0; i < object->faceNb; ++i) {
+        multV33M44(object->faces[i].v0, *object->worldMatrix);
+        multV33M44(object->faces[i].v1, *object->worldMatrix);
+        multV33M44(object->faces[i].v2, *object->worldMatrix);
+    }
+
+
+    // generate the transpose of the inverse of the world matrix
+    float transposeInverseMatrix[4][4], inverseMatrix[4][4];
+    invertM44(*inverseMatrix, *object->worldMatrix);
+    transposeM44(*transposeInverseMatrix, *inverseMatrix);
+
+    // todo transform normals with the inverse transposed matrix
+    for (int i = 0; i < object->faceNb; ++i) {
+        multV33M44(object->faces[i].n, *transposeInverseMatrix);
+    }
+
+    // reset world matrix to avoid exponential transform
+    initIdentityM44(object->worldMatrix);
+}
+
+void computeBBox(const Object *o, float *bbox) {
 
     float maxCoordX = -WORLD_MAX_DISTANCE;
     float maxCoordY = -WORLD_MAX_DISTANCE;
@@ -74,7 +98,7 @@ void computeBBox(const Object *o, float* bbox){
         current = &o->faces[i];
 
         // loop over every vertex in the face
-        for(int v=0; v < 3; v++){
+        for (int v = 0; v < 3; v++) {
             // loop over attributes of struct
             float x = *(current->v0 + 3 * v + 0);
             float y = *(current->v0 + 3 * v + 1);
@@ -93,7 +117,8 @@ void computeBBox(const Object *o, float* bbox){
             if (z < minCoordZ)
                 minCoordZ = z;
             if (z > maxCoordZ)
-                maxCoordZ = z;        }
+                maxCoordZ = z;
+        }
     }
 
     bbox[0] = minCoordX;

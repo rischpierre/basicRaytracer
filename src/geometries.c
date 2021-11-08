@@ -2,11 +2,11 @@
 #include "geometries.h"
 
 
-void printObject(const Object *o, bool details){
+void printObject(const Object *o, bool details) {
     printf("Object: %s\n", o->name);
     printf("nb of faces: %d\n", o->faceNb);
-    if (details == true){
-        for (int faceId = 0; faceId < o->faceNb; faceId++){
+    if (details == true) {
+        for (int faceId = 0; faceId < o->faceNb; faceId++) {
             printf("----------------------\n");
             Face curr = o->faces[faceId];
             printf("Face %d\n", faceId);

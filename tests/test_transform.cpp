@@ -3,7 +3,6 @@
 #include <math.h>
 
 #include "gtest/gtest.h"
-#include "../src/geometries.h"
 
 
 TEST(transformTests, translate_works) {
@@ -15,7 +14,7 @@ TEST(transformTests, translate_works) {
             1.f, 1.f, 1.f       // scale
     };
 
-    transform(v, transformMatrix);
+    transformVec3(v, transformMatrix);
 
     float expected[4] = {2, 4, -2, 1};
 
@@ -35,7 +34,7 @@ TEST(transformTests, rotate_works) {
             1.f, 1.f, 1.f
     };
 
-    transform(v, transformMatrix);
+    transformVec3(v, transformMatrix);
 
     float expected[4] = {cosf(M_PI/4), 0, 0.5f, 1.f};
 
@@ -55,7 +54,7 @@ TEST(transformTests, scale_works) {
             .5f, .5f, .5f
     };
 
-    transform(v, transformMatrix);
+    transformVec3(v, transformMatrix);
 
     float expected[4] = {0.5f, 0.5f, 0.5f, 1.f};
     for(uint8_t i = 0; i < 4; i++){

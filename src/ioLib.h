@@ -1,5 +1,6 @@
 #ifndef RAYTRACEREXPERIMENT_IOLIB_H
 #define RAYTRACEREXPERIMENT_IOLIB_H
+
 #include "geometries.h"
 
 #define TAG_VERTEX "v "
@@ -10,9 +11,13 @@
 
 // the image origin is the bottom left corner
 void writeBmpFile(int width, int height, float **red, float **green, float **blue, const char *filePath);
+
 void parseObjFile(Scene *scene, const char *filePath);
-void splitFaceToken(const char* token, int *vertexId, int *vertexNId);
-void parseVertices(float* vertices, const char* buffer, const int *vertexId);
+
+void splitFaceToken(const char *token, int *vertexId, int *vertexNId);
+
+void parseVertices(float *vertices, const char *buffer, const int *vertexId);
+
 Face parseFace(const char *buffer, const float *vertices, const float *vertexNormals);
 
 #endif //RAYTRACEREXPERIMENT_IOLIB_H

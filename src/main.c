@@ -1,27 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
+
 #include "geometries.h"
 #include "raytracer.h"
 #include "ioLib.h"
 #include "renderSettings.h"
-#include "transform.h"
+#include "../examples/exampleScene.h"
 
-void defineExampleScene(Scene *scene) {
-    Camera camera = {
-            .focalPoint={0, 0, 0},
-            .direction={1, 0, 0},
-    };
-
-    // light on the top left side
-    DirLight light = {.direction={0.2f, 0.6f, -0.2f}};
-
-    scene->camera = camera;
-    scene->light = light;
-
-}
-
-void validateRenderSettings(){
+void validateRenderSettings() {
     assert(RESOLUTION_DIVIDER % 2 == 0 || RESOLUTION_DIVIDER == 1);
 }
 
@@ -29,20 +17,55 @@ int main(int argc, char *argv[]) {
     validateRenderSettings();
 
     Scene *scene = malloc(sizeof(*scene));
-    defineExampleScene(scene);
-    char *usage = "Usage:\nraytracerExperiment <objFile>\n";
-    if (argc != 2){
+
+    char *usage = "Usage:\nraytracerExperiment [<objFile>]\n"
+                  "If no object file is provided, the example scene will be used";
+
+    // generate scene from given .obj file
+    if (argc == 2) {
+        generateRig(scene);
+        scene->isAnimated = false;
+        printf("Parsing object...\n");
+        parseObjFile(scene, argv[1]);
+
+        printObject(&scene->object, false);
+        printf("Rendering...\n");
+
+        render(scene, "render.bmp");
+
+        // animated example scene
+    } else if (argc == 1) {
+        generateExampleScene(scene);
+
+        printObject(&scene->object, false);
+
+        for (unsigned int frame = scene->startFrame; frame <= scene->endFrame; ++frame) {
+            printf("Rendering frame %d ...\n", frame);
+
+            char frameStr[5];
+            char imageName[50] = "render.";
+
+            sprintf(frameStr, "%04d", frame);
+            strcat(imageName, frameStr);
+            strcat(imageName, ".bmp");
+
+            render(scene, imageName);
+
+            // todo move it in the example scene
+            float translate[3] = {0, 0, 0};
+            float rotate[3] = {0, 0, (2.0f * (float) M_PI) / (float) (scene->endFrame - scene->startFrame)};
+            float scale[3] = {1, 1, 1};
+
+            applyTransform(&scene->object, translate, rotate, scale);
+
+        }
+
+    } else {
         printf("Wrong arguments\n");
         printf("%s", usage);
         exit(1);
     }
-    printf("Parsing object...\n");
-    parseObjFile(scene, argv[1]);
-    splitQuads(&scene->object);
 
-    printObject(&scene->object, false);
-    printf("Rendering...\n");
-    render(scene);
 
     freeScene(scene);
 
