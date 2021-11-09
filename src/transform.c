@@ -72,11 +72,11 @@ void applyTransform(Object *o, const float translate[3], const float rotate[3], 
             {0,        0,        0,        1}
     };
 
-    multM44M44(matrix44fTranslate, o->worldMatrix);
-    multM44M44(rxMatrix, o->worldMatrix);
-    multM44M44(ryMatrix, o->worldMatrix);
-    multM44M44(rzMatrix, o->worldMatrix);
-    multM44M44(scaleMatrix, o->worldMatrix);
+    multMat44(matrix44fTranslate, o->worldMatrix);
+    multMat44(rxMatrix, o->worldMatrix);
+    multMat44(ryMatrix, o->worldMatrix);
+    multMat44(rzMatrix, o->worldMatrix);
+    multMat44(scaleMatrix, o->worldMatrix);
 
 }
 
@@ -93,9 +93,9 @@ void printBBox(const float *bbox) {
 void transformObject(Object *object) {
     // transform points
     for (int i = 0; i < object->faceNb; ++i) {
-        multV33M44(object->faces[i].v0, *object->worldMatrix);
-        multV33M44(object->faces[i].v1, *object->worldMatrix);
-        multV33M44(object->faces[i].v2, *object->worldMatrix);
+        multV3M44(object->faces[i].v0, *object->worldMatrix);
+        multV3M44(object->faces[i].v1, *object->worldMatrix);
+        multV3M44(object->faces[i].v2, *object->worldMatrix);
     }
 
 
@@ -106,11 +106,11 @@ void transformObject(Object *object) {
 
     // todo transform normals with the inverse transposed matrix
     for (int i = 0; i < object->faceNb; ++i) {
-        multV33M44(object->faces[i].n, *transposeInverseMatrix);
+        multV3M44(object->faces[i].n, *transposeInverseMatrix);
     }
 
     // reset world matrix to avoid exponential transform
-    initIdentityM44(object->worldMatrix);
+    initIdentityMat44(object->worldMatrix);
 }
 
 void computeBBox(const Object *o, float *bbox) {

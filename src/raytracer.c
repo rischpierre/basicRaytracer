@@ -48,13 +48,13 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
     float det, u, v, invertedDet;
 
     // find the two edges arround V0
-    subVectors(edge1, face->v1, face->v0);
-    subVectors(edge2, face->v2, face->v0);
+    subVec3(edge1, face->v1, face->v0);
+    subVec3(edge2, face->v2, face->v0);
 
     //  get p
-    crossProduct(p, ray->direction, edge2);
+    crossProductVec3(p, ray->direction, edge2);
 
-    det = dotProduct(edge1, p);
+    det = dotProductVec3(edge1, p);
     if (det > -RAY_TRACING_THRESHOLD && det < RAY_TRACING_THRESHOLD)
         return false;
 
@@ -62,20 +62,20 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
     invertedDet = 1.f / det;
 
     // distance from V to ray origin
-    subVectors(t, ray->origin, face->v0);
+    subVec3(t, ray->origin, face->v0);
 
     // calculate u param
-    u = dotProduct(t, p) * invertedDet;
+    u = dotProductVec3(t, p) * invertedDet;
     if (u < 0 || u > 1.f)  // the hit point is outside of the triangle
         return false;
 
     // calculate v param
-    crossProduct(q, t, edge1);
-    v = dotProduct(ray->direction, q) * invertedDet;
+    crossProductVec3(q, t, edge1);
+    v = dotProductVec3(ray->direction, q) * invertedDet;
     if (v < 0 || u + v > 1.f)  // hit point outside triangle
         return false;
 
-    *distance = dotProduct(edge2, q) * invertedDet;
+    *distance = dotProductVec3(edge2, q) * invertedDet;
 
     return true;
 }
@@ -83,7 +83,7 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
 
 void
 computeColor(float color[3], const float *faceNormal, const DirLight *light, const float objectColor[3]) {
-    float angle = angleBetweenVectors(light->direction, faceNormal);
+    float angle = angleBetweenVec3(light->direction, faceNormal);
     float result = interpolation1d(angle, M_PI / 2, M_PI, 0, 1);
 
     if (result < 0) {

@@ -33,7 +33,7 @@
 #include "math.h"
 #include "stdint.h"
 
-void crossProduct(float *result, const float *v1, const float *v2) {
+void crossProductVec3(float result[3], const float v1[3], const float v2[3]) {
 
     result[0] = v1[1] * v2[2] - v1[2] * v2[1];
     result[1] = v1[2] * v2[0] - v1[0] * v2[2];
@@ -41,7 +41,7 @@ void crossProduct(float *result, const float *v1, const float *v2) {
 
 }
 
-void initIdentityM44(float m[4][4]) {
+void initIdentityMat44(float m[4][4]) {
 
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -54,7 +54,7 @@ void initIdentityM44(float m[4][4]) {
     }
 }
 
-void multM44M44(const float m1[4][4], float m2[4][4]) {
+void multMat44(const float m1[4][4], float m2[4][4]) {
     float result[4][4];
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
@@ -74,7 +74,7 @@ void multM44M44(const float m1[4][4], float m2[4][4]) {
 
 }
 
-void multV33M44(float v[3], const float m[16]) {
+void multV3M44(float v[3], const float m[16]) {
     float res[3];
     res[0] = v[0] * m[0] + v[1] * m[1] + v[2] * m[2] + 1 * m[3];
     res[1] = v[0] * m[4] + v[1] * m[5] + v[2] * m[6] + 1 * m[7];
@@ -86,38 +86,36 @@ void multV33M44(float v[3], const float m[16]) {
 }
 
 
-float dotProduct(const float *v1, const float *v2) {
+float dotProductVec3(const float v1[3], const float v2[3]) {
 
     return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
 }
 
 
-float magnitude3f(const float *v) {
+float magnitudeVec3(const float v[3]) {
     return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
-float angleBetweenVectors(const float *v1, const float *v2) {
+float angleBetweenVec3(const float *v1, const float *v2) {
 
-    return acosf(dotProduct(v1, v2) / (magnitude3f(v1) * magnitude3f(v2)));
+    return acosf(dotProductVec3(v1, v2) / (magnitudeVec3(v1) * magnitudeVec3(v2)));
 
 }
 
 
-void crossProductFloat(float *result, const float *v1, const float *f) {
+void crossProductFloatVec3(float *result, const float v[3], const float *f) {
     for (uint8_t i = 0; i < 3; i++) {
-        result[i] = v1[i] * (*f);
-
+        result[i] = v[i] * (*f);
     }
 }
 
-void addVectors(float *result, const float *v1, const float *v2) {
+void addVec3(float *result, const float v1[3], const float v2[3]) {
     for (uint8_t i = 0; i < 3; i++) {
         result[i] = v1[i] + v2[i];
     }
-
 }
 
-void subVectors(float *result, const float *v1, const float *v2) {
+void subVec3(float *result, const float *v1, const float *v2) {
 
     for (uint8_t i = 0; i < 3; i++) {
         result[i] = v1[i] - v2[i];

@@ -253,7 +253,7 @@ void parseObjFile(Scene *scene, const char *filePath) {
 
     // define object's default world matrix
     // todo put this elsewhere, maybe an obj initializer?
-    initIdentityM44(scene->object.worldMatrix);
+    initIdentityMat44(scene->object.worldMatrix);
 
     splitQuads(&scene->object);
 

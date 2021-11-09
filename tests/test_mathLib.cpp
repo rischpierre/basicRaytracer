@@ -40,7 +40,7 @@ TEST(vector_tests, cross_product) {
     float v2[3] = {0, 1, 0};
     float result[3];
 
-    crossProduct(result, v1, v2);
+    crossProductVec3(result, v1, v2);
     float expected[3] = {0, 0, 1};
 
     for (uint8_t i = 0; i < 3; i++) {
@@ -58,7 +58,7 @@ TEST(vector_tests, mult_matrix) {
     float vector[4] = {1, 1, 1, 1};
     float vectorExpected[4] = {3, 3, 3, 1};
 
-    multV33M44(vector, matrix44fTranslate);
+    multV3M44(vector, matrix44fTranslate);
 
     for (int i = 0; i < 4; i++) {
         ASSERT_EQ(vector[i], vectorExpected[i]);
@@ -68,7 +68,7 @@ TEST(vector_tests, mult_matrix) {
 TEST(vector_tests, dot_product) {
     float v1[3] = {1, 1, 2};
     float v2[3] = {0, 1, 4};
-    ASSERT_EQ(dotProduct(v1, v2), 9);
+    ASSERT_EQ(dotProductVec3(v1, v2), 9);
 }
 
 TEST(vector_tests, angle_between_vectors) {
@@ -76,9 +76,9 @@ TEST(vector_tests, angle_between_vectors) {
     float v2[3] = {0, 1, 0};
     float v3[3] = {-1, 0, 0};
 
-    ASSERT_EQ(angleBetweenVectors(v1, v2), (float) M_PI / 2);
-    ASSERT_EQ(angleBetweenVectors(v1, v1), 0);
-    ASSERT_EQ(angleBetweenVectors(v1, v3), (float) M_PI);
+    ASSERT_EQ(angleBetweenVec3(v1, v2), (float) M_PI / 2);
+    ASSERT_EQ(angleBetweenVec3(v1, v1), 0);
+    ASSERT_EQ(angleBetweenVec3(v1, v3), (float) M_PI);
 }
 
 TEST(utils, interpolation1d) {
