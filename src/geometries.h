@@ -60,7 +60,6 @@ typedef struct {
     float color[3];
 } Object;
 
-void printObject(const Object *o, bool details);
 
 typedef struct {
     float origin[3];
@@ -82,5 +81,12 @@ typedef struct {
     unsigned int startFrame;
     unsigned int endFrame;
 } Scene;
+
+/* Print addDetails about the object: names, number of faces...
+ *
+ *  object: The object to print the information.
+ *  addDetails: If true, it prints detailed information.
+ */
+void printObject(const Object *object, bool addDetails);
 
 #endif //RAYTRACEREXPERIMENT_GEOMETRIES_H
