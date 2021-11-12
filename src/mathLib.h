@@ -41,7 +41,7 @@ void crossProductVec3(float *result, const float *v1, const float *v2);
 
 void multMat44(const float m1[4][4], float m2[4][4]);
 
-void initIdentityMat44(float m[4][4]);
+void generateIdentityMat44(float m[4][4]);
 
 float dotProductVec3(const float *v1, const float *v2);
 
@@ -55,9 +55,9 @@ void addVectors(float *result, const float *v1, const float *v2);
 
 void subVec3(float *result, const float *v1, const float *v2);
 
-float interpolation1d(float x, float x1, float x2, float y1, float y2);
+float interpolation1d(float inputValue, float inputRangeStart, float inputRangeEnd, float outputRangeStart, float outputRangeEnd);
 
-void transposeM44(float *r_m44, const float *m44);
+void transposeM44(float result[4][4], const float input[4][4]);
 
 bool invertM44(float *r_m44, const float *m44);
 

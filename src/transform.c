@@ -110,7 +110,7 @@ void transformObject(Object *object) {
     }
 
     // reset world matrix to avoid exponential transform
-    initIdentityMat44(object->worldMatrix);
+    generateIdentityMat44(object->worldMatrix);
 }
 
 void computeBBox(const Object *o, float *bbox) {

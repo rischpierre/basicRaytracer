@@ -32,7 +32,12 @@
 #include "mathLib.h"
 #include "math.h"
 #include "stdint.h"
-
+/*
+ * Return the cross product of two vectors.
+ * result:  result vector
+ * v1:      first vector to compute
+ * v2:      second vector to compute
+ */
 void crossProductVec3(float result[3], const float v1[3], const float v2[3]) {
 
     result[0] = v1[1] * v2[2] - v1[2] * v2[1];
@@ -41,7 +46,11 @@ void crossProductVec3(float result[3], const float v1[3], const float v2[3]) {
 
 }
 
-void initIdentityMat44(float m[4][4]) {
+/*
+ * Generate a 4x4 identity matrix.
+ * m: The resulting matrix
+ */
+void generateIdentityMat44(float m[4][4]) {
 
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -53,7 +62,11 @@ void initIdentityMat44(float m[4][4]) {
         }
     }
 }
-
+/*
+ * Multiply two matrices together.
+ * m1: The first matrix to multiply to.
+ * m2: The resulting matrix and the second matrix to multiply with.
+ */
 void multMat44(const float m1[4][4], float m2[4][4]) {
     float result[4][4];
     for (int i = 0; i < 4; i++) {
@@ -73,7 +86,11 @@ void multMat44(const float m1[4][4], float m2[4][4]) {
     }
 
 }
-
+/*
+ * Return the multiplication of a 4x4 matrix with a vector
+ * v: resulting vector
+ * m: matrix to multiply
+ */
 void multV3M44(float v[3], const float m[16]) {
     float res[3];
     res[0] = v[0] * m[0] + v[1] * m[1] + v[2] * m[2] + 1 * m[3];
@@ -85,36 +102,68 @@ void multV3M44(float v[3], const float m[16]) {
     }
 }
 
-
+/*
+ * Return the dot product of two vectors
+ * v1: first vector to compute
+ * v2: second vector to compute
+ * return: result number of the dot product
+ */
 float dotProductVec3(const float v1[3], const float v2[3]) {
 
     return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
 }
 
-
+/*
+ * Return the magnitude of a vector
+ * v: vector to get the magnitude of.
+ * return: result magnitude of the vector
+ */
 float magnitudeVec3(const float v[3]) {
     return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
+/*
+ * Return the angle between two vectors.
+ * v1: first input vector
+ * v2: second input vector
+ * return: angle in radians
+ */
 float angleBetweenVec3(const float *v1, const float *v2) {
 
     return acosf(dotProductVec3(v1, v2) / (magnitudeVec3(v1) * magnitudeVec3(v2)));
 
 }
 
-
+/*
+ * Return the cross product between a vector and a float number.
+ * result: cross product result
+ * v: input vector
+ * f: input float
+ */
 void crossProductFloatVec3(float *result, const float v[3], const float *f) {
     for (uint8_t i = 0; i < 3; i++) {
         result[i] = v[i] * (*f);
     }
 }
 
+/*
+ * Return the addition of two vectors.
+ * result: result vector
+ * v1: first input vector
+ * v2: second input vector
+ */
 void addVec3(float *result, const float v1[3], const float v2[3]) {
     for (uint8_t i = 0; i < 3; i++) {
         result[i] = v1[i] + v2[i];
     }
 }
 
+/*
+ * Return the subtraction of two vectors.
+ * result: result vector
+ * v1: first input vector
+ * v2: second input vector
+ */
 void subVec3(float *result, const float *v1, const float *v2) {
 
     for (uint8_t i = 0; i < 3; i++) {
@@ -123,17 +172,30 @@ void subVec3(float *result, const float *v1, const float *v2) {
 
 }
 
+/*
+ * Compute a one dimension interpolation between
+ * xValue: input value
+ * inputRangeStart: start of input range
+ * inputRangeEnd: end of input range
+ * outputRangeStart: start of output range
+ * outputRangeEnd: end of output range
+ */
+float interpolation1d(float inputValue, float inputRangeStart,
+                      float inputRangeEnd, float outputRangeStart, float outputRangeEnd) {
 
-float interpolation1d(float x, float x1, float x2, float y1, float y2) {
-
-    return ((y2 - y1) * x + x2 * y1 - x1 * y2) / (x2 - x1);
+    return ((outputRangeEnd - outputRangeStart) * inputValue + inputRangeEnd * outputRangeStart - inputRangeStart * outputRangeEnd) / (inputRangeEnd - inputRangeStart);
 
 }
 
-void transposeM44(float *r_m44, const float *m44) {
+/*
+ * Transpose a 4x4 matrix
+ *
+ */
+// todo
+void transposeM44(float result[4][4], const float input[4][4]) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; ++j) {
-            r_m44[4 * i + j] = m44[4 * j + i];
+            result[4 * i + j] = m44[4 * j + i];
         }
     }
 }

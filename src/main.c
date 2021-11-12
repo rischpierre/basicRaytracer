@@ -39,8 +39,12 @@
 #include "renderSettings.h"
 #include "../examples/exampleScene.h"
 
+
+/*
+ * Check if all the render settings are valid
+ */
 void validateRenderSettings() {
-    assert(RESOLUTION_DIVIDER % 2 == 0 || RESOLUTION_DIVIDER == 1);
+    static_assert(RESOLUTION_DIVIDER % 2 == 0 || RESOLUTION_DIVIDER == 1);
 }
 
 int main(int argc, char *argv[]) {
@@ -63,7 +67,7 @@ int main(int argc, char *argv[]) {
 
         render(scene, "render.bmp");
 
-        // animated example scene
+    // animated example scene
     } else if (argc == 1) {
         generateExampleScene(scene);
 
@@ -87,7 +91,6 @@ int main(int argc, char *argv[]) {
             float scale[3] = {1, 1, 1};
 
             applyTransform(&scene->object, translate, rotate, scale);
-
         }
 
     } else {
@@ -95,7 +98,6 @@ int main(int argc, char *argv[]) {
         printf("%s", usage);
         exit(1);
     }
-
 
     freeScene(scene);
 
