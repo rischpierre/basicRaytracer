@@ -31,7 +31,7 @@
 #ifndef RAYTRACEREXPERIMENT_IOLIB_H
 #define RAYTRACEREXPERIMENT_IOLIB_H
 
-#include "geometries.h"
+#include "sceneEntities.h"
 
 #define TAG_VERTEX "v "
 #define TAG_VERTEX_N "vn "

@@ -33,7 +33,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "geometries.h"
+#include "sceneEntities.h"
 #include "raytracer.h"
 #include "ioLib.h"
 #include "renderSettings.h"

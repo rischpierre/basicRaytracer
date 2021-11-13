@@ -38,7 +38,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "ioLib.h"
-#include "geometries.h"
+#include "sceneEntities.h"
 #include "raytracer.h"
 #include "mathLib.h"
 

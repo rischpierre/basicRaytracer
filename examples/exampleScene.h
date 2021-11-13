@@ -33,7 +33,7 @@
 
 
 #include <math.h>
-#include "../src/geometries.h"
+#include "../src/sceneEntities.h"
 #include "../src/transform.h"
 
 void generateRig(Scene *scene) {

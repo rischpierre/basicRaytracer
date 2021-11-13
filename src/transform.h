@@ -32,7 +32,7 @@
 #ifndef RAYTRACEREXPERIMENT_TRANSFORM_H
 #define RAYTRACEREXPERIMENT_TRANSFORM_H
 
-#include "geometries.h"
+#include "sceneEntities.h"
 
 void printBBox(const float *bbox);
 

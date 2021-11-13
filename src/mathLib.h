@@ -34,7 +34,7 @@
 #define RAYTRACEREXPERIMENT_MATHLIB_H
 
 #include "mathLib.h"
-#include "geometries.h"
+#include "sceneEntities.h"
 #include "stdint.h"
 
 void crossProductVec3(float *result, const float *v1, const float *v2);

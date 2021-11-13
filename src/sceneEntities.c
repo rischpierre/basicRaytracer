@@ -30,7 +30,7 @@
  */
 
 #include <stdio.h>
-#include "geometries.h"
+#include "sceneEntities.h"
 
 
 void printObject(const Object *o, bool details) {
