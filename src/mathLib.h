@@ -59,7 +59,7 @@ float interpolation1d(float inputValue, float inputRangeStart, float inputRangeE
 
 void transposeM44(float result[4][4], const float input[4][4]);
 
-bool invertM44(float *r_m44, const float *m44);
+bool invertM44(float *result, const float *input);
 
 void multV3M44(float v[3], const float m[16]);
 
