@@ -205,7 +205,7 @@ float interpolation1d(float inputValue, float inputRangeStart,
  * result: The transposed matrix.
  * input: The matrix to transpose.
  */
-void transposeM44(float result[4][4], const float input[4][4]) {
+void transposeM44(float result[4][4], float input[4][4]) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; ++j) {
             result[i][j] = input[j][i];
@@ -221,130 +221,135 @@ void transposeM44(float result[4][4], const float input[4][4]) {
  * input: The input matrix to invert.
  * result: true if it is possible to invert.
  */
-bool invertM44(float *result, const float *input) {
+bool invertM44(float result[4][4], float input[4][4]) {
     float inv[16], det;
-    // todo replace all the [] with double [][]
-    inv[0] = input[5] * input[10] * input[15] -
-             input[5] * input[11] * input[14] -
-             input[9] * input[6] * input[15] +
-             input[9] * input[7] * input[14] +
-             input[13] * input[6] * input[11] -
-             input[13] * input[7] * input[10];
 
-    inv[4] = -input[4] * input[10] * input[15] +
-             input[4] * input[11] * input[14] +
-             input[8] * input[6] * input[15] -
-             input[8] * input[7] * input[14] -
-             input[12] * input[6] * input[11] +
-             input[12] * input[7] * input[10];
+    float *in = (float *)input;
 
-    inv[8] = input[4] * input[9] * input[15] -
-             input[4] * input[11] * input[13] -
-             input[8] * input[5] * input[15] +
-             input[8] * input[7] * input[13] +
-             input[12] * input[5] * input[11] -
-             input[12] * input[7] * input[9];
+    inv[0] = in[5] * in[10] * in[15] -
+             in[5] * in[11] * in[14] -
+             in[9] * in[6] * in[15] +
+             in[9] * in[7] * in[14] +
+             in[13] * in[6] * in[11] -
+             in[13] * in[7] * in[10];
 
-    inv[12] = -input[4] * input[9] * input[14] +
-              input[4] * input[10] * input[13] +
-              input[8] * input[5] * input[14] -
-              input[8] * input[6] * input[13] -
-              input[12] * input[5] * input[10] +
-              input[12] * input[6] * input[9];
+    inv[4] = -in[4] * in[10] * in[15] +
+             in[4] * in[11] * in[14] +
+             in[8] * in[6] * in[15] -
+             in[8] * in[7] * in[14] -
+             in[12] * in[6] * in[11] +
+             in[12] * in[7] * in[10];
 
-    inv[1] = -input[1] * input[10] * input[15] +
-             input[1] * input[11] * input[14] +
-             input[9] * input[2] * input[15] -
-             input[9] * input[3] * input[14] -
-             input[13] * input[2] * input[11] +
-             input[13] * input[3] * input[10];
+    inv[8] = in[4] * in[9] * in[15] -
+             in[4] * in[11] * in[13] -
+             in[8] * in[5] * in[15] +
+             in[8] * in[7] * in[13] +
+             in[12] * in[5] * in[11] -
+             in[12] * in[7] * in[9];
 
-    inv[5] = input[0] * input[10] * input[15] -
-             input[0] * input[11] * input[14] -
-             input[8] * input[2] * input[15] +
-             input[8] * input[3] * input[14] +
-             input[12] * input[2] * input[11] -
-             input[12] * input[3] * input[10];
+    inv[12] = -in[4] * in[9] * in[14] +
+              in[4] * in[10] * in[13] +
+              in[8] * in[5] * in[14] -
+              in[8] * in[6] * in[13] -
+              in[12] * in[5] * in[10] +
+              in[12] * in[6] * in[9];
 
-    inv[9] = -input[0] * input[9] * input[15] +
-             input[0] * input[11] * input[13] +
-             input[8] * input[1] * input[15] -
-             input[8] * input[3] * input[13] -
-             input[12] * input[1] * input[11] +
-             input[12] * input[3] * input[9];
+    inv[1] = -in[1] * in[10] * in[15] +
+             in[1] * in[11] * in[14] +
+             in[9] * in[2] * in[15] -
+             in[9] * in[3] * in[14] -
+             in[13] * in[2] * in[11] +
+             in[13] * in[3] * in[10];
 
-    inv[13] = input[0] * input[9] * input[14] -
-              input[0] * input[10] * input[13] -
-              input[8] * input[1] * input[14] +
-              input[8] * input[2] * input[13] +
-              input[12] * input[1] * input[10] -
-              input[12] * input[2] * input[9];
+    inv[5] = in[0] * in[10] * in[15] -
+             in[0] * in[11] * in[14] -
+             in[8] * in[2] * in[15] +
+             in[8] * in[3] * in[14] +
+             in[12] * in[2] * in[11] -
+             in[12] * in[3] * in[10];
 
-    inv[2] = input[1] * input[6] * input[15] -
-             input[1] * input[7] * input[14] -
-             input[5] * input[2] * input[15] +
-             input[5] * input[3] * input[14] +
-             input[13] * input[2] * input[7] -
-             input[13] * input[3] * input[6];
+    inv[9] = -in[0] * in[9] * in[15] +
+             in[0] * in[11] * in[13] +
+             in[8] * in[1] * in[15] -
+             in[8] * in[3] * in[13] -
+             in[12] * in[1] * in[11] +
+             in[12] * in[3] * in[9];
 
-    inv[6] = -input[0] * input[6] * input[15] +
-             input[0] * input[7] * input[14] +
-             input[4] * input[2] * input[15] -
-             input[4] * input[3] * input[14] -
-             input[12] * input[2] * input[7] +
-             input[12] * input[3] * input[6];
+    inv[13] = in[0] * in[9] * in[14] -
+              in[0] * in[10] * in[13] -
+              in[8] * in[1] * in[14] +
+              in[8] * in[2] * in[13] +
+              in[12] * in[1] * in[10] -
+              in[12] * in[2] * in[9];
 
-    inv[10] = input[0] * input[5] * input[15] -
-              input[0] * input[7] * input[13] -
-              input[4] * input[1] * input[15] +
-              input[4] * input[3] * input[13] +
-              input[12] * input[1] * input[7] -
-              input[12] * input[3] * input[5];
+    inv[2] = in[1] * in[6] * in[15] -
+             in[1] * in[7] * in[14] -
+             in[5] * in[2] * in[15] +
+             in[5] * in[3] * in[14] +
+             in[13] * in[2] * in[7] -
+             in[13] * in[3] * in[6];
 
-    inv[14] = -input[0] * input[5] * input[14] +
-              input[0] * input[6] * input[13] +
-              input[4] * input[1] * input[14] -
-              input[4] * input[2] * input[13] -
-              input[12] * input[1] * input[6] +
-              input[12] * input[2] * input[5];
+    inv[6] = -in[0] * in[6] * in[15] +
+             in[0] * in[7] * in[14] +
+             in[4] * in[2] * in[15] -
+             in[4] * in[3] * in[14] -
+             in[12] * in[2] * in[7] +
+             in[12] * in[3] * in[6];
 
-    inv[3] = -input[1] * input[6] * input[11] +
-             input[1] * input[7] * input[10] +
-             input[5] * input[2] * input[11] -
-             input[5] * input[3] * input[10] -
-             input[9] * input[2] * input[7] +
-             input[9] * input[3] * input[6];
+    inv[10] = in[0] * in[5] * in[15] -
+              in[0] * in[7] * in[13] -
+              in[4] * in[1] * in[15] +
+              in[4] * in[3] * in[13] +
+              in[12] * in[1] * in[7] -
+              in[12] * in[3] * in[5];
 
-    inv[7] = input[0] * input[6] * input[11] -
-             input[0] * input[7] * input[10] -
-             input[4] * input[2] * input[11] +
-             input[4] * input[3] * input[10] +
-             input[8] * input[2] * input[7] -
-             input[8] * input[3] * input[6];
+    inv[14] = -in[0] * in[5] * in[14] +
+              in[0] * in[6] * in[13] +
+              in[4] * in[1] * in[14] -
+              in[4] * in[2] * in[13] -
+              in[12] * in[1] * in[6] +
+              in[12] * in[2] * in[5];
 
-    inv[11] = -input[0] * input[5] * input[11] +
-              input[0] * input[7] * input[9] +
-              input[4] * input[1] * input[11] -
-              input[4] * input[3] * input[9] -
-              input[8] * input[1] * input[7] +
-              input[8] * input[3] * input[5];
+    inv[3] = -in[1] * in[6] * in[11] +
+             in[1] * in[7] * in[10] +
+             in[5] * in[2] * in[11] -
+             in[5] * in[3] * in[10] -
+             in[9] * in[2] * in[7] +
+             in[9] * in[3] * in[6];
 
-    inv[15] = input[0] * input[5] * input[10] -
-              input[0] * input[6] * input[9] -
-              input[4] * input[1] * input[10] +
-              input[4] * input[2] * input[9] +
-              input[8] * input[1] * input[6] -
-              input[8] * input[2] * input[5];
+    inv[7] = in[0] * in[6] * in[11] -
+             in[0] * in[7] * in[10] -
+             in[4] * in[2] * in[11] +
+             in[4] * in[3] * in[10] +
+             in[8] * in[2] * in[7] -
+             in[8] * in[3] * in[6];
 
-    det = input[0] * inv[0] + input[1] * inv[4] + input[2] * inv[8] + input[3] * inv[12];
+    inv[11] = -in[0] * in[5] * in[11] +
+              in[0] * in[7] * in[9] +
+              in[4] * in[1] * in[11] -
+              in[4] * in[3] * in[9] -
+              in[8] * in[1] * in[7] +
+              in[8] * in[3] * in[5];
+
+    inv[15] = in[0] * in[5] * in[10] -
+              in[0] * in[6] * in[9] -
+              in[4] * in[1] * in[10] +
+              in[4] * in[2] * in[9] +
+              in[8] * in[1] * in[6] -
+              in[8] * in[2] * in[5];
+
+    det = in[0] * inv[0] + in[1] * inv[4] + in[2] * inv[8] + in[3] * inv[12];
 
     if (det == 0)
         return false;
 
     det = 1.0f / det;
 
-    for (int i = 0; i < 16; i++)
-        result[i] = inv[i] * det;
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++){
+            result[i][j] = inv[4 * i + j] * det;
+        }
+    }
 
     return true;
 }

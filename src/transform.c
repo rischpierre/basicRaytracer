@@ -116,7 +116,7 @@ void transformObject(Object *object) {
 
     // generate the transpose of the inverse of the world matrix
     float transposeInverseMatrix[4][4], inverseMatrix[4][4];
-    invertM44(*inverseMatrix, *object->worldMatrix);
+    invertM44(inverseMatrix, object->worldMatrix);
     transposeM44(transposeInverseMatrix, inverseMatrix);
 
     for (int i = 0; i < object->faceNb; ++i) {

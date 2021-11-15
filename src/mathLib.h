@@ -57,9 +57,9 @@ void subVec3(float *result, const float *v1, const float *v2);
 
 float interpolation1d(float inputValue, float inputRangeStart, float inputRangeEnd, float outputRangeStart, float outputRangeEnd);
 
-void transposeM44(float result[4][4], const float input[4][4]);
+void transposeM44(float result[4][4], float input[4][4]);
 
-bool invertM44(float *result, const float *input);
+bool invertM44(float result[4][4], float input[4][4]);
 
 void multV3M44(float v[3], const float m[16]);
 
