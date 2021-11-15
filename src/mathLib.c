@@ -223,7 +223,7 @@ void transposeM44(float result[4][4], const float input[4][4]) {
  */
 bool invertM44(float *result, const float *input) {
     float inv[16], det;
-
+    // todo replace all the [] with double [][]
     inv[0] = input[5] * input[10] * input[15] -
              input[5] * input[11] * input[14] -
              input[9] * input[6] * input[15] +

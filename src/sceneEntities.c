@@ -30,16 +30,22 @@
  */
 
 #include <stdio.h>
+#include <malloc.h>
 #include "sceneEntities.h"
 
-
-void printObject(const Object *o, bool details) {
-    printf("Object: %s\n", o->name);
-    printf("nb of faces: %d\n", o->faceNb);
+/*
+ * Print information about a given object.
+ *
+ * object: The object that will be printed.
+ * details: If true, the face coordinates will be printed as well.
+ */
+void printObject(const Object *object, bool details) {
+    printf("Object: %s\n", object->name);
+    printf("nb of faces: %d\n", object->faceNb);
     if (details == true) {
-        for (int faceId = 0; faceId < o->faceNb; faceId++) {
+        for (int faceId = 0; faceId < object->faceNb; faceId++) {
             printf("----------------------\n");
-            Face curr = o->faces[faceId];
+            Face curr = object->faces[faceId];
             printf("Face %d\n", faceId);
             printf("  v0: %f %f %f\n", curr.v0[0], curr.v0[1], curr.v0[2]);
             printf("  v1: %f %f %f\n", curr.v1[0], curr.v1[1], curr.v1[2]);
@@ -48,4 +54,15 @@ void printObject(const Object *o, bool details) {
         }
     }
     printf("----------------------\n");
+}
+
+/*
+ * Free the scene struct and its components.
+ *
+ * scene: The scene to free the memory to.
+ */
+void freeScene(Scene *scene) {
+    free(scene->object.faces);
+    free((char *) scene->object.name);
+    free(scene);
 }

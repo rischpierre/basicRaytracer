@@ -34,6 +34,7 @@
 #include "gtest/gtest.h"
 #include "../src/ioLib.h"
 #include "../src/renderSettings.h"
+#include "../src/sceneParser.h"
 
 TEST(raytracer, test_ray_inside_triangle) {
     Ray ray = {{0, 0, 0},

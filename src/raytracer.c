@@ -159,11 +159,16 @@ void splitQuads(Object *object) {
 }
 
 /*
- *  todo
+ * For each pixel in the image, trace a ray following the direction of the camera.
+ * If the ray intersect a face in the scene, the color is computer.
+ *
+ * renderArguments: Since this function is meant to be used by multiple threads,
+ *                  only one argument can be passed as argument.
+ *                  renderArguments is a struct containing the scene, the image channels, etc...
  */
-void *renderLoop(void *arguments) {
+void *renderLoop(void *renderArguments) {
 
-    struct renderArgs *args = (struct renderArgs *) arguments;
+    struct renderArgs *args = (struct renderArgs *) renderArguments;
 
     // todo the direction of the camera should be computed with the camera wolrd matrix instead
     Ray ray = {.origin={args->scene->camera.origin[0], args->scene->camera.origin[1],
@@ -220,7 +225,11 @@ void *renderLoop(void *arguments) {
     return NULL;
 }
 
-
+/*
+ * Helper function to get the number of threads of the current system.
+ *
+ * return: number of threads available
+*/
 unsigned int getNumThreads() {
 
     unsigned int eax = 11, ebx = 0, ecx = 1, edx = 0;
@@ -236,11 +245,19 @@ unsigned int getNumThreads() {
     return ebx;
 }
 
+
+/*
+ * Given a scene and an image path, It renders the object in the scene and outputs an image.
+ *
+ * scene: struct containing information about the objects, cameras, lights, etc...
+ * imagePath: the output file path of the rendered image.
+ */
 void render(Scene *scene, char *imagePath) {
-    // this is first a test with planar projection
 
     transformObject(&scene->object);
 
+    // Generate arrays of pointers for each color channel.
+    // This represents the final image
     float **red = (float **) malloc(RESOLUTION_H * sizeof(float *));
     float **green = (float **) malloc(RESOLUTION_H * sizeof(float *));
     float **blue = (float **) malloc(RESOLUTION_H * sizeof(float *));
@@ -257,6 +274,7 @@ void render(Scene *scene, char *imagePath) {
     printf("Using %d threads\n", threadCount);
     pthread_t threads[threadCount];
 
+    // submit multi-threaded render loop.
     int start = 0;
     int lineIncrement = RESOLUTION_H / threadCount;
     struct renderArgs arguments[threadCount];
@@ -277,6 +295,7 @@ void render(Scene *scene, char *imagePath) {
         pthread_join(threads[i], NULL);
     }
 
+    // Print render time taking multithreading into consideration
     clock_gettime(CLOCK_MONOTONIC, &finishTime);
     double elapsed = (double) (finishTime.tv_sec - startTime.tv_sec);
     elapsed += (double) ((finishTime.tv_nsec - startTime.tv_nsec) / 1000000000.0);
@@ -296,10 +315,4 @@ void render(Scene *scene, char *imagePath) {
     free(green);
     free(blue);
 
-}
-
-void freeScene(Scene *scene) {
-    free(scene->object.faces);
-    free((char *) scene->object.name);
-    free(scene);
 }

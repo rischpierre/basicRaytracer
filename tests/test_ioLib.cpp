@@ -32,6 +32,7 @@
 #include "gtest/gtest.h"
 #include <unistd.h>
 #include "../src/ioLib.h"
+#include "../src/sceneParser.h"
 
 TEST(splitFaceToken, valid_output) {
     int vertexId = -1;

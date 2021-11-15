@@ -40,11 +40,9 @@ void computeColor(float color[3], const float *faceNormal, const DirLight *light
 
 void render(Scene *scene, char *imagePath);
 
-void freeScene(Scene *scene);
-
 void splitQuads(Object *object);
 
-void *renderLoop(void *arguments);
+void *renderLoop(void *renderArguments);
 
 // this is used to pass on args for multi-threaded functions
 struct renderArgs {

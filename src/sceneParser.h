@@ -1,3 +1,4 @@
+
 /*
  *
  * Copyright (c) 2021 Pierre Risch
@@ -28,37 +29,24 @@
  *
  */
 
-#ifndef RAYTRACEREXPERIMENT_EXAMPLESCENE_H
-#define RAYTRACEREXPERIMENT_EXAMPLESCENE_H
+#ifndef BASICRAYTRACER_SCENEPARSER_H
+#define BASICRAYTRACER_SCENEPARSER_H
 
 
-#include <math.h>
-#include "../src/sceneEntities.h"
-#include "../src/transform.h"
-#include "../src/sceneParser.h"
+#include "sceneEntities.h"
 
-void generateRig(Scene *scene) {
+#define TAG_VERTEX "v "
+#define TAG_VERTEX_N "vn "
+#define TAG_FACE "f "
+#define TAG_OBJECT "o "
+#define BUFFER_SIZE 256
 
-    Camera camera = {
-            .origin={0, -5, 0},
-            .direction={0, 0, 0},
-    };
+void parseObjFile(Scene *scene, const char *filePath);
 
-    // light on the top left side
-    DirLight light = {.direction={0.2f, 0.6f, -0.2f}};
+void splitFaceToken(const char *token, int *vertexId, int *vertexNId);
 
-    scene->camera = camera;
-    scene->light = light;
-}
+void parseVertices(float *vertices, const char *buffer, const int *vertexId);
 
+Face parseFace(const char *buffer, const float *vertices, const float *vertexNormals);
 
-void generateExampleScene(Scene *scene) {
-    generateRig(scene);
-    scene->isAnimated = true;
-    scene->startFrame = 1;
-    scene->endFrame = 24 * 2;
-    parseObjFile(scene, "../examples/monkey.obj");
-
-}
-
-#endif //RAYTRACEREXPERIMENT_EXAMPLESCENE_H
+#endif //BASICRAYTRACER_SCENEPARSER_H

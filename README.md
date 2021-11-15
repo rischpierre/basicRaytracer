@@ -3,7 +3,7 @@
 ![unittests](https://github.com/rischpierre/raytracerExperiment/actions/workflows/main.yml/badge.svg)
 
 This is a standalone basic raytracer written in C without any library.  
-The goal of this project is for me to learn the logic behind raytracing and to learn C programming language.  
+The goal of this project was learning the logic behind raytracing and learning C programming language.  
 It has been tested on ubuntu-20.  
 
 Here is a render of the [example scene](examples/exampleScene.h) :  

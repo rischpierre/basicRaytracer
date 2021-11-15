@@ -16,6 +16,6 @@ file(GLOB SOURCES "src/*.h" "src/*.c" "examples/*.h")
 
 add_subdirectory(tests)
 
-add_executable(basicRaytracer ${SOURCES})
+add_executable(basicRaytracer ${SOURCES} src/sceneParser.c src/sceneParser.h)
 
 target_link_libraries(basicRaytracer pthread m)

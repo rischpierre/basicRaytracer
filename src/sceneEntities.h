@@ -58,9 +58,10 @@ typedef struct {
     const char *name;
     float worldMatrix[4][4];
     float color[3];
+    float bbox[6];
 } Object;
 
-void printObject(const Object *o, bool details);
+void printObject(const Object *object, bool details);
 
 typedef struct {
     float origin[3];
@@ -82,5 +83,7 @@ typedef struct {
     unsigned int startFrame;
     unsigned int endFrame;
 } Scene;
+
+void freeScene(Scene *scene);
 
 #endif //RAYTRACEREXPERIMENT_GEOMETRIES_H
