@@ -41,13 +41,21 @@
 #include "ioLib.h"
 #include "transform.h"
 
-
+/*
+ * Check if a ray hits a given triangle. This is the implementation of the Möller-Trumbore algorithm
+ *
+ * ray: The ray that intersects or not the face.
+ * face: The face that is intersected or not by the ray.
+ * distance: The distance between the origin of the ray and the point of
+ * intersection between the ray and the face.
+ * return: true if the ray intersect the face.
+ */
 bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) {
 
     float edge1[3], edge2[3], p[3], q[3], t[3];
     float det, u, v, invertedDet;
 
-    // find the two edges arround V0
+    // find the two edges around V0
     subVec3(edge1, face->v1, face->v0);
     subVec3(edge2, face->v2, face->v0);
 
@@ -66,7 +74,7 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
 
     // calculate u param
     u = dotProductVec3(t, p) * invertedDet;
-    if (u < 0 || u > 1.f)  // the hit point is outside of the triangle
+    if (u < 0 || u > 1.f)  // the hit point is outside the triangle
         return false;
 
     // calculate v param
@@ -80,7 +88,17 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
     return true;
 }
 
-
+/*
+ * Compute the color that radiates out of the face.
+ * This function is oversimplified, It's a basic interpolation between the direction of the ray and the
+ * direction of the light.
+ * The more the face aligns with the light, the more light is coming from it.
+ *
+ * color: The resulting color.
+ * faceNormal: The normal of the face being computed.
+ * light: The directional light used to compute the color.
+ * objectColor: RGB contribution multiplier.
+ */
 void
 computeColor(float color[3], const float *faceNormal, const DirLight *light, const float objectColor[3]) {
     float angle = angleBetweenVec3(light->direction, faceNormal);
@@ -97,45 +115,65 @@ computeColor(float color[3], const float *faceNormal, const DirLight *light, con
     }
 }
 
-void splitQuads(Object *o) {
+/*
+ * Split the quad faces of the given object into triangles.
+ * The vertices are split using the rule:
+ * Quad: v0, v1, v2, v3  -> first Tri : v0, v1, v2
+ *                       -> second Tri: v0, v2, v3
+ *
+ * object: The object containing the faces to split
+ */
+void splitQuads(Object *object) {
+
+    // check for the number of quads
     int quadNb = 0;
-    for (int fId = 0; fId < o->faceNb; fId++) {
-        Face current = o->faces[fId];
+    for (int fId = 0; fId < object->faceNb; fId++) {
+        Face current = object->faces[fId];
         if (current.isQuad) {
             quadNb++;
         }
     }
     if (quadNb == 0) return;
-    int newFaceNb = (o->faceNb - quadNb) + 2 * quadNb;
-    o->faces = (Face *) realloc(o->faces, sizeof(Face) * newFaceNb);
-    int newFaceId = o->faceNb;
-    for (int currentFaceId = 0; currentFaceId < o->faceNb; currentFaceId++) {
-        Face c = o->faces[currentFaceId];
+
+    // split the quads
+    int newFaceNb = (object->faceNb - quadNb) + 2 * quadNb;
+    object->faces = (Face *) realloc(object->faces, sizeof(Face) * newFaceNb);
+    int newFaceId = object->faceNb;
+    for (int currentFaceId = 0; currentFaceId < object->faceNb; currentFaceId++) {
+        Face c = object->faces[currentFaceId];
         if (c.isQuad) {
             Face f;
             for (int i = 0; i < 3; i++) {
+
+                // interchanging the faces
                 f.v0[i] = c.v0[i];
                 f.v1[i] = c.v2[i];
                 f.v2[i] = c.v3[i];
                 f.n[i] = c.n[i];
                 f.isQuad = false;
             }
-            o->faces[newFaceId] = f;
+            object->faces[newFaceId] = f;
             newFaceId++;
         }
     }
-    o->faceNb = newFaceNb;
+    object->faceNb = newFaceNb;
 }
 
+/*
+ * For each pixel in the image, trace a ray following the direction of the camera.
+ * If the ray intersect a face in the scene, the color is computer.
+ *
+ * renderArguments: Since this function is meant to be used by multiple threads,
+ *                  only one argument can be passed as argument.
+ *                  renderArguments is a struct containing the scene, the image channels, etc...
+ */
+void *renderLoop(void *renderArguments) {
 
-void *renderLoop(void *arguments) {
+    struct renderArgs *args = (struct renderArgs *) renderArguments;
 
-    struct renderArgs *args = (struct renderArgs *) arguments;
-
-    // todo need to get the ray direction from the camera
+    // todo the direction of the camera should be computed with the camera wolrd matrix instead
     Ray ray = {.origin={args->scene->camera.origin[0], args->scene->camera.origin[1],
                         args->scene->camera.origin[2]},
-//            .direction=*args->scene->camera.direction};
             .direction={0, CAM_FOCAL_LENGTH, 0}};
 
     for (int y = args->start; y < args->end; y++) {
@@ -188,7 +226,11 @@ void *renderLoop(void *arguments) {
     return NULL;
 }
 
-
+/*
+ * Helper function to get the number of threads of the current system.
+ *
+ * return: number of threads available
+*/
 unsigned int getNumThreads() {
 
     unsigned int eax = 11, ebx = 0, ecx = 1, edx = 0;
@@ -204,11 +246,19 @@ unsigned int getNumThreads() {
     return ebx;
 }
 
+
+/*
+ * Given a scene and an image path, It renders the object in the scene and outputs an image.
+ *
+ * scene: struct containing information about the objects, cameras, lights, etc...
+ * imagePath: the output file path of the rendered image.
+ */
 void render(Scene *scene, char *imagePath) {
-    // this is first a test with planar projection
 
     transformObject(&scene->object);
 
+    // Generate arrays of pointers for each color channel.
+    // This represents the final image
     float **red = (float **) malloc(RESOLUTION_H * sizeof(float *));
     float **green = (float **) malloc(RESOLUTION_H * sizeof(float *));
     float **blue = (float **) malloc(RESOLUTION_H * sizeof(float *));
@@ -225,6 +275,7 @@ void render(Scene *scene, char *imagePath) {
     printf("Using %d threads\n", threadCount);
     pthread_t threads[threadCount];
 
+    // submit multi-threaded render loop.
     int start = 0;
     int lineIncrement = RESOLUTION_H / threadCount;
     struct renderArgs arguments[threadCount];
@@ -245,6 +296,7 @@ void render(Scene *scene, char *imagePath) {
         pthread_join(threads[i], NULL);
     }
 
+    // Print render time taking multithreading into consideration
     clock_gettime(CLOCK_MONOTONIC, &finishTime);
     double elapsed = (double) (finishTime.tv_sec - startTime.tv_sec);
     elapsed += (double) ((finishTime.tv_nsec - startTime.tv_nsec) / 1000000000.0);
@@ -264,10 +316,4 @@ void render(Scene *scene, char *imagePath) {
     free(green);
     free(blue);
 
-}
-
-void freeScene(Scene *scene) {
-    free(scene->object.faces);
-    free((char *) scene->object.name);
-    free(scene);
 }

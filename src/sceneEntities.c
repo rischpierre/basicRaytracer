@@ -29,64 +29,40 @@
  *
  */
 
-#ifndef RAYTRACEREXPERIMENT_GEOMETRIES_H
-#define RAYTRACEREXPERIMENT_GEOMETRIES_H
+#include <stdio.h>
+#include <malloc.h>
+#include "sceneEntities.h"
 
-
-#include <stdbool.h>
-
-typedef struct {
-    float origin[3];
-    float direction[3];
-
-} Ray;
-
-typedef struct {
-    float v0[3];
-    float v1[3];
-    float v2[3];
-    float v3[3];
-
-    bool isQuad;
-    float n[3];
-
-} Face;
-
-typedef struct {
-    Face *faces;
-    int faceNb;
-    const char *name;
-    float worldMatrix[4][4];
-    float color[3];
-} Object;
-
-
-typedef struct {
-    float origin[3];
-    float direction[3];
-
-} Camera;
-
-typedef struct {
-    float direction[3];
-
-} DirLight;
-
-
-typedef struct {
-    DirLight light;
-    Camera camera;
-    Object object;
-    bool isAnimated;
-    unsigned int startFrame;
-    unsigned int endFrame;
-} Scene;
-
-/* Print addDetails about the object: names, number of faces...
+/*
+ * Print information about a given object.
  *
- *  object: The object to print the information.
- *  addDetails: If true, it prints detailed information.
+ * object: The object that will be printed.
+ * details: If true, the face coordinates will be printed as well.
  */
-void printObject(const Object *object, bool addDetails);
+void printObject(const Object *object, bool details) {
+    printf("Object: %s\n", object->name);
+    printf("nb of faces: %d\n", object->faceNb);
+    if (details == true) {
+        for (int faceId = 0; faceId < object->faceNb; faceId++) {
+            printf("----------------------\n");
+            Face curr = object->faces[faceId];
+            printf("Face %d\n", faceId);
+            printf("  v0: %f %f %f\n", curr.v0[0], curr.v0[1], curr.v0[2]);
+            printf("  v1: %f %f %f\n", curr.v1[0], curr.v1[1], curr.v1[2]);
+            printf("  v2: %f %f %f\n", curr.v2[0], curr.v2[1], curr.v2[2]);
+            printf("  n:  %f %f %f\n", curr.n[0], curr.n[1], curr.n[2]);
+        }
+    }
+    printf("----------------------\n");
+}
 
-#endif //RAYTRACEREXPERIMENT_GEOMETRIES_H
+/*
+ * Free the scene struct and its components.
+ *
+ * scene: The scene to free the memory to.
+ */
+void freeScene(Scene *scene) {
+    free(scene->object.faces);
+    free((char *) scene->object.name);
+    free(scene);
+}

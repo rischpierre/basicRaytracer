@@ -29,23 +29,24 @@
  *
  */
 
-#include <stdio.h>
-#include "geometries.h"
+#ifndef BASICRAYTRACER_SCENEPARSER_H
+#define BASICRAYTRACER_SCENEPARSER_H
 
 
-void printObject(const Object *object, bool addDetails) {
-    printf("Object: %s\n", object->name);
-    printf("nb of faces: %d\n", object->faceNb);
-    if (addDetails == true) {
-        for (int faceId = 0; faceId < object->faceNb; faceId++) {
-            printf("----------------------\n");
-            Face curr = object->faces[faceId];
-            printf("Face %d\n", faceId);
-            printf("  v0: %f %f %f\n", curr.v0[0], curr.v0[1], curr.v0[2]);
-            printf("  v1: %f %f %f\n", curr.v1[0], curr.v1[1], curr.v1[2]);
-            printf("  v2: %f %f %f\n", curr.v2[0], curr.v2[1], curr.v2[2]);
-            printf("  n:  %f %f %f\n", curr.n[0], curr.n[1], curr.n[2]);
-        }
-    }
-    printf("----------------------\n");
-}
+#include "sceneEntities.h"
+
+#define TAG_VERTEX "v "
+#define TAG_VERTEX_N "vn "
+#define TAG_FACE "f "
+#define TAG_OBJECT "o "
+#define BUFFER_SIZE 256
+
+void parseObjFile(Scene *scene, const char *filePath);
+
+void getVerticesIndices(const char *token, int *vertexId, int *vertexNId);
+
+void parseVertices(float *vertices, const char *buffer, const int *vertexId);
+
+Face parseFace(const char *buffer, const float *vertices, const float *vertexNormals);
+
+#endif //BASICRAYTRACER_SCENEPARSER_H

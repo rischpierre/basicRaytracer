@@ -29,20 +29,61 @@
  *
  */
 
-#ifndef RAYTRACEREXPERIMENT_TRANSFORM_H
-#define RAYTRACEREXPERIMENT_TRANSFORM_H
+#ifndef RAYTRACEREXPERIMENT_GEOMETRIES_H
+#define RAYTRACEREXPERIMENT_GEOMETRIES_H
 
-#include "sceneEntities.h"
 
-void printBBox(const float *bbox);
+#include <stdbool.h>
 
-void transformVec3(float *v, float *tm);
+typedef struct {
+    float origin[3];
+    float direction[3];
 
-void computeBBox(Object *object);
+} Ray;
 
-void transformObject(Object *o);
+typedef struct {
+    float v0[3];
+    float v1[3];
+    float v2[3];
+    float v3[3];
 
-void applyTransform(Object *object, const float translate[3], const float rotate[3], const float scale[3]);
+    bool isQuad;
+    float n[3];
 
-#endif //RAYTRACEREXPERIMENT_TRANSFORM_H
+} Face;
 
+typedef struct {
+    Face *faces;
+    int faceNb;
+    const char *name;
+    float worldMatrix[4][4];
+    float color[3];
+    float bbox[6];
+} Object;
+
+typedef struct {
+    float origin[3];
+    float direction[3];
+
+} Camera;
+
+typedef struct {
+    float direction[3];
+
+} DirLight;
+
+
+typedef struct {
+    DirLight light;
+    Camera camera;
+    Object object;
+    bool isAnimated;
+    unsigned int startFrame;
+    unsigned int endFrame;
+} Scene;
+
+void freeScene(Scene *scene);
+
+void printObject(const Object *object, bool details);
+
+#endif //RAYTRACEREXPERIMENT_GEOMETRIES_H

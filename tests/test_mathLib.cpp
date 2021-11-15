@@ -35,7 +35,7 @@
 #include "gtest/gtest.h"
 
 
-TEST(vector_tests, cross_product) {
+TEST(vectors, cross_product) {
     float v1[3] = {1, 0, 0};
     float v2[3] = {0, 1, 0};
     float result[3];
@@ -49,7 +49,7 @@ TEST(vector_tests, cross_product) {
     }
 }
 
-TEST(vector_tests, mult_matrix) {
+TEST(vectors, mult_matrix) {
 
     float matrix44fTranslate[16] = {1, 0, 0, 2,
                                     0, 1, 0, 2,
@@ -65,13 +65,13 @@ TEST(vector_tests, mult_matrix) {
     }
 }
 
-TEST(vector_tests, dot_product) {
+TEST(vectors, dot_product) {
     float v1[3] = {1, 1, 2};
     float v2[3] = {0, 1, 4};
     ASSERT_EQ(dotProductVec3(v1, v2), 9);
 }
 
-TEST(vector_tests, angle_between_vectors) {
+TEST(vectors, angle_between_vectors) {
     float v1[3] = {1, 0, 0};
     float v2[3] = {0, 1, 0};
     float v3[3] = {-1, 0, 0};
@@ -87,48 +87,51 @@ TEST(utils, interpolation1d) {
     ASSERT_EQ(interpolation1d(10, 0, 100, -10, 10), -8);
 }
 
-TEST(transpose, transposeMatrix) {
+TEST(matrix, transposeMatrix) {
 
-    float m[16] = {
-            1, 2, 3, 4,
-            5, 6, 7, 8,
-            9, 10, 11, 12,
-            13, 14, 15, 16
-
+    float input[4][4] = {
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12},
+            {13, 14, 15, 16}
     };
 
-    float exp[16] = {
-            1, 5, 9, 13,
-            2, 6, 10, 14,
-            3, 7, 11, 15,
-            4, 8, 12, 16
+    float exp[4][4] = {
+            {1, 5, 9, 13},
+            {2, 6, 10, 14},
+            {3, 7, 11, 15},
+            {4, 8, 12, 16}
     };
-    float res[16] = {0};
-    transposeM44(res, m);
-    for (int i = 0; i < 16; ++i) {
-        ASSERT_EQ(res[i], exp[i]);
+    float res[4][4] = {{0}};
+    transposeM44(res, input);
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            ASSERT_EQ(res[i][j], exp[i][j]);
+        }
     }
 }
 
-TEST(matrixTests, inverseMatrix) {
-    float m[16] = {
-            2, 0, 0, 0,
-            0, 1, 4, 0,
-            5, 0, 1, 0,
-            0, 0, 0, 1
+TEST(matrix, inverseMatrix) {
+    float m[4][4] = {
+            {2, 0, 0, 0},
+            {0, 1, 4, 0},
+            {5, 0, 1, 0},
+            {0, 0, 0, 1}
     };
 
-    float exp[16] = {
-            0.5f, 0, 0, 0,
-            10, 1, -4, 0,
-            -5.0 / 2, 0, 1, 0,
-            0, 0, 0, 1
+    float exp[4][4] = {
+            {0.5f,     0, 0,  0},
+            {10,       1, -4, 0},
+            {-5.0 / 2, 0, 1,  0},
+            {0,        0, 0,  1}
 
     };
-    float result[16];
+    float result[4][4];
     invertM44(result, m);
-    for (int i = 0; i < 16; ++i) {
-        ASSERT_EQ(result[i], exp[i]);
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            ASSERT_EQ(result[i][j], exp[i][j]);
+        }
     }
 }
 

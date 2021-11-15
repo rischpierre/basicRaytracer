@@ -35,8 +35,15 @@
 #include <math.h>
 #include <stdio.h>
 
-
-void applyTransform(Object *o, const float translate[3], const float rotate[3], const float scale[3]) {
+/*
+ * Apply transform matrices to the object's matrix.
+ *
+ * object: The object to transform.
+ * translate: Translate values in x, y and z.
+ * rotate: Rotate values in x, y and z.
+ * scale: Scale values in x, y and z.
+ */
+void applyTransform(Object *object, const float translate[3], const float rotate[3], const float scale[3]) {
     const float matrix44fTranslate[4][4] = {
             {1, 0, 0, translate[0]},
             {0, 1, 0, translate[1]},
@@ -72,15 +79,19 @@ void applyTransform(Object *o, const float translate[3], const float rotate[3], 
             {0,        0,        0,        1}
     };
 
-    multMat44(matrix44fTranslate, o->worldMatrix);
-    multMat44(rxMatrix, o->worldMatrix);
-    multMat44(ryMatrix, o->worldMatrix);
-    multMat44(rzMatrix, o->worldMatrix);
-    multMat44(scaleMatrix, o->worldMatrix);
+    multMat44(matrix44fTranslate, object->worldMatrix);
+    multMat44(rxMatrix, object->worldMatrix);
+    multMat44(ryMatrix, object->worldMatrix);
+    multMat44(rzMatrix, object->worldMatrix);
+    multMat44(scaleMatrix, object->worldMatrix);
 
 }
 
-
+/*
+ * Print a given bounding box.
+ *
+ * bbox: The bounding box to print.
+ */
 void printBBox(const float *bbox) {
 
     printf("bbox: x-: %f x+ %f  |  ", bbox[0], bbox[1]);
@@ -90,6 +101,11 @@ void printBBox(const float *bbox) {
 }
 
 
+/*
+ * Transform the object's components based on its world matrix.
+ *
+ * object: The object to transform.
+ */
 void transformObject(Object *object) {
     // transform points
     for (int i = 0; i < object->faceNb; ++i) {
@@ -98,22 +114,25 @@ void transformObject(Object *object) {
         multV3M44(object->faces[i].v2, *object->worldMatrix);
     }
 
-
     // generate the transpose of the inverse of the world matrix
     float transposeInverseMatrix[4][4], inverseMatrix[4][4];
-    invertM44(*inverseMatrix, *object->worldMatrix);
-    transposeM44(*transposeInverseMatrix, *inverseMatrix);
+    invertM44(inverseMatrix, object->worldMatrix);
+    transposeM44(transposeInverseMatrix, inverseMatrix);
 
-    // todo transform normals with the inverse transposed matrix
     for (int i = 0; i < object->faceNb; ++i) {
         multV3M44(object->faces[i].n, *transposeInverseMatrix);
     }
 
     // reset world matrix to avoid exponential transform
-    initIdentityMat44(object->worldMatrix);
+    generateIdentityMat44(object->worldMatrix);
 }
 
-void computeBBox(const Object *o, float *bbox) {
+/*
+ * Compute the bounding box of an object.
+ *
+ * object: The object to compute the bounding box.
+ */
+void computeBBox(Object *object) {
 
     float maxCoordX = -WORLD_MAX_DISTANCE;
     float maxCoordY = -WORLD_MAX_DISTANCE;
@@ -124,8 +143,8 @@ void computeBBox(const Object *o, float *bbox) {
     float minCoordZ = WORLD_MAX_DISTANCE;
 
     Face *current;
-    for (int i = 0; i < o->faceNb; i++) {
-        current = &o->faces[i];
+    for (int i = 0; i < object->faceNb; i++) {
+        current = &object->faces[i];
 
         // loop over every vertex in the face
         for (int v = 0; v < 3; v++) {
@@ -151,13 +170,13 @@ void computeBBox(const Object *o, float *bbox) {
         }
     }
 
-    bbox[0] = minCoordX;
-    bbox[1] = maxCoordX;
+    object->bbox[0] = minCoordX;
+    object->bbox[1] = maxCoordX;
 
-    bbox[2] = minCoordY;
-    bbox[3] = maxCoordY;
+    object->bbox[2] = minCoordY;
+    object->bbox[3] = maxCoordY;
 
-    bbox[4] = minCoordZ;
-    bbox[5] = maxCoordZ;
+    object->bbox[4] = minCoordZ;
+    object->bbox[5] = maxCoordZ;
 
 }

@@ -32,17 +32,18 @@
 #include "gtest/gtest.h"
 #include <unistd.h>
 #include "../src/ioLib.h"
+#include "../src/sceneParser.h"
 
-TEST(splitFaceToken, valid_output) {
+TEST(getVerticesIndices, valid_output) {
     int vertexId = -1;
     int vertexNId = -1;
-    splitFaceToken("34/1/3", &vertexId, &vertexNId);
+    getVerticesIndices("34/1/3", &vertexId, &vertexNId);
     ASSERT_EQ(vertexId, 33);
     ASSERT_EQ(vertexNId, 2);
 }
 
 
-TEST(parseVertices, valid_output){
+TEST(parseVertices, valid_output) {
     float vertices[2][3];
     const char *buffer = "v -0.174167 3.415299 0.296311";
     int vertexId = 0;

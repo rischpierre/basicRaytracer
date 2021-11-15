@@ -35,14 +35,14 @@
 
 TEST(computeBbox, validBBox){
 
-    float bbox[6];
-
+    float bbox[6] = {0};
     Face faces[1];
     const char *name = "test";
     Object o;
     o.faces = faces;
     o.faceNb = 1;
     o.name = name;
+    memcpy(o.bbox, bbox, sizeof(bbox));
 
     Face f = {
             {1, 2, -3},
@@ -54,14 +54,14 @@ TEST(computeBbox, validBBox){
     };
     faces[0] = f;
 
-    computeBBox(&o, bbox);
+    computeBBox(&o);
 
-    ASSERT_FLOAT_EQ(bbox[0], -4);
-    ASSERT_FLOAT_EQ(bbox[1], 7);
+    ASSERT_FLOAT_EQ(o.bbox[0], -4);
+    ASSERT_FLOAT_EQ(o.bbox[1], 7);
 
-    ASSERT_FLOAT_EQ(bbox[2], 2);
-    ASSERT_FLOAT_EQ(bbox[3], 8);
+    ASSERT_FLOAT_EQ(o.bbox[2], 2);
+    ASSERT_FLOAT_EQ(o.bbox[3], 8);
 
-    ASSERT_FLOAT_EQ(bbox[4], -3);
-    ASSERT_FLOAT_EQ(bbox[5], 9);
+    ASSERT_FLOAT_EQ(o.bbox[4], -3);
+    ASSERT_FLOAT_EQ(o.bbox[5], 9);
 }

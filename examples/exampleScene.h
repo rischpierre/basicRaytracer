@@ -33,8 +33,9 @@
 
 
 #include <math.h>
-#include "../src/geometries.h"
+#include "../src/sceneEntities.h"
 #include "../src/transform.h"
+#include "../src/sceneParser.h"
 
 void generateRig(Scene *scene) {
 
@@ -55,7 +56,7 @@ void generateExampleScene(Scene *scene) {
     generateRig(scene);
     scene->isAnimated = true;
     scene->startFrame = 1;
-    scene->endFrame = 24 * 2;
+    scene->endFrame = 3;
     parseObjFile(scene, "../examples/monkey.obj");
 
 }
