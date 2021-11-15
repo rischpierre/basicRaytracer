@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 
         render(scene, "render.bmp");
 
-    // animated example scene
+        // animated example scene
     } else if (argc == 1) {
         generateExampleScene(scene);
 

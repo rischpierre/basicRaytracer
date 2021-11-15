@@ -65,6 +65,7 @@ void generateIdentityMat44(float m[4][4]) {
         }
     }
 }
+
 /*
  * Multiply two matrices together.
  *
@@ -90,6 +91,7 @@ void multMat44(const float m1[4][4], float m2[4][4]) {
     }
 
 }
+
 /*
  * Return the multiplication of a 4x4 matrix with a vector
  *
@@ -195,7 +197,8 @@ void subVec3(float *result, const float *v1, const float *v2) {
 float interpolation1d(float inputValue, float inputRangeStart,
                       float inputRangeEnd, float outputRangeStart, float outputRangeEnd) {
 
-    return ((outputRangeEnd - outputRangeStart) * inputValue + inputRangeEnd * outputRangeStart - inputRangeStart * outputRangeEnd) / (inputRangeEnd - inputRangeStart);
+    return ((outputRangeEnd - outputRangeStart) * inputValue + inputRangeEnd * outputRangeStart -
+            inputRangeStart * outputRangeEnd) / (inputRangeEnd - inputRangeStart);
 
 }
 
@@ -224,7 +227,7 @@ void transposeM44(float result[4][4], float input[4][4]) {
 bool invertM44(float result[4][4], float input[4][4]) {
     float inv[16], det;
 
-    float *in = (float *)input;
+    float *in = (float *) input;
 
     inv[0] = in[5] * in[10] * in[15] -
              in[5] * in[11] * in[14] -
@@ -345,8 +348,8 @@ bool invertM44(float result[4][4], float input[4][4]) {
 
     det = 1.0f / det;
 
-    for (int i = 0; i < 4; i++){
-        for (int j = 0; j < 4; j++){
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
             result[i][j] = inv[4 * i + j] * det;
         }
     }

@@ -99,7 +99,8 @@ bool isRayIntersectsTriangle(const Ray *ray, const Face *face, float *distance) 
  * light: The directional light used to compute the color.
  * objectColor: RGB contribution multiplier.
  */
-void computeColor(float color[3], const float *faceNormal, const DirLight *light, const float objectColor[3]) {
+void
+computeColor(float color[3], const float *faceNormal, const DirLight *light, const float objectColor[3]) {
     float angle = angleBetweenVec3(light->direction, faceNormal);
     float result = interpolation1d(angle, M_PI / 2, M_PI, 0, 1);
 

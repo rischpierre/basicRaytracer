@@ -55,7 +55,8 @@ void addVectors(float *result, const float *v1, const float *v2);
 
 void subVec3(float *result, const float *v1, const float *v2);
 
-float interpolation1d(float inputValue, float inputRangeStart, float inputRangeEnd, float outputRangeStart, float outputRangeEnd);
+float interpolation1d(float inputValue, float inputRangeStart, float inputRangeEnd, float outputRangeStart,
+                      float outputRangeEnd);
 
 void transposeM44(float result[4][4], float input[4][4]);
 
