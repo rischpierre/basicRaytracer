@@ -56,7 +56,7 @@ void generateExampleScene(Scene *scene) {
     generateRig(scene);
     scene->isAnimated = true;
     scene->startFrame = 1;
-    scene->endFrame = 24 * 2;
+    scene->endFrame = 3;
     parseObjFile(scene, "../examples/monkey.obj");
 
 }

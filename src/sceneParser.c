@@ -43,10 +43,13 @@
 
 
 /*
- * Split the face descriptor into vertexId and
- * todo continue here
+ * Find the corresponding vertexId and vertexNId from a given face token.
+ *
+ * token: Face token to parse. i.e. `1/3/4`
+ * vertexId: Found ID of the face token's vertex.
+ * vertexId: Found ID of the face token's vertex normal.
  */
-void splitFaceToken(const char *token, int *vertexId, int *vertexNId) {
+void getVerticesIndices(const char *token, int *vertexId, int *vertexNId) {
     char tmp[255];
     strcpy(tmp, token);
     char *found = strtok(tmp, "/");
@@ -62,6 +65,13 @@ void splitFaceToken(const char *token, int *vertexId, int *vertexNId) {
     }
 }
 
+/*
+ * Parse the vertices from a line buffer in the obj file.
+ *
+ * vertices: The parsed vertices are added to this array.
+ * buffer: Line to parse. i.e. `v 1.324 1.2352 4.23525`
+ * vertexId: ID to increment when a line is parsed
+ */
 void parseVertices(float *vertices, const char *buffer, const int *vertexId) {
     char tmpBuffer[BUFFER_SIZE];
     strcpy(tmpBuffer, buffer);
@@ -74,6 +84,63 @@ void parseVertices(float *vertices, const char *buffer, const int *vertexId) {
     }
 }
 
+/*
+ * Parse the faces from a line buffer in the obj file.
+ *
+ * vertices: The parsed vertices are added to this array.
+ * vertexNormals: The parsed vertex normals are added to this array.
+ * buffer: Line to parse. i.e. `f 1/2/3 2/4/5 2/3/4`
+ * vertexId: ID to increment when a line is parsed
+ * return: Newly created face.
+ */
+Face parseFace(const char *buffer, const float *vertices, const float *vertexNormals) {
+
+    char tmpBuffer[BUFFER_SIZE];
+    strcpy(tmpBuffer, buffer);
+    Face f = {.isQuad=false};
+    int faceGroupId = 0;
+    char *token;
+    char *rest = tmpBuffer;
+    while ((token = strtok_r(rest, TAG_FACE, &rest))) {
+        int matchingVertexId = -1;
+        int matchingVertexNId = -1;
+        getVerticesIndices(token, &matchingVertexId, &matchingVertexNId);
+        if (matchingVertexNId == -1 || matchingVertexId == -1) {
+            printf("Unable to find the matching vertex ids");
+            exit(1);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            float vertexTmp = *(vertices + matchingVertexId * 3 + i);
+            if (faceGroupId == 0) {
+                f.n[i] = *(vertexNormals + matchingVertexNId * 3 + i);
+                f.v0[i] = vertexTmp;
+
+            } else if (faceGroupId == 1) {
+                f.v1[i] = vertexTmp;
+
+            } else if (faceGroupId == 2) {
+                f.v2[i] = vertexTmp;
+
+            } else {
+                f.v3[i] = vertexTmp;
+                f.isQuad = true;
+            }
+        }
+        faceGroupId++;
+    }
+    return f;
+}
+
+/*
+ * Parse an object from an .obj file.
+ * The object is then linked to the given scene struct.
+ * It goes through all the lines in the obj file and parse the object components like
+ * vertices, faces, faceNormals, etc...
+ *
+ * scene: Scene struct that contain the object to create.
+ * filePath: Path of the obj file to parse.
+ */
 void parseObjFile(Scene *scene, const char *filePath) {
     FILE *file;
     file = fopen(filePath, "r");
@@ -163,43 +230,4 @@ void parseObjFile(Scene *scene, const char *filePath) {
     scene->object.color[2] = 0.85f;
 
     fclose(file);
-}
-
-Face parseFace(const char *buffer, const float *vertices, const float *vertexNormals) {
-
-    char tmpBuffer[BUFFER_SIZE];
-    strcpy(tmpBuffer, buffer);
-    Face f = {.isQuad=false};
-    int faceGroupId = 0;
-    char *token;
-    char *rest = tmpBuffer;
-    while ((token = strtok_r(rest, TAG_FACE, &rest))) {
-        int matchingVertexId = -1;
-        int matchingVertexNId = -1;
-        splitFaceToken(token, &matchingVertexId, &matchingVertexNId);
-        if (matchingVertexNId == -1 || matchingVertexId == -1) {
-            printf("Unable to find the matching vertex ids");
-            exit(1);
-        }
-
-        for (int i = 0; i < 3; i++) {
-            float vertexTmp = *(vertices + matchingVertexId * 3 + i);
-            if (faceGroupId == 0) {
-                f.n[i] = *(vertexNormals + matchingVertexNId * 3 + i);
-                f.v0[i] = vertexTmp;
-
-            } else if (faceGroupId == 1) {
-                f.v1[i] = vertexTmp;
-
-            } else if (faceGroupId == 2) {
-                f.v2[i] = vertexTmp;
-
-            } else {
-                f.v3[i] = vertexTmp;
-                f.isQuad = true;
-            }
-        }
-        faceGroupId++;
-    }
-    return f;
 }

@@ -43,7 +43,7 @@
 
 void parseObjFile(Scene *scene, const char *filePath);
 
-void splitFaceToken(const char *token, int *vertexId, int *vertexNId);
+void getVerticesIndices(const char *token, int *vertexId, int *vertexNId);
 
 void parseVertices(float *vertices, const char *buffer, const int *vertexId);
 
