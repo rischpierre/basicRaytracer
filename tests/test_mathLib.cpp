@@ -112,24 +112,26 @@ TEST(matrix, transposeMatrix) {
 }
 
 TEST(matrix, inverseMatrix) {
-    float m[16] = {
-            2, 0, 0, 0,
-            0, 1, 4, 0,
-            5, 0, 1, 0,
-            0, 0, 0, 1
+    float m[4][4] = {
+            {2, 0, 0, 0},
+            {0, 1, 4, 0},
+            {5, 0, 1, 0},
+            {0, 0, 0, 1}
     };
 
-    float exp[16] = {
-            0.5f, 0, 0, 0,
-            10, 1, -4, 0,
-            -5.0 / 2, 0, 1, 0,
-            0, 0, 0, 1
+    float exp[4][4] = {
+            {0.5f,     0, 0,  0},
+            {10,       1, -4, 0},
+            {-5.0 / 2, 0, 1,  0},
+            {0,        0, 0,  1}
 
     };
-    float result[16];
+    float result[4][4];
     invertM44(result, m);
-    for (int i = 0; i < 16; ++i) {
-        ASSERT_EQ(result[i], exp[i]);
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            ASSERT_EQ(result[i][j], exp[i][j]);
+        }
     }
 }
 
