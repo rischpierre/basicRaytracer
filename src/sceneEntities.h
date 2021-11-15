@@ -61,8 +61,6 @@ typedef struct {
     float bbox[6];
 } Object;
 
-void printObject(const Object *object, bool details);
-
 typedef struct {
     float origin[3];
     float direction[3];
@@ -85,5 +83,7 @@ typedef struct {
 } Scene;
 
 void freeScene(Scene *scene);
+
+void printObject(const Object *object, bool details);
 
 #endif //RAYTRACEREXPERIMENT_GEOMETRIES_H
